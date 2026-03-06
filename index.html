@@ -36,11 +36,10 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 #stxt{font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;min-width:130px}
 #abtn{background:var(--rose2);color:var(--bg);border:none;padding:11px 30px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:opacity .2s}
 #abtn:disabled{opacity:.45;cursor:not-allowed}
-#token-box{display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding:8px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:2px;min-width:140px}
-.tok-row{display:flex;align-items:center;gap:8px;width:100%}
-.tok-label{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1}
-.tok-val{font-size:11px;font-weight:600;color:var(--sub);font-family:"Montserrat",sans-serif}
-.tok-bar{height:2px;background:var(--bdr);border-radius:1px;width:100%;margin-top:1px}
+#token-box{display:flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--bdr);border-radius:2px;background:var(--surf2)}
+.tok-val{font-size:9px;color:var(--muted);font-family:"Montserrat",sans-serif;white-space:nowrap}
+.tok-val span{color:var(--sub);font-weight:600}
+.tok-bar{height:2px;width:36px;background:var(--bdr);border-radius:1px}
 .tok-fill{height:100%;border-radius:1px;transition:width .6s;background:var(--green)}
 .tok-fill.warn{background:var(--gold)}
 .tok-fill.crit{background:var(--red)}
@@ -225,12 +224,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
     <div id="sdot"></div>
     <div id="stxt">Ready</div>
   </div>
-  <div id="token-box">
-    <div class="tok-row"><span class="tok-label">Session tokens</span><span class="tok-val" id="tok-session">0</span></div>
-    <div class="tok-bar"><div class="tok-fill" id="tok-bar-s" style="width:0%"></div></div>
-    <div class="tok-row"><span class="tok-label">Daily remaining</span><span class="tok-val" id="tok-daily">500,000</span></div>
-    <div class="tok-bar"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div>
-  </div>
+  <div id="token-box"><div class="tok-val">S: <span id="tok-session">0</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-s" style="width:0%"></div></div><div class="tok-val">D: <span id="tok-daily">500k</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div></div>
   <button id="ubtn" onclick="runUpdate()">+ Update</button>
   <button id="abtn" onclick="run()">Analyse Now</button>
 </div>
@@ -473,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // restore daily token display on load
   const _remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
   const _pct = (dailyUsed / DAILY_LIMIT) * 100;
-  document.getElementById("tok-daily").textContent = _remaining.toLocaleString() + " left";
+  document.getElementById("tok-daily").textContent = _remaining >= 1000 ? Math.round(_remaining/1000)+"k" : _remaining;
   document.getElementById("tok-bar-d").style.width = Math.max(0, 100 - _pct) + "%";
   if (_pct > 90) document.getElementById("tok-bar-d").className = "tok-fill crit";
   else if (_pct > 70) document.getElementById("tok-bar-d").className = "tok-fill warn";
@@ -548,8 +542,8 @@ function updateTokenUI(promptTokens, completionTokens) {
   const remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
   const dailyPct  = (dailyUsed / DAILY_LIMIT) * 100;
 
-  document.getElementById("tok-session").textContent = sessionTokens.toLocaleString() + " tok";
-  document.getElementById("tok-daily").textContent   = remaining.toLocaleString() + " left";
+  document.getElementById("tok-session").textContent = sessionTokens >= 1000 ? (sessionTokens/1000).toFixed(1)+"k" : sessionTokens;
+  document.getElementById("tok-daily").textContent = remaining >= 1000 ? Math.round(remaining/1000)+"k" : remaining;
 
   const barS = document.getElementById("tok-bar-s");
   const barD = document.getElementById("tok-bar-d");
