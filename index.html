@@ -234,7 +234,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
       <div id="sdot"></div>
       <div id="stxt">Ready</div>
     </div>
-    <div id="token-box"><div class="tok-val">Groq <span id="tok-daily">500k</span></div><div class="tok-bar" style="width:48px"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div><div class="vline" style="height:14px;margin:0 4px"></div><div class="tok-val">FMP <span id="tok-fmp">250</span></div><div class="tok-bar" style="width:30px"><div class="tok-fill" id="tok-bar-fmp" style="width:100%"></div></div></div>
+    <div id="token-box"><div class="tok-val">Groq <span id="tok-daily">500k</span></div><div class="tok-bar" style="width:48px"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div></div>
     <button id="ubtn" onclick="runUpdate()">+ Update</button>
     <button id="abtn" onclick="run()">Analyse Now</button>
   </div>
@@ -1246,31 +1246,55 @@ function fmtMktCap(v) {
 }
 
 async function fetchYahoo(ticker) {
-  const urls = [
-    `https://financialmodelingprep.com/api/v3/quote/${ticker}?apikey=${FMP_KEY}`,
-    `https://corsproxy.io/?https://financialmodelingprep.com/api/v3/quote/${ticker}?apikey=${FMP_KEY}`,
+  // Try Yahoo Finance direct (works from browser)
+  const yUrls = [
+    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d`,
+    `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d`,
   ];
-  for (const url of urls) {
+  for (const url of yUrls) {
     try {
-      const r = await fetch(url, { signal: AbortSignal.timeout(7000) });
-      if (!r.ok) { console.warn(`FMP ${ticker} HTTP ${r.status} via ${url}`); continue; }
+      const r = await fetch(url, { signal: AbortSignal.timeout(6000), headers: { "Accept": "application/json" } });
+      if (!r.ok) { console.warn(`Yahoo ${ticker} HTTP ${r.status}`); continue; }
       const d = await r.json();
-      const q = Array.isArray(d) ? d[0] : d?.quote || null;
-      if (!q || !q.price) { console.warn(`FMP ${ticker} empty response`); continue; }
-      console.log(`FMP ${ticker} OK: $${q.price} | P/E ${q.pe} | chg ${q.changesPercentage}%`);
+      const meta = d?.chart?.result?.[0]?.meta;
+      if (!meta?.regularMarketPrice) { console.warn(`Yahoo ${ticker} no price`); continue; }
+      const price = meta.regularMarketPrice;
+      const prev  = meta.chartPreviousClose || meta.previousClose || price;
+      const chg   = prev ? ((price - prev) / prev * 100) : null;
+      console.log(`Yahoo ${ticker} OK: $${price} | chg ${chg?.toFixed(2)}%`);
       fmpUsed++;
       localStorage.setItem("fmp_daily_used", fmpUsed);
       updateFmpUI();
       return {
-        mktCap : fmtMktCap(q.marketCap),
-        pe     : q.pe ? Number(q.pe).toFixed(1) : "N/A",
-        chg    : q.changesPercentage != null ? Number(q.changesPercentage).toFixed(2) : null,
-        low52  : q.yearLow  ? Number(q.yearLow).toFixed(2)  : "—",
-        high52 : q.yearHigh ? Number(q.yearHigh).toFixed(2) : "—",
-        price  : q.price    ? Number(q.price).toFixed(2)    : "—",
+        mktCap : meta.marketCap ? fmtMktCap(meta.marketCap) : "N/A",
+        pe     : meta.trailingPE ? Number(meta.trailingPE).toFixed(1) : "N/A",
+        chg    : chg != null ? chg.toFixed(2) : null,
+        low52  : meta.fiftyTwoWeekLow  ? Number(meta.fiftyTwoWeekLow).toFixed(2)  : "—",
+        high52 : meta.fiftyTwoWeekHigh ? Number(meta.fiftyTwoWeekHigh).toFixed(2) : "—",
+        price  : price.toFixed(2),
       };
-    } catch(e) { console.warn(`FMP ${ticker} error: ${e.message}`); }
+    } catch(e) { console.warn(`Yahoo ${ticker} error: ${e.message}`); }
   }
+  // Fallback: stooq (price + day change only, no P/E)
+  try {
+    const sym = ticker.toLowerCase() + (ticker.length <= 4 ? ".us" : "");
+    const r = await fetch(`https://stooq.com/q/l/?s=${sym}&f=sd2t2ohlcvn&h&e=csv`, { signal: AbortSignal.timeout(6000) });
+    if (!r.ok) throw new Error("stooq HTTP "+r.status);
+    const text = await r.text();
+    const rows = text.trim().split("\n");
+    if (rows.length < 2) throw new Error("stooq no data");
+    const cols = rows[1].split(",");
+    // Symbol,Date,Time,Open,High,Low,Close,Volume,Name
+    const close = parseFloat(cols[6]);
+    const open  = parseFloat(cols[3]);
+    if (!close) throw new Error("stooq no close");
+    const chg = ((close - open) / open * 100);
+    console.log(`stooq ${ticker} OK: $${close}`);
+    fmpUsed++;
+    localStorage.setItem("fmp_daily_used", fmpUsed);
+    updateFmpUI();
+    return { mktCap:"N/A", pe:"N/A", chg:chg.toFixed(2), low52:"—", high52:"—", price:close.toFixed(2) };
+  } catch(e) { console.warn(`stooq ${ticker} error: ${e.message}`); }
   return null;
 }
 
