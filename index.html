@@ -244,7 +244,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
   </div>
 
   <!-- SOURCE HEALTH PANEL -->
-  <div id="src-panel">
+  <div id="src-panel" style="display:block">
     <div class="src-panel-top">
       <div class="src-panel-label">News Sources</div>
       <div class="src-panel-summary" id="src-summary"></div>
@@ -257,7 +257,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 
     <!-- Research -->
     <div class="paste-panel">
-      <div class="paste-header" onclick="toggleBox('research')">
+      <div class="paste-header" id="hdr-research" onclick="toggleBox('research')">
         <div class="paste-header-left">
           <span class="paste-icon">✦</span>
           <span class="paste-title">Your Research</span>
@@ -277,7 +277,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 
     <!-- AAII -->
     <div class="paste-panel">
-      <div class="paste-header" onclick="toggleBox('aaii')">
+      <div class="paste-header" id="hdr-aaii" onclick="toggleBox('aaii')">
         <div class="paste-header-left">
           <span class="paste-icon" style="color:var(--gold)">◈</span>
           <span class="paste-title">AAII Sentiment</span>
@@ -297,7 +297,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 
     <!-- NAAIM -->
     <div class="paste-panel">
-      <div class="paste-header" onclick="toggleBox('naaim')">
+      <div class="paste-header" id="hdr-naaim" onclick="toggleBox('naaim')">
         <div class="paste-header-left">
           <span class="paste-icon" style="color:var(--green)">◈</span>
           <span class="paste-title">NAAIM Exposure Index</span>
@@ -501,10 +501,11 @@ function updateChip(name, state, count) {
 function toggleBox(id) {
   const body   = document.getElementById("body-"+id);
   const toggle = document.getElementById("toggle-"+id);
-  const header = body.previousElementSibling;
+  const header = document.getElementById("hdr-"+id);
+  if (!body) return;
   const isOpen = body.classList.contains("open");
   body.classList.toggle("open", !isOpen);
-  toggle.classList.toggle("open", !isOpen);
+  if (toggle) toggle.classList.toggle("open", !isOpen);
   if (header) header.classList.toggle("open", !isOpen);
 }
 function clearBox(id) {
@@ -674,6 +675,26 @@ async function groq(system, user) {
   return d.choices[0].message.content;
 }
 
+// ── Sentiment section builder (avoids nested backtick issue) ─
+function buildSentSection(aaiiText, naaimText) {
+  let out = "";
+  if (aaiiText && aaiiText.trim().length > 10) {
+    out += "\n\n\u2501\u2501\u2501 AAII INVESTOR SENTIMENT SURVEY (weekly, contrarian indicator) \u2501\u2501\u2501\n";
+    out += aaiiText.trim().slice(0, 2000);
+    out += "\n\u2501\u2501\u2501 END AAII \u2501\u2501\u2501";
+  } else {
+    out += "\n\nAAII Sentiment Survey: No data provided.";
+  }
+  if (naaimText && naaimText.trim().length > 10) {
+    out += "\n\n\u2501\u2501\u2501 NAAIM EXPOSURE INDEX (active manager positioning, weekly) \u2501\u2501\u2501\n";
+    out += naaimText.trim().slice(0, 2000);
+    out += "\n\u2501\u2501\u2501 END NAAIM \u2501\u2501\u2501";
+  } else {
+    out += "\n\nNAAIM Exposure Index: No data provided.";
+  }
+  return out;
+}
+
 async function analyse(articles, pastedText, aaiiText="", naaimText="") {
   step("Groq AI reading all sources...");
 
@@ -689,26 +710,24 @@ async function analyse(articles, pastedText, aaiiText="", naaimText="") {
     pastedPreamble = `The user has provided PRIMARY RESEARCH that must be the dominant input for your analysis. The RSS headlines are secondary context only — they support or add colour to the primary research, they do not override it. All stock picks, thesis, and signals must be grounded first in the primary research.\n\n`;
   }
 
-  const raw = await groq(
-    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. If AAII or NAAIM sentiment survey data is included in the research input, extract and use it as key contrarian context. If no sentiment survey data is present, note 'No AAII/NAAIM data provided' in hf_signals. Return ONLY raw JSON — no markdown, no backticks, no explanation. Start with { end with }.",
-    `${pastedPreamble}Analyse the following market intelligence and generate a full trading-oriented macro analysis.
+  // Build prompt cleanly to avoid nested template literal issues
+  const headlineLabel = hasPastedContent
+    ? "SECONDARY CONTEXT (RSS headlines - use to add colour, do not let these override the primary research above):"
+    : "LIVE HEADLINES:";
+  const aaiiSection = (aaiiText && aaiiText.trim().length > 10)
+    ? "\n\nAAII INVESTOR SENTIMENT SURVEY (weekly, contrarian indicator):\n" + aaiiText.trim().slice(0,2000)
+    : "\n\nAAII Sentiment Survey: No data provided.";
+  const naaimSection = (naaimText && naaimText.trim().length > 10)
+    ? "\n\nNAAIM EXPOSURE INDEX (active manager positioning, weekly):\n" + naaimText.trim().slice(0,2000)
+    : "\n\nNAAIM Exposure Index: No data provided.";
 
-${hasPastedContent ? "SECONDARY CONTEXT (RSS headlines — use to add colour, do not let these override the primary research above):" : "LIVE HEADLINES:"}
-${lines}${pastedSection}${aaiiText ? `
+  const prompt = pastedPreamble
+    + "Analyse the following market intelligence and generate a full trading-oriented macro analysis.\n\n"
+    + headlineLabel + "\n"
+    + lines + pastedSection
+    + aaiiSection + naaimSection;
 
-━━━ AAII INVESTOR SENTIMENT SURVEY (weekly, contrarian indicator) ━━━
-${aaiiText.slice(0,2000)}
-━━━ END AAII ━━━` : "
-
-AAII Sentiment Survey: No data provided."}${naaimText ? `
-
-━━━ NAAIM EXPOSURE INDEX (active manager positioning, weekly) ━━━
-${naaimText.slice(0,2000)}
-━━━ END NAAIM ━━━` : "
-
-NAAIM Exposure Index: No data provided."}
-
-Return this exact JSON structure:
+  const schema = `\n\nReturn this exact JSON structure:
 {
   "narrative": "2-3 sentences on the dominant market story right now",
   "dominant_themes": ["theme1","theme2","theme3","theme4"],
@@ -781,7 +800,11 @@ GLOBAL rules:
 - direction: exactly "long" or "short"
 - key_entities: 6-8 entries, direction = bull/bear/neutral only
 - risk_sentiment: exactly "bullish", "cautious", or "bearish"
-- Return ONLY the JSON. Nothing else.`
+- Return ONLY the JSON. Nothing else.`;
+
+  const raw = await groq(
+    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. If AAII or NAAIM sentiment survey data is included, extract and use it as key contrarian context. If absent, note No AAII/NAAIM data provided in hf_signals. Return ONLY raw JSON - no markdown, no backticks, no explanation. Start with { end with }.",
+    prompt + schema
   );
 
   let s = raw.trim().replace(/^```json\s*/i,"").replace(/^```\s*/i,"").replace(/\s*```\s*$/i,"").trim();
@@ -1013,7 +1036,11 @@ EXISTING ANALYSIS:
 ${existingJSON}
 
 ${hasNewPastedContent ? "SECONDARY CONTEXT (new headlines):" : "NEW ARTICLES (" + newArticles.length + "):"}
-${newLines}${pastedSection}${aaiiText ? `\n\n━━━ AAII SENTIMENT (weekly) ━━━\n${aaiiText.slice(0,1500)}\n━━━ END AAII ━━━` : "\n\nAAII: No data."}${naaimText ? `\n\n━━━ NAAIM EXPOSURE (weekly) ━━━\n${naaimText.slice(0,1500)}\n━━━ END NAAIM ━━━` : "\n\nNAAIM: No data."}\n\nInstructions:
+${newLines}${pastedSection}
+${aaiiText ? "\n\n━━━ AAII SENTIMENT (weekly) ━━━\n" + aaiiText.slice(0,1500) + "\n━━━ END AAII ━━━" : "\n\nAAII: No data."}
+${naaimText ? "\n\n━━━ NAAIM EXPOSURE (weekly) ━━━\n" + naaimText.slice(0,1500) + "\n━━━ END NAAIM ━━━" : "\n\nNAAIM: No data."}
+
+Instructions:
 - Only update fields that the new information actually changes
 - If the new articles reinforce existing thesis, strengthen the language
 - If new articles contradict the thesis, revise accordingly  
