@@ -211,8 +211,10 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .fund-err{font-size:10px;color:var(--muted);font-style:italic;padding:4px 0}
 
 @media(max-width:1100px){.dlayout{grid-template-columns:1fr}.dside{flex-direction:row;flex-wrap:wrap}.scard{flex:1;min-width:280px}}
-@media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:88px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}}
-@media(max-width:560px){.ngrid,.sgrid,.steps{grid-template-columns:1fr}}
+@media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:88px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}.fund-strip{grid-template-columns:1fr 1fr}.dlayout{grid-template-columns:1fr}}
+@media(max-width:560px){.ngrid,.sgrid,.steps{grid-template-columns:1fr}.fund-strip{grid-template-columns:1fr 1fr}#hdr{height:54px}.tok-bar{display:none}.src-panel-top{flex-direction:column;align-items:flex-start;gap:6px}.src-list{gap:6px}.paste-sub{display:none}.pick-meta{flex-wrap:wrap}.ptabs{overflow-x:auto;-webkit-overflow-scrolling:touch}}
+
+@media(max-width:420px){#page{padding:72px 14px 80px}#hdr{padding:0 14px}.hlogo{font-size:13px}#token-box{display:none}.pick-dir{font-size:8px;padding:2px 6px}.pick-ticker{font-size:18px}.pick-name{font-size:9px}.scard{padding:14px}}
 </style>
 </head>
 <body>
@@ -860,7 +862,7 @@ GLOBAL rules:
 - Return ONLY the JSON. Nothing else.`;
 
   const raw = await groq(
-    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. If AAII or NAAIM sentiment survey data is included, extract and use it as key contrarian context. If absent, note No AAII/NAAIM data provided in hf_signals. Return ONLY raw JSON - no markdown, no backticks, no explanation. Start with { end with }.",
+    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. If AAII or NAAIM sentiment survey data is included, extract and use it as key contrarian context. Return ONLY raw JSON - no markdown, no backticks, no explanation. Start with { end with }.",
     prompt + schema
   );
 
@@ -1025,9 +1027,20 @@ async function run() {
     document.getElementById("res").style.display="block";
     setStatus("done","Live");
 
-    // Apply live data to cards (already fetched — just render)
+    // Fetch FMP for actual final picks (may differ from pre-screened candidates)
     const allPicks = [...(d.trend_picks||[]), ...(d.asymmetric_picks||[])];
-    applyFundamentalsToCards(allPicks, window._fundMap || {});
+    const finalTickers = allPicks.filter(p => p.asset_type !== "fx").map(p => p.ticker);
+    if (finalTickers.length) {
+      fetchFundamentalsMap(finalTickers).then(map => {
+        applyFundamentalsToCards(allPicks, map);
+      });
+    }
+    // Fallback: hide strips still on loading dashes after 8s
+    setTimeout(() => {
+      document.querySelectorAll(".fund-strip").forEach(strip => {
+        if (strip.querySelector(".loading")) strip.style.display = "none";
+      });
+    }, 8000);
   } catch(e) {
     console.error(e);
     showErr(e.message);
