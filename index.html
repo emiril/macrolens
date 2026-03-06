@@ -1,680 +1,646 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MACROLENS — Smart Money Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MacroLens AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #0a0810;
-  --bg2: #0e0b14;
-  --surface: #141020;
-  --surface2: #1c1730;
-  --border: #2a2040;
-  --border2: #3d2f55;
-  --rose: #f2bfce;
-  --rose2: #d4829a;
-  --gold: #e0c080;
-  --cream: #faf4ee;
-  --green: #90e0b8;
-  --red: #e87888;
-  --blue: #90c8e0;
-  --lavender: #ccc0ee;
-  --orange: #f4b07a;
-  --text: #f2eef8;
-  --sub: #c8b8d8;
-  --muted: #9888a8;
-  --muted2: #6a5578;
-  --serif: 'Cormorant Garamond', serif;
-  --sans: 'Montserrat', sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0810;--surf:#141020;--surf2:#1c1730;
+  --bdr:#2a2040;--bdr2:#3d2f55;
+  --rose:#f2bfce;--rose2:#d4829a;
+  --gold:#e0c080;--cream:#faf4ee;
+  --green:#90e0b8;--red:#e87888;
+  --blue:#90c8e0;--lav:#ccc0ee;
+  --text:#f2eef8;--sub:#c8b8d8;--muted:#9888a8;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(184,168,216,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 70% at 85% 90%,rgba(232,160,176,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,168,216,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(184,168,216,0.012) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
-.z1{position:relative;z-index:1;}
+body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fp{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:normal}
 
-/* HEADER */
-header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-.header-inner{max-width:1500px;margin:0 auto;padding:0 40px;height:68px;display:flex;align-items:center;gap:24px;}
-.logo{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:10px;text-transform:uppercase;flex-shrink:0;}
-.logo-m{color:var(--rose);}
-.logo-l{color:var(--cream);}
-.hdiv{width:1px;height:24px;background:var(--border2);flex-shrink:0;}
-.htag{font-size:10px;color:var(--sub);letter-spacing:3px;text-transform:uppercase;}
-.hspace{flex:1;}
-.header-right{display:flex;align-items:center;gap:12px;}
-.live-pill{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);}
-.dot.live{background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite;}
-.dot.err{background:var(--red);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.fmp-input{background:var(--surface);border:1px solid var(--border2);color:var(--cream);padding:9px 14px;font-family:var(--sans);font-size:11px;font-weight:400;border-radius:2px;width:220px;letter-spacing:0.5px;transition:border-color 0.3s;}
-.fmp-input:focus{outline:none;border-color:var(--rose2);}
-.fmp-input::placeholder{color:var(--muted);}
-.fmp-label{font-size:10px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
-.btn-run{background:transparent;border:1px solid var(--rose2);color:var(--rose);padding:9px 24px;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s;white-space:nowrap;}
-.btn-run:hover{background:var(--rose2);color:var(--bg);}
-.btn-run:disabled{opacity:0.3;cursor:not-allowed;}
+/* ── HEADER ── */
+#hdr{position:sticky;top:0;z-index:100;background:rgba(10,8,16,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--bdr);padding:0 36px;height:68px;display:flex;align-items:center;gap:20px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;letter-spacing:10px;text-transform:uppercase}
+.logo .m{color:var(--rose)}.logo .l{color:var(--cream)}
+.logo sup{font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:3px;color:var(--muted);vertical-align:super;margin-left:4px}
+.vline{width:1px;height:28px;background:var(--bdr2)}
+.htag{font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase}
+#sdot{width:7px;height:7px;border-radius:50%;background:var(--bdr2);transition:all .3s}
+#sdot.loading{background:var(--gold);box-shadow:0 0 10px var(--gold);animation:fp .8s infinite}
+#sdot.done{background:var(--green);box-shadow:0 0 10px var(--green)}
+#sdot.error{background:var(--red)}
+#stxt{font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;min-width:130px}
+#abtn{background:var(--rose2);color:var(--bg);border:none;padding:11px 30px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:opacity .2s}
+#abtn:disabled{opacity:.45;cursor:not-allowed}
 
-/* PAGE */
-.page{max-width:1500px;margin:0 auto;padding:36px 40px 80px;}
+/* ── PAGE ── */
+#page{max-width:1400px;margin:0 auto;padding:40px 40px 100px}
+.ebox{background:rgba(232,120,136,.08);border:1px solid rgba(232,120,136,.3);border-radius:3px;padding:14px 20px;font-size:12px;color:var(--red);margin-bottom:24px;line-height:1.7;display:none}
 
-/* EMPTY */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72vh;text-align:center;}
-.empty-title{font-family:var(--serif);font-size:88px;font-weight:300;letter-spacing:14px;line-height:1;color:var(--surface2);text-transform:uppercase;margin-bottom:20px;}
-.empty-title span{color:var(--border2);}
-.empty-sub{font-size:12px;color:var(--sub);letter-spacing:2px;line-height:2.4;font-weight:400;text-transform:uppercase;}
-.empty-note{margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:300;}
-.empty-note span{color:var(--rose2);}
+/* ── SOURCE HEALTH PANEL ── */
+#src-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;padding:16px 20px;margin-bottom:28px;display:none}
+.src-panel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.src-panel-label{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;font-weight:600}
+.src-panel-summary{font-size:10px;color:var(--sub)}
+.src-list{display:flex;flex-wrap:wrap;gap:8px}
+.src-chip{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:2px;border:1px solid var(--bdr);background:var(--surf2);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all .3s}
+.src-chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.src-chip .count{font-size:9px;font-weight:400;color:var(--muted);margin-left:2px}
+.src-chip.checking .dot{background:var(--gold);animation:fp .8s infinite}
+.src-chip.checking{color:var(--muted)}
+.src-chip.live .dot{background:var(--green);box-shadow:0 0 6px var(--green)}
+.src-chip.live{color:var(--cream)}
+.src-chip.down .dot{background:var(--red)}
+.src-chip.down{color:var(--muted);opacity:.6}
 
-/* SECTION LABEL */
-.slbl{font-family:var(--serif);font-size:12px;letter-spacing:4px;color:var(--sub);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
-.slbl::before{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border2));}
-.slbl::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border2));}
+/* ── PASTE BOX ── */
+#paste-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;margin-bottom:28px;overflow:hidden}
+.paste-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
+.paste-header-left{display:flex;align-items:center;gap:12px}
+.paste-icon{font-size:14px;color:var(--lav)}
+.paste-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cream)}
+.paste-sub{font-size:10px;color:var(--muted)}
+.paste-toggle{font-size:10px;color:var(--muted);letter-spacing:1px;transition:transform .2s}
+.paste-toggle.open{transform:rotate(180deg)}
+#paste-body{display:none;padding:16px 20px}
+#paste-body.open{display:block}
+#paste-input{width:100%;min-height:120px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:12px;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;transition:border-color .2s}
+#paste-input:focus{border-color:var(--rose2)}
+#paste-input::placeholder{color:var(--muted)}
+.paste-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.paste-hint{font-size:10px;color:var(--muted);line-height:1.6}
+.paste-hint span{color:var(--lav)}
+.paste-clear{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0}
+.paste-clear:hover{color:var(--red)}
+#paste-badge{display:none;background:rgba(204,192,238,.1);border:1px solid rgba(204,192,238,.2);color:var(--lav);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px;margin-left:10px}
 
-/* SNAPSHOT BAR */
-.snapshot-bar{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:32px;}
-.snap-tile{background:var(--surface);padding:16px 18px;position:relative;transition:background 0.2s;}
-.snap-tile:hover{background:var(--surface2);}
-.snap-label{font-size:10px;letter-spacing:1.5px;color:var(--sub);text-transform:uppercase;margin-bottom:8px;font-weight:500;}
-.snap-value{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:-0.5px;line-height:1;margin-bottom:5px;}
-.snap-change{font-size:11px;font-weight:500;}
-.snap-accent{position:absolute;bottom:0;left:0;right:0;height:2px;opacity:0.5;}
+/* ── EMPTY ── */
+#empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center}
+.bigw{font-family:'Cormorant Garamond',serif;font-size:88px;font-weight:300;letter-spacing:16px;line-height:1;color:var(--surf2);text-transform:uppercase;margin-bottom:24px}
+.bigw span{color:var(--bdr)}
+.subl{font-size:12px;color:var(--sub);letter-spacing:2px;line-height:2.6;text-transform:uppercase;margin-bottom:28px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:860px;width:100%}
+.sc{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;padding:18px 20px;text-align:left}
+.sc-n{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--bdr2);line-height:1;margin-bottom:8px}
+.sc-t{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--cream);margin-bottom:6px;text-transform:uppercase}
+.sc-d{font-size:11px;color:var(--sub);line-height:1.7;font-weight:300}
+.note{font-size:11px;color:var(--muted);margin-top:16px}.note span{color:var(--rose)}
 
-/* COMPOSITE */
-.composite-box{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:32px 40px;margin-bottom:32px;position:relative;overflow:hidden;}
-.composite-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--rose2),transparent);}
-.composite-inner{display:flex;align-items:center;gap:48px;flex-wrap:wrap;}
-.composite-left{flex:1;min-width:260px;}
-.composite-eyebrow{font-size:10px;letter-spacing:3px;color:var(--sub);text-transform:uppercase;margin-bottom:10px;}
-.composite-verdict{font-family:var(--serif);font-size:48px;font-weight:300;letter-spacing:3px;text-transform:uppercase;line-height:1;margin-bottom:14px;}
-.composite-desc{font-size:14px;color:var(--text);line-height:1.85;font-weight:300;}
-.composite-ring{flex-shrink:0;width:120px;height:120px;position:relative;}
-.composite-ring svg{transform:rotate(-90deg);}
-.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.ring-num{font-family:var(--serif);font-size:36px;font-weight:300;line-height:1;}
-.ring-lbl{font-size:9px;letter-spacing:2px;color:var(--sub);text-transform:uppercase;margin-top:4px;}
-.composite-bars{flex:1;min-width:260px;display:flex;flex-direction:column;gap:10px;}
-.cbar-row{display:flex;align-items:center;gap:12px;}
-.cbar-name{font-size:11px;letter-spacing:0.5px;color:var(--sub);width:160px;flex-shrink:0;}
-.cbar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
-.cbar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
-.cbar-val{font-size:11px;width:52px;text-align:right;font-weight:500;}
+/* ── LOADING ── */
+#ldg{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:14px;color:var(--sub);font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.spin{width:24px;height:24px;border:1px solid var(--bdr2);border-top-color:var(--rose2);border-radius:50%;animation:spin 1s linear infinite}
+#ltxt{animation:fp 2s infinite}
 
-/* PLAYER CARDS */
-.players-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
-.player-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:border-color 0.3s,transform 0.2s;}
-.player-card:hover{border-color:var(--border2);transform:translateY(-2px);}
-.player-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.player-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.ph-gov::before{background:linear-gradient(to right,var(--blue),transparent);}
-.ph-hf::before{background:linear-gradient(to right,var(--rose),transparent);}
-.ph-cta::before{background:linear-gradient(to right,var(--orange),transparent);}
-.ph-retail::before{background:linear-gradient(to right,var(--lavender),transparent);}
-.ph-insider::before{background:linear-gradient(to right,var(--gold),transparent);}
-.ph-options::before{background:linear-gradient(to right,var(--green),transparent);}
-.player-eyebrow{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
-.player-name{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:1px;color:var(--cream);margin-bottom:4px;}
-.player-speed-label{font-size:10px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;}
-.speed-pips{display:flex;gap:3px;margin-top:10px;}
-.pip{width:16px;height:3px;border-radius:2px;background:var(--border2);}
-.pip.on{background:var(--player-color,var(--rose));}
-.player-body{padding:16px 24px 20px;}
-.player-source-tag{font-size:10px;letter-spacing:0.5px;color:var(--sub);margin-bottom:12px;font-weight:400;line-height:1.7;}
-.player-signal-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
-.psr-label{font-size:11px;color:var(--sub);}
-.psr-value{font-family:var(--serif);font-size:24px;font-weight:400;}
-.pos-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px;}
-.pos-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(0.4,0,0.2,1);}
-.pos-labels{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.5px;color:var(--sub);margin-bottom:14px;}
-.player-insight{font-size:13px;color:var(--text);line-height:1.85;font-weight:300;padding-top:14px;border-top:1px solid var(--border);}
-.player-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px;}
-.verdict-badge{padding:5px 12px;border-radius:2px;font-size:9px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
-.vb-bull{background:rgba(144,224,184,0.12);color:var(--green);border:1px solid rgba(144,224,184,0.25);}
-.vb-bear{background:rgba(232,120,136,0.12);color:var(--red);border:1px solid rgba(232,120,136,0.25);}
-.vb-neu{background:rgba(224,192,128,0.12);color:var(--gold);border:1px solid rgba(224,192,128,0.25);}
-.vb-mix{background:rgba(204,192,238,0.12);color:var(--lavender);border:1px solid rgba(204,192,238,0.25);}
-.lag-note{font-size:10px;letter-spacing:0.5px;color:var(--muted);font-style:italic;}
+/* ── RESULTS ── */
+#res{display:none;animation:up .4s ease}
+.sec{margin-bottom:48px}
+.divider{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.dl{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--bdr2))}
+.dlr{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--bdr2))}
+.dlbl{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:4px;color:var(--sub);text-transform:uppercase;white-space:nowrap}
 
-/* NEWS */
-.news-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:32px;}
-.news-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
-.news-card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;}
-.news-card-title{font-family:var(--serif);font-size:16px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;}
-.news-card-sub{font-size:10px;letter-spacing:1.5px;color:var(--sub);text-transform:uppercase;}
-.news-list{display:flex;flex-direction:column;gap:1px;}
-.news-item{padding:13px 20px;background:var(--surface2);border-left:2px solid transparent;transition:background 0.2s;cursor:default;}
-.news-item:hover{background:var(--surface);}
-.news-item.pos{border-left-color:var(--green);}
-.news-item.neg{border-left-color:var(--red);}
-.news-item.neu{border-left-color:var(--gold);}
-.news-headline{font-size:13px;color:var(--cream);line-height:1.55;margin-bottom:6px;}
-.news-meta{display:flex;gap:10px;font-size:10px;color:var(--sub);letter-spacing:0.5px;}
-.news-sent-tag{font-weight:600;text-transform:uppercase;}
+/* ── NEWS ── */
+.ngrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bdr);border:1px solid var(--bdr);border-radius:3px;overflow:hidden}
+.ni{background:var(--surf);padding:14px 18px;border-left:2px solid var(--gold)}
+.ni.pos{border-left-color:var(--green)}.ni.neg{border-left-color:var(--red)}
+.nt{font-size:13px;color:var(--cream);line-height:1.55;margin-bottom:5px}
+.nm{font-size:10px;display:flex;gap:10px;align-items:center}
+.ndot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.ndot.pos{background:var(--green)}.ndot.neg{background:var(--red)}
+.nsrc{color:var(--muted)}
+.nsen{font-weight:600;font-size:9px;text-transform:uppercase;color:var(--gold)}
+.nsen.pos{color:var(--green)}.nsen.neg{color:var(--red)}
 
-.sentiment-panel{display:flex;flex-direction:column;gap:12px;}
-.sent-box{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;}
-.sent-box-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:14px;}
-.gauge-wrap{position:relative;height:10px;background:linear-gradient(to right,var(--red),var(--gold) 50%,var(--green));border-radius:5px;margin-bottom:8px;}
-.gauge-needle{position:absolute;top:-5px;width:4px;height:20px;background:var(--cream);border-radius:2px;transform:translateX(-50%);transition:left 1.4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 6px rgba(240,232,220,0.6);}
-.gauge-labels{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.5px;color:var(--sub);text-transform:uppercase;margin-bottom:14px;}
-.sent-big{font-family:var(--serif);font-size:52px;font-weight:300;text-align:center;line-height:1;margin-bottom:4px;}
-.sent-verdict-lbl{text-align:center;font-size:10px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
-.breakdown-list{display:flex;flex-direction:column;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
-.bk-row{display:flex;align-items:center;gap:8px;}
-.bk-lbl{font-size:11px;letter-spacing:0.5px;color:var(--sub);width:64px;text-transform:uppercase;}
-.bk-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
-.bk-fill{height:100%;border-radius:2px;transition:width 1s ease;}
-.bk-count{font-family:var(--serif);font-size:18px;width:24px;text-align:right;}
+/* ── DISCOURSE ── */
+.dlayout{display:grid;grid-template-columns:1fr 330px;gap:20px}
+.dmain{display:flex;flex-direction:column;gap:16px}
+.dcard{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;padding:26px 30px;border-top:1px solid var(--bdr2)}
+.dcard.lav{border-top-color:var(--lav)}.dcard.rose{border-top-color:var(--rose2)}.dcard.gold{border-top-color:var(--gold)}
+.eye{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.ctitle{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--cream);letter-spacing:1px;margin-bottom:14px}
+.cbody{font-size:14px;color:var(--text);line-height:1.9;font-weight:300}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pill{padding:5px 14px;border-radius:2px;font-size:10px;letter-spacing:1.5px;font-weight:600;text-transform:uppercase;background:rgba(204,192,238,.1);color:var(--lav);border:1px solid rgba(204,192,238,.2)}
+.dside{display:flex;flex-direction:column;gap:16px}
+.scard{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;padding:20px 22px}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:14px}
+.rnum{font-family:'Cormorant Garamond',serif;font-size:60px;font-weight:300;line-height:1;text-align:center;padding-top:12px}
+.rlbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:700;text-align:center;padding:8px 0 20px}
+.mrow{display:flex;justify-content:space-between;font-size:11px;color:var(--sub);margin-bottom:4px}
+.mtrack{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-bottom:11px}
+.mfill{height:100%;border-radius:2px;transition:width 1s}
+.erow{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 10px;background:var(--surf2);border-radius:2px;margin-bottom:6px}
+.en{font-size:12px;color:var(--cream)}.ec{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+.etag{font-size:9px;letter-spacing:1.5px;font-weight:700;text-transform:uppercase;padding:3px 8px;border-radius:1px;flex-shrink:0;margin-top:2px}
+.etag.bull{background:rgba(144,224,184,.12);color:var(--green);border:1px solid rgba(144,224,184,.2)}
+.etag.bear{background:rgba(232,120,136,.12);color:var(--red);border:1px solid rgba(232,120,136,.2)}
+.etag.neu{background:rgba(224,192,128,.12);color:var(--gold);border:1px solid rgba(224,192,128,.2)}
 
-.explainer-box{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;}
-.explainer-box-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:12px;}
-.explainer-text{font-size:13px;color:var(--text);line-height:1.85;font-weight:300;}
-.explainer-text em{color:var(--rose);font-style:normal;}
+/* ── THESIS ── */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tcard{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;padding:26px 30px;border-top:2px solid var(--bdr2)}
+.tcard.rose{border-top-color:var(--rose2)}.tcard.blue{border-top-color:var(--blue)}
+.thead{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--cream);margin-bottom:16px;line-height:1.25}
+.twlist{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.twi{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--surf2);border-radius:2px;border-left:2px solid var(--green)}
+.twi.down{border-left-color:var(--red)}
+.twico{font-size:14px;flex-shrink:0;margin-top:2px;color:var(--green)}.twi.down .twico{color:var(--red)}
+.twtxt{font-size:13px;color:var(--text);line-height:1.65;font-weight:300}
 
-/* COLORS */
-.c-green{color:var(--green);}.c-red{color:var(--red);}.c-gold{color:var(--gold);}
-.c-rose{color:var(--rose);}.c-lav{color:var(--lavender);}.c-blue{color:var(--blue);}
-.c-orange{color:var(--orange);}.c-muted{color:var(--muted);}.c-cream{color:var(--cream);}
+/* ── PICKS ── */
+.pbox{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;overflow:hidden}
+.ptabs{display:flex;border-bottom:1px solid var(--bdr)}
+.ptab{padding:13px 26px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'Montserrat',sans-serif;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s}
+.ptab.active{color:var(--rose);border-bottom-color:var(--rose2)}
+.tpane{padding:26px 28px 32px;display:none}.tpane.active{display:block}
+.pintro{font-size:13px;color:var(--sub);line-height:1.85;margin-bottom:22px;font-weight:300;max-width:720px}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sk{background:var(--surf2);border:1px solid var(--bdr);border-radius:3px;padding:20px;border-top:1px solid var(--rose2)}
+.sk.asymm{border-top-color:var(--lav)}
+.sktop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.sktick{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--cream);line-height:1}
+.skname{font-size:10px;color:var(--muted);margin-top:3px}
+.skbadge{font-size:8px;letter-spacing:2px;font-weight:700;text-transform:uppercase;padding:4px 10px;border-radius:2px}
+.skbadge.trend{background:rgba(242,191,206,.1);color:var(--rose);border:1px solid rgba(242,191,206,.2)}
+.skbadge.asymm{background:rgba(204,192,238,.1);color:var(--lav);border:1px solid rgba(204,192,238,.2)}
+.skwhy{font-size:13px;color:var(--text);line-height:1.75;margin-bottom:14px;font-weight:300;padding-bottom:12px;border-bottom:1px solid var(--bdr)}
+.skfoot{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.skm{background:var(--surf);border:1px solid var(--bdr);border-radius:2px;padding:8px 10px}
+.skml{font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.skmv{font-size:11px;color:var(--sub);line-height:1.4}
+.skmv.High{color:var(--green);font-weight:600}.skmv.Medium{color:var(--gold);font-weight:600}.skmv.Low{color:var(--red);font-weight:600}
 
-/* LOADING */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px;gap:14px;color:var(--sub);font-size:10px;letter-spacing:3px;text-transform:uppercase;}
-.spinner{width:22px;height:22px;border:1px solid var(--border2);border-top-color:var(--rose);border-radius:50%;animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
+/* ── PASTED ARTICLES BADGE in news section ── */
+.paste-notice{background:rgba(204,192,238,.07);border:1px solid rgba(204,192,238,.15);border-radius:2px;padding:10px 16px;font-size:11px;color:var(--lav);margin-bottom:12px;display:none}
+.paste-notice span{font-weight:600}
 
-/* TOAST */
-.toast{position:fixed;bottom:28px;right:28px;background:var(--surface2);border:1px solid var(--border2);border-radius:2px;padding:12px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.ok{border-color:var(--green);color:var(--green);}
-.toast.fail{border-color:var(--red);color:var(--red);}
-
-@media(max-width:1200px){.players-grid{grid-template-columns:repeat(2,1fr);}.news-layout{grid-template-columns:1fr;}.snapshot-bar{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:700px){.players-grid{grid-template-columns:1fr;}.snapshot-bar{grid-template-columns:repeat(2,1fr);}.hdiv,.htag{display:none;}.page{padding:20px;}.empty-title{font-size:52px;}.composite-inner{flex-direction:column;}}
+@media(max-width:1100px){.dlayout{grid-template-columns:1fr}.dside{flex-direction:row;flex-wrap:wrap}.scard{flex:1;min-width:280px}}
+@media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:24px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}}
+@media(max-width:560px){.ngrid,.sgrid,.steps{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="logo"><span class="logo-m">Macro</span><span class="logo-l">Lens</span></div>
-    <div class="hdiv"></div>
-    <div class="htag">Smart Money Intelligence</div>
-    <div class="hspace"></div>
-    <div class="header-right">
-      <div class="live-pill"><div class="dot" id="dot"></div><span id="liveText">Offline</span></div>
-      <span class="fmp-label">FMP API key required:</span>
-      <input class="fmp-input" id="fmpKey" placeholder="Paste FMP API key..." />
-      <button class="btn-run" id="runBtn" onclick="runAnalysis()">Analyse</button>
-    </div>
+<!-- HEADER -->
+<div id="hdr">
+  <div class="logo"><span class="m">Macro</span><span class="l">Lens</span><sup>AI</sup></div>
+  <div class="vline"></div>
+  <div class="htag">News · Discourse · Macro Thesis · Stocks</div>
+  <div style="flex:1"></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div id="sdot"></div>
+    <div id="stxt">Ready</div>
   </div>
-</header>
-
-<div class="page z1">
-
-  <div id="emptyState" class="empty">
-    <div class="empty-title">Macro<br><span>Lens</span></div>
-    <div class="empty-sub">
-      Smart money positioning · Who is doing what<br>
-      Governments · Hedge Funds · CTAs · Retail · Insiders · Options<br>
-      Enter your FMP API key and click Analyse
-    </div>
-    <div class="empty-note">Free FMP key at <span>financialmodelingprep.com</span> — takes 2 minutes · 250 requests/day free</div>
-  </div>
-
-  <div id="mainContent" style="display:none">
-
-    <!-- MARKET SNAPSHOT -->
-    <div class="slbl">Live Market Snapshot</div>
-    <div class="snapshot-bar" id="snapshotBar">
-      <div class="loading" style="grid-column:span 8"><div class="spinner"></div><span>Fetching market data</span></div>
-    </div>
-
-    <!-- COMPOSITE SIGNAL -->
-    <div class="slbl">Composite Smart Money Signal</div>
-    <div class="composite-box" id="compositeBox">
-      <div class="loading"><div class="spinner"></div><span>Computing signal</span></div>
-    </div>
-
-    <!-- THE PLAYERS -->
-    <div class="slbl">The Players — Who Is Positioned Where</div>
-    <div class="players-grid" id="playersGrid">
-      <div class="loading" style="grid-column:span 3"><div class="spinner"></div></div>
-    </div>
-
-    <!-- NEWS SENTIMENT -->
-    <div class="slbl">News Sentiment</div>
-    <div class="news-layout" id="newsLayout">
-      <div class="loading"><div class="spinner"></div><span>Loading news</span></div>
-    </div>
-
-  </div>
+  <button id="abtn" onclick="run()">Analyse Now</button>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- PAGE -->
+<div id="page">
+  <div id="ebox" class="ebox"></div>
 
-<script>
-// ─────────────────────────────────────────────────────────
-// MACROLENS — Smart Money Intelligence
-// Data sources:
-//   Market data → FMP free tier batch quotes (requires key)
-//   News        → FMP /stock_news (same key)
-// ─────────────────────────────────────────────────────────
+  <!-- SOURCE HEALTH PANEL -->
+  <div id="src-panel">
+    <div class="src-panel-top">
+      <div class="src-panel-label">News Sources</div>
+      <div class="src-panel-summary" id="src-summary"></div>
+    </div>
+    <div class="src-list" id="src-list"></div>
+  </div>
 
-const FMP = 'https://financialmodelingprep.com/api/v3';
-const fmpKey = () => document.getElementById('fmpKey').value.trim();
-
-function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.className='toast',3500);}
-function setLive(s){document.getElementById('dot').className='dot '+(s==='live'?'live':s==='err'?'err':'');document.getElementById('liveText').textContent=s==='live'?'Live':s==='err'?'Error':'Loading';}
-
-async function fmpFetch(path) {
-  const sep = path.includes('?') ? '&' : '?';
-  const r = await fetch(`${FMP}${path}${sep}apikey=${fmpKey()}`);
-  if (!r.ok) throw new Error('FMP ' + r.status);
-  return r.json();
-}
-
-// Batch fetch multiple tickers in one call — saves daily quota
-async function batchQuotes(tickers) {
-  const data = await fmpFetch(`/quote/${tickers.join(',')}`);
-  const map = {};
-  (data || []).forEach(q => { map[q.symbol] = { symbol: q.symbol, price: q.price, change: q.changesPercentage, name: q.name }; });
-  return map;
-}
-
-async function runAnalysis() {
-  if (!fmpKey()) { toast('Please enter your FMP API key', 'fail'); return; }
-  const btn = document.getElementById('runBtn');
-  btn.disabled = true; btn.textContent = 'Loading...';
-  setLive('loading');
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('mainContent').style.display = 'block';
-
-  try {
-    // Two batch calls — indices/macro + sectors (saves quota vs individual calls)
-    const [macroMap, sectorMap, news] = await Promise.all([
-      batchQuotes(['^GSPC','^IXIC','^VIX','^TNX','^IRX','GC=F','CL=F','DX-Y.NYB','TLT']),
-      batchQuotes(['XLK','XLE','XLB','XLF','XLV','XLY','XLU','XLRE','XLI','XLP']),
-      fmpFetch('/stock_news?limit=20'),
-    ]);
-
-    const data = { ...macroMap, ...sectorMap };
-    const m = buildMarket(data);
-    renderSnapshot(m);
-    const players = buildPlayers(m);
-    renderPlayers(players);
-    renderComposite(players, m);
-    renderNews(news, m);
-
-    setLive('live');
-    toast('Analysis complete');
-  } catch(e) {
-    setLive('err');
-    toast('Error: ' + e.message + ' — check your FMP key', 'fail');
-    console.error(e);
-  }
-
-  btn.disabled = false; btn.textContent = 'Analyse';
-}
-
-function buildMarket(data) {
-  const g = sym => data[sym] || { price: 0, change: 0 };
-  const spx = g('^GSPC'), ndx = g('^IXIC'), vix = g('^VIX');
-  // FMP returns ^TNX as actual yield value (e.g. 4.35)
-  const y10 = g('^TNX').price || 4.5;
-  const y2 = g('^IRX').price || 4.0;
-  const gold = g('GC=F'), oil = g('CL=F'), usd = g('DX-Y.NYB'), tlt = g('TLT');
-  const sectors = {
-    'Technology': g('XLK'), 'Energy': g('XLE'), 'Materials': g('XLB'),
-    'Financials': g('XLF'), 'Healthcare': g('XLV'), 'Consumer Disc': g('XLY'),
-    'Utilities': g('XLU'), 'Real Estate': g('XLRE'), 'Industrials': g('XLI'), 'Staples': g('XLP'),
-  };
-  return { spx, ndx, vix, y10, y2, yieldCurve: y10 - y2, gold, oil, usd, tlt, sectors };
-}
-
-function renderSnapshot(m) {
-  const fmt = (v, d=2) => v ? parseFloat(v).toFixed(d) : '—';
-  const ch = v => v >= 0 ? `<span class="c-green">▲ ${Math.abs(v).toFixed(2)}%</span>` : `<span class="c-red">▼ ${Math.abs(v).toFixed(2)}%</span>`;
-  const tiles = [
-    { lbl:'S&P 500', val: fmt(m.spx.price,0), chg: m.spx.change, col: m.spx.change>=0?'var(--green)':'var(--red)' },
-    { lbl:'NASDAQ', val: fmt(m.ndx.price,0), chg: m.ndx.change, col: m.ndx.change>=0?'var(--green)':'var(--red)' },
-    { lbl:'VIX', val: fmt(m.vix.price,1), chg: m.vix.change, col: m.vix.price<20?'var(--green)':'var(--red)' },
-    { lbl:'10Y Yield', val: m.y10 ? fmt(m.y10,2)+'%' : '—', chg: null, col: m.y10<4?'var(--green)':'var(--red)' },
-    { lbl:'Yield Curve', val: m.yieldCurve ? (m.yieldCurve>0?'+':'')+fmt(m.yieldCurve,2) : '—', chg: null, col: m.yieldCurve>0?'var(--green)':'var(--red)' },
-    { lbl:'Gold', val: fmt(m.gold.price,0), chg: m.gold.change, col: 'var(--gold)' },
-    { lbl:'Crude Oil', val: fmt(m.oil.price,1), chg: m.oil.change, col: m.oil.price<85?'var(--green)':'var(--red)' },
-    { lbl:'USD Index', val: fmt(m.usd.price,1), chg: m.usd.change, col: m.usd.change>0?'var(--red)':'var(--green)' },
-  ];
-  document.getElementById('snapshotBar').innerHTML = tiles.map(t => `
-    <div class="snap-tile">
-      <div class="snap-label">${t.lbl}</div>
-      <div class="snap-value" style="color:${t.col}">${t.val}</div>
-      <div class="snap-change">${t.chg !== null ? ch(t.chg) : ''}</div>
-      <div class="snap-accent" style="background:${t.col}"></div>
-    </div>`).join('');
-}
-
-// ─────────────────────────────────────────────
-// PLAYER SIGNALS — derived from market data
-// ─────────────────────────────────────────────
-function buildPlayers(m) {
-  const vix = m.vix.price || 20;
-  const spxChg = m.spx.change || 0;
-  const goldChg = m.gold.change || 0;
-  const tltChg = m.tlt.change || 0;
-  const tltPrice = m.tlt.price || 95;
-  const y10 = m.y10 || 4.5;
-  const yc = m.yieldCurve || 0;
-  const usdChg = m.usd.change || 0;
-
-  // ── 1. GOVERNMENTS & CENTRAL BANKS (slowest) ──
-  // Read via bond market — TLT price and yields
-  const govScore = y10 < 3.5 ? 80 : y10 < 4.0 ? 65 : y10 < 4.5 ? 48 : y10 < 5.0 ? 32 : 18;
-  const gov = {
-    id:'gov', color:'var(--blue)', pips:1,
-    eyebrow:'Player 1 · Slowest Moving',
-    name:'Governments & Central Banks',
-    speedLabel:'Glacial — 3 to 12 month cycles',
-    source:'Data: 10Y yield · TLT bond ETF · Fed dot plot · FRED',
-    signal: y10 < 4 ? 'Easing Bias' : y10 < 4.5 ? 'On Hold' : 'Restrictive',
-    signalColor: y10 < 4 ? 'c-green' : y10 < 4.5 ? 'c-gold' : 'c-red',
-    bullPct: govScore, score: govScore,
-    posLabel: y10 < 4.5 ? 'Accommodative policy environment' : 'Tightening / restrictive policy',
-    verdict: govScore > 60 ? 'bull' : govScore > 40 ? 'neu' : 'bear',
-    verdictLabel: govScore > 60 ? 'Supportive' : govScore > 40 ? 'Neutral' : 'Restrictive',
-    lag: 'Lag: Policy signals 3–12 months ahead',
-    insight: y10 < 4.0
-      ? `10Y at ${y10.toFixed(2)}% — central banks in easing cycle or pause. The most bullish macro environment for equities. Lower rates expand P/E multiples and reduce corporate borrowing costs. This regime historically lasts 12–24 months. Growth stocks, tech, and real estate benefit most.`
-      : y10 < 4.5
-      ? `10Y at ${y10.toFixed(2)}% — CBs on hold, watching inflation data. Neutral environment. Markets can grind higher but multiple expansion is limited. Quality and earnings growth matter more in this regime than momentum alone.`
-      : `10Y at ${y10.toFixed(2)}% — elevated rates compress equity multiples and increase cost of capital. Stocks with weak balance sheets or negative free cash flow are most vulnerable. Favour value, dividends, and short-duration cash flows. This is the environment that separates quality from speculation.`,
-  };
-
-  // ── 2. MACRO HEDGE FUNDS (fastest) ──
-  // Proxied via VIX + gold movement
-  const hfScore = vix < 14 ? 78 : vix < 18 ? 65 : vix < 22 ? 52 : vix < 28 ? 35 : 18;
-  const hf = {
-    id:'hf', color:'var(--rose)', pips:5,
-    eyebrow:'Player 2 · Fastest Moving',
-    name:'Macro Hedge Funds',
-    speedLabel:'Fast — days to weeks',
-    source:'Data: VIX · Gold flows · COT Non-Commercial · 13F (45d lag)',
-    signal: vix < 16 ? 'Risk On' : vix < 22 ? 'Cautious' : 'Defensive',
-    signalColor: vix < 16 ? 'c-green' : vix < 22 ? 'c-gold' : 'c-red',
-    bullPct: hfScore, score: hfScore,
-    posLabel: `VIX at ${vix.toFixed(1)} — ${vix < 18 ? 'net long, low hedging' : vix < 25 ? 'moderate hedging' : 'heavy hedging / short'}`,
-    verdict: hfScore > 60 ? 'bull' : hfScore > 42 ? 'neu' : 'bear',
-    verdictLabel: hfScore > 60 ? 'Net Long' : hfScore > 42 ? 'Neutral' : 'Net Short',
-    lag: 'Lag: Real-time (VIX) · 45 days (13F filings)',
-    insight: vix < 16
-      ? `VIX at ${vix.toFixed(1)} — macro funds aggressively long. Complacency at this level is a late-cycle signal. Great for momentum but watch for sudden VIX spikes as HFs have crowded positioning to unwind. They will exit before the data confirms the move.`
-      : vix < 22
-      ? `VIX at ${vix.toFixed(1)} — HFs moderately positioned. Standard risk-on environment. Not chasing but not fleeing. This is the sweet spot for markets — enough optimism to keep assets bid, enough caution to prevent blow-off tops.`
-      : `VIX at ${vix.toFixed(1)} — HFs in defensive mode. Reducing gross exposure and increasing hedges. Not necessarily net short but risk-adjusted exposure is falling. Forced deleveraging risk increases above VIX 30. These environments create the best asymmetric setups once fear peaks.`,
-  };
-
-  // ── 3. CTAs / TREND FOLLOWERS ──
-  // Pure momentum — they buy what is going up, sell what is going down
-  const ctaScore = spxChg > 1.5 ? 80 : spxChg > 0.5 ? 66 : spxChg > 0 ? 55 : spxChg > -1 ? 38 : 20;
-  const cta = {
-    id:'cta', color:'var(--orange)', pips:3,
-    eyebrow:'Player 3 · Momentum Driven',
-    name:'CTAs & Systematic Funds',
-    speedLabel:'Medium — trend signals 1–4 weeks',
-    source:'Data: Price momentum · COT Managed Money · Vol-targeting models',
-    signal: spxChg > 0.5 ? 'Long Trend' : spxChg > -0.5 ? 'Flat' : 'Short Signal',
-    signalColor: spxChg > 0.5 ? 'c-green' : spxChg > -0.5 ? 'c-gold' : 'c-red',
-    bullPct: ctaScore, score: ctaScore,
-    posLabel: spxChg > 0.5 ? 'Adding length mechanically' : spxChg > -0.5 ? 'Flat / waiting for signal' : 'Reducing / shorting on breakdown',
-    verdict: ctaScore > 60 ? 'bull' : ctaScore > 42 ? 'neu' : 'bear',
-    verdictLabel: ctaScore > 60 ? 'Trend Long' : ctaScore > 42 ? 'Neutral' : 'Trend Short',
-    lag: 'Lag: 1–3 days (price signal) · 3 days (COT)',
-    insight: spxChg > 1
-      ? `Strong positive day — CTAs mechanically adding longs. They amplify moves in both directions. Critical to understand: CTAs are NOT predictive. They are the last buyers at tops and last sellers at bottoms. Their crowding is a contrarian signal at extremes — when everyone knows CTAs are max long, the unwind risk is the trade.`
-      : spxChg > 0
-      ? `Mild positive momentum — CTAs holding or adding marginally. No strong trigger. In range-bound markets CTAs flip frequently and add noise. Focus on the multi-week trend rather than daily signals for CTA positioning.`
-      : `Negative momentum — CTAs selling mechanically. This creates overshoots to the downside as their selling is indiscriminate. When CTAs are max short and news sentiment is most bearish, quality assets are often at their best risk/reward. The CTA unwind from max short is one of the most violent and fast moves in markets.`,
-  };
-
-  // ── 4. RETAIL / DUMB MONEY (contrarian) ──
-  // Inverted — retail fear = smart money buying opportunity
-  const retailRaw = vix < 14 ? 15 : vix < 18 ? 28 : vix < 22 ? 50 : vix < 28 ? 68 : 85;
-  const retail = {
-    id:'retail', color:'var(--lavender)', pips:2,
-    eyebrow:'Player 4 · Contrarian Indicator',
-    name:'Retail Investors',
-    speedLabel:'Slow — always last to know',
-    source:'Data: VIX proxy · AAII sentiment survey · Retail options flow',
-    signal: vix < 16 ? 'Euphoric' : vix < 20 ? 'Optimistic' : vix < 26 ? 'Worried' : 'Fearful',
-    signalColor: vix < 16 ? 'c-red' : vix < 20 ? 'c-gold' : vix < 26 ? 'c-green' : 'c-green',
-    bullPct: retailRaw, score: retailRaw,
-    posLabel: vix < 18 ? 'Max long — CONTRARIAN SELL signal' : vix < 24 ? 'Reducing exposure' : 'Panic selling — CONTRARIAN BUY signal',
-    verdict: retailRaw > 65 ? 'bull' : retailRaw > 45 ? 'neu' : 'bear',
-    verdictLabel: retailRaw > 65 ? 'Contrarian Bull' : retailRaw > 45 ? 'Mixed' : 'Contrarian Bear',
-    lag: 'Lag: Real-time proxy · 1 week (AAII survey)',
-    insight: vix < 16
-      ? `Retail euphoric — maximum complacency. The AAII bull survey typically peaks here. This is historically one of the strongest contrarian BEAR signals. Who is left to buy when everyone is already long? Smart money uses retail euphoria as an exit ramp. This does not mean crash is imminent — markets can stay irrational — but risk/reward is worst here.`
-      : vix < 22
-      ? `Retail moderately positioned. Not at extremes. Mixed signal — markets can continue either direction. The best trading environments are when retail is slightly uncertain but not panicking.`
-      : `Retail fearful or panicking. VIX elevated and AAII bears outnumber bulls. This is the contrarian BUY zone. Every major market bottom in history was accompanied by maximum retail fear. Smart money accumulates from panicking retail sellers. The more extreme the fear, the better the eventual setup.`,
-  };
-
-  // ── 5. CORPORATE INSIDERS ──
-  // Highest conviction — they know their company best
-  // Proxied via gold vs equity flow divergence
-  const insiderScore = goldChg > 2 ? 25 : goldChg > 1 ? 38 : goldChg > 0 ? 52 : goldChg > -1 ? 65 : 78;
-  const insider = {
-    id:'insider', color:'var(--gold)', pips:3,
-    eyebrow:'Player 5 · Highest Conviction',
-    name:'Corporate Insiders',
-    speedLabel:'Medium — 45 day reporting lag',
-    source:'Data: Gold/equity divergence proxy · SEC Form 4 filings · Buyback announcements',
-    signal: goldChg < 0 ? 'Buying' : goldChg < 1 ? 'Neutral' : 'Cautious',
-    signalColor: goldChg < 0 ? 'c-green' : goldChg < 1 ? 'c-gold' : 'c-red',
-    bullPct: insiderScore, score: insiderScore,
-    posLabel: goldChg < 0 ? 'Insiders buying own stock' : 'Insiders on sidelines',
-    verdict: insiderScore > 60 ? 'bull' : insiderScore > 40 ? 'neu' : 'bear',
-    verdictLabel: insiderScore > 60 ? 'Accumulating' : insiderScore > 40 ? 'Neutral' : 'Selling',
-    lag: 'Lag: 45 days mandatory (SEC Form 4)',
-    insight: goldChg < -0.5
-      ? `Gold underperforming — risk appetite intact. Insiders tend to buy back their own stock and increase buybacks when they have high conviction in their business outlook. This is the highest quality signal in markets — insiders have the most information about their company. The 45-day Form 4 lag means you are seeing their conviction from 6 weeks ago, but clusters of insider buying across sectors remain highly predictive.`
-      : goldChg < 0.5
-      ? `Neutral signal. Insider activity likely mixed across companies. In this environment, individual company Form 4 filings give better resolution than macro proxies. Look for clusters of buying in specific sectors for the highest conviction setups.`
-      : `Gold rising — risk-off signal. Insiders become cautious when macro uncertainty rises. Note: insider SELLING is less meaningful (they sell for many reasons — diversification, taxes, liquidity). Focus on insider BUYING as the high-conviction signal. Absence of buying in elevated markets is itself a warning sign.`,
-  };
-
-  // ── 6. OPTIONS MARKET ──
-  // Real-time institutional positioning signal
-  const optScore = vix < 14 ? 76 : vix < 18 ? 64 : vix < 23 ? 48 : vix < 30 ? 30 : 16;
-  const options = {
-    id:'options', color:'var(--green)', pips:5,
-    eyebrow:'Player 6 · Real-time Signal',
-    name:'Options Market',
-    speedLabel:'Real-time — most current signal',
-    source:'Data: VIX level · Put/Call ratio proxy · Skew · Dark pool prints',
-    signal: vix < 18 ? 'Call Skew' : vix < 24 ? 'Balanced' : 'Put Skew',
-    signalColor: vix < 18 ? 'c-green' : vix < 24 ? 'c-gold' : 'c-red',
-    bullPct: optScore, score: optScore,
-    posLabel: vix < 18 ? 'Institutions buying calls / selling puts' : vix < 24 ? 'Balanced put/call flow' : 'Institutions buying puts / hedging',
-    verdict: optScore > 58 ? 'bull' : optScore > 40 ? 'neu' : 'bear',
-    verdictLabel: optScore > 58 ? 'Call Skew' : optScore > 40 ? 'Balanced' : 'Put Skew',
-    lag: 'Lag: Real-time (VIX) · 1 day (options flow)',
-    insight: vix < 16
-      ? `Low VIX with call skew — institutions buying calls and selling puts for income. Reflects confidence in near-term trend continuation. Options market is the most real-time signal available. Dark pool large block call buying on specific names is the highest conviction institutional signal you can access publicly. Watch for unusual options activity in sector leaders.`
-      : vix < 22
-      ? `Moderate VIX — balanced options flow. Institutions neither aggressively hedging nor chasing upside. Stable environment. The most interesting trades emerge in individual stocks with unusual options activity against a neutral market backdrop.`
-      : `Elevated VIX — put buying dominating. Institutions purchasing downside protection. When put buying becomes extreme and then reverses, it often marks the short-term low. The best entries come when implied volatility is elevated (options are expensive) but market is stabilising — sell the vol, not the market.`,
-  };
-
-  return [gov, hf, cta, retail, insider, options];
-}
-
-function renderPlayers(players) {
-  document.getElementById('playersGrid').innerHTML = players.map(p => `
-    <div class="player-card">
-      <div class="player-header ph-${p.id}" style="--player-color:${p.color}">
-        <div class="player-eyebrow" style="color:${p.color}">${p.eyebrow}</div>
-        <div class="player-name">${p.name}</div>
-        <div class="player-speed-label">${p.speedLabel}</div>
-        <div class="speed-pips">
-          ${[1,2,3,4,5].map(i=>`<div class="pip ${i<=p.pips?'on':''}" style="${i<=p.pips?'--player-color:'+p.color+';background:'+p.color:''}"></div>`).join('')}
-        </div>
+  <!-- PASTE BOX -->
+  <div id="paste-panel">
+    <div class="paste-header" onclick="togglePaste()">
+      <div class="paste-header-left">
+        <span class="paste-icon">✦</span>
+        <span class="paste-title">Add Your Own Research</span>
+        <span id="paste-badge">Active</span>
+        <span class="paste-sub">ZeroHedge premium · broker reports · any article text</span>
       </div>
-      <div class="player-body">
-        <div class="player-source-tag">${p.source}</div>
-        <div class="player-signal-row">
-          <span class="psr-label">Current signal</span>
-          <span class="psr-value ${p.signalColor}">${p.signal}</span>
-        </div>
-        <div class="pos-bar"><div class="pos-fill" style="width:${p.bullPct}%;background:${p.color}"></div></div>
-        <div class="pos-labels"><span>Bearish</span><span>${p.posLabel}</span><span>Bullish</span></div>
-        <div class="player-insight">${p.insight}</div>
-        <div class="player-footer">
-          <div class="verdict-badge vb-${p.verdict}">${p.verdictLabel}</div>
-          <div class="lag-note">${p.lag}</div>
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-function renderComposite(players, m) {
-  // Weighted composite — gov and HF weighted highest
-  const weights = { gov:0.25, hf:0.25, cta:0.15, retail:0.10, insider:0.15, options:0.10 };
-  let composite = 0;
-  players.forEach(p => { composite += (p.score || 0) * (weights[p.id] || 0.1); });
-  composite = Math.round(composite);
-
-  const regimes = [
-    { min:68, label:'Smart Money Bullish', color:'var(--green)', desc:'The majority of informed market participants are net long or increasing risk exposure. Macro, hedge fund, and options signals are aligned. Follow the dominant flow — trend trades in quality names have the best risk/reward here.' },
-    { min:54, label:'Cautiously Constructive', color:'var(--gold)', desc:'Mixed signals across player types. Some players bullish, others neutral. Selectivity matters — focus on the strongest sectors and highest quality balance sheets. Asymmetric setups are beginning to emerge.' },
-    { min:42, label:'Transition — Watch Closely', color:'var(--rose)', desc:'Players are repositioning. Smart money reducing risk while retail may still be complacent. The best asymmetric setups form in this environment. Reduce position size, increase cash, wait for clarity.' },
-    { min:28, label:'Smart Money Bearish', color:'var(--red)', desc:'Informed players are reducing exposure or short. Government policy restrictive, HFs hedged, CTAs going short. Capital preservation is the priority. Only the highest quality balance sheets deserve exposure.' },
-    { min:0,  label:'Crisis Positioning', color:'var(--lavender)', desc:'Extreme risk-off across all player types. Only the most defensive positioning is appropriate. These environments end with maximum retail panic and smart money accumulation — but timing the exact bottom requires patience.' },
-  ];
-
-  const regime = regimes.find(r => composite >= r.min) || regimes[regimes.length-1];
-  const dashOffset = 339 - (339 * composite / 100);
-
-  // Top sectors
-  const sectorArr = Object.entries(m.sectors).map(([name,d])=>({name,change:d.change||0})).sort((a,b)=>b.change-a.change);
-  const topSectors = sectorArr.slice(0,3).map(s=>`<span style="color:var(--green)">${s.name} +${s.change.toFixed(1)}%</span>`).join(' · ');
-  const botSectors = sectorArr.slice(-2).map(s=>`<span style="color:var(--red)">${s.name} ${s.change.toFixed(1)}%</span>`).join(' · ');
-
-  document.getElementById('compositeBox').innerHTML = `
-    <div class="composite-inner">
-      <div class="composite-left">
-        <div class="composite-eyebrow">Composite Smart Money Signal — Weighted 6-Player Model</div>
-        <div class="composite-verdict" style="color:${regime.color}">${regime.label}</div>
-        <div class="composite-desc">${regime.desc}</div>
-        <div style="margin-top:16px;font-size:12px;color:var(--sub);letter-spacing:0.5px;line-height:1.9">
-          Sector inflows: ${topSectors}<br>
-          Sector outflows: ${botSectors}
-        </div>
-      </div>
-      <div class="composite-ring">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="54" fill="none" stroke="#251e35" stroke-width="6"/>
-          <circle cx="60" cy="60" r="54" fill="none" stroke="${regime.color}" stroke-width="6"
-            stroke-linecap="round" stroke-dasharray="339"
-            style="stroke-dashoffset:${dashOffset};transition:stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1);transform:rotate(-90deg);transform-origin:60px 60px"/>
-        </svg>
-        <div class="ring-text">
-          <div class="ring-num" style="color:${regime.color}">${composite}</div>
-          <div class="ring-lbl">Signal</div>
-        </div>
-      </div>
-      <div class="composite-bars">
-        ${players.map(p=>`
-          <div class="cbar-row">
-            <div class="cbar-name" style="color:${p.color}">${p.name.split(' ').slice(0,3).join(' ')}</div>
-            <div class="cbar-track"><div class="cbar-fill" style="width:${p.score}%;background:${p.color}"></div></div>
-            <div class="cbar-val" style="color:${p.score>60?'var(--green)':p.score>40?'var(--gold)':'var(--red)'}">${p.score}/100</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-}
-
-// ─────────────────────────────────────────────
-// NEWS
-// ─────────────────────────────────────────────
-
-function scoreSentiment(text) {
-  const t = text.toLowerCase();
-  const bull = ['rally','surge','gain','rise','growth','strong','beat','record','upgrade','bull','recovery','high','positive','optimism','rebound'];
-  const bear = ['fall','drop','crash','decline','loss','weak','miss','cut','downgrade','bear','recession','low','risk','warn','fear','crisis','concern','inflation'];
-  let b = 0, be = 0;
-  bull.forEach(w => { if(t.includes(w)) b++; });
-  bear.forEach(w => { if(t.includes(w)) be++; });
-  if(b > be) return { label:'Positive', cls:'pos', color:'var(--green)' };
-  if(be > b) return { label:'Negative', cls:'neg', color:'var(--red)' };
-  return { label:'Neutral', cls:'neu', color:'var(--gold)' };
-}
-
-function renderNews(news, m) {
-  const scored = news.slice(0,14).map(n => ({ ...n, sent: scoreSentiment((n.title||'')+(n.text||'')) }));
-  const pos = scored.filter(n=>n.sent.label==='Positive').length;
-  const neg = scored.filter(n=>n.sent.label==='Negative').length;
-  const neu = scored.filter(n=>n.sent.label==='Neutral').length;
-  const total = scored.length || 1;
-  const sentScore = Math.round((pos/total)*100);
-  const sv = sentScore > 58 ? { v:'Bullish News Flow', c:'c-green' } : sentScore > 40 ? { v:'Neutral News Flow', c:'c-gold' } : { v:'Bearish News Flow', c:'c-red' };
-
-  document.getElementById('newsLayout').innerHTML = `
-    <div class="news-card">
-      <div class="news-card-head">
-        <div class="news-card-title">Latest Financial News</div>
-        <div class="news-card-sub">Sentiment scored automatically</div>
-      </div>
-      <div class="news-list">
-        ${scored.map(n=>`
-          <div class="news-item ${n.sent.cls}">
-            <div class="news-headline">${n.title||'—'}</div>
-            <div class="news-meta">
-              <span>${(n.publishedDate||'').substring(0,10)}</span>
-              <span>${n.site||''}</span>
-              <span class="news-sent-tag" style="color:${n.sent.color}">${n.sent.label}</span>
-            </div>
-          </div>`).join('')}
+      <span class="paste-toggle" id="paste-toggle">▼</span>
+    </div>
+    <div id="paste-body">
+      <textarea id="paste-input" placeholder="Paste any article text, research notes, or ZeroHedge premium content here. It will be included in the AI analysis alongside the live RSS news.&#10;&#10;Tip: you can paste multiple articles — just separate them with a blank line."></textarea>
+      <div class="paste-footer">
+        <div class="paste-hint">This text will be labelled <span>Manual Input</span> and weighted alongside live headlines in the Groq analysis.</div>
+        <button class="paste-clear" onclick="clearPaste()">Clear ✕</button>
       </div>
     </div>
-    <div class="sentiment-panel">
-      <div class="sent-box">
-        <div class="sent-box-title">News Sentiment Score</div>
-        <div class="gauge-wrap"><div class="gauge-needle" style="left:${sentScore}%"></div></div>
-        <div class="gauge-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
-        <div class="sent-big ${sv.c}">${sentScore}</div>
-        <div class="sent-verdict-lbl ${sv.c}">${sv.v}</div>
-        <div class="breakdown-list">
-          ${[['Positive',pos,'var(--green)'],['Negative',neg,'var(--red)'],['Neutral',neu,'var(--gold)']].map(([l,c,col])=>`
-            <div class="bk-row">
-              <div class="bk-lbl">${l}</div>
-              <div class="bk-track"><div class="bk-fill" style="width:${c/total*100}%;background:${col}"></div></div>
-              <div class="bk-count" style="color:${col}">${c}</div>
-            </div>`).join('')}
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="empty">
+    <div class="bigw">Macro<br><span>Lens</span></div>
+    <div class="subl">Live multi-source news · Groq AI discourse analysis<br>Smart money signals · Macro thesis · Stock screening</div>
+    <div class="steps">
+      <div class="sc"><div class="sc-n">01</div><div class="sc-t">Multi-Source News</div><div class="sc-d">ZeroHedge, Reuters, CNBC, MarketWatch, FT — merged and ranked by recency.</div></div>
+      <div class="sc"><div class="sc-n">02</div><div class="sc-t">Your Research</div><div class="sc-d">Paste premium ZeroHedge articles or any text. It gets merged with the live feed.</div></div>
+      <div class="sc"><div class="sc-n">03</div><div class="sc-t">Macro Thesis</div><div class="sc-d">Short and long-term tailwinds and headwinds built from all sources combined.</div></div>
+      <div class="sc"><div class="sc-n">04</div><div class="sc-t">Stock Picks</div><div class="sc-d">Trend trades riding the thesis + asymmetric setups with high upside.</div></div>
+    </div>
+    <div class="note">Powered by <span>Groq · Llama 3.3 70B</span> · ZeroHedge + Reuters + CNBC + more · Free</div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="ldg">
+    <div class="spin"></div>
+    <div id="ltxt">Fetching news...</div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="res">
+
+    <!-- NEWS FEED -->
+    <div class="sec">
+      <div class="divider"><div class="dl"></div><div class="dlbl">Live News Feed</div><div class="dlr"></div></div>
+      <div class="paste-notice" id="paste-notice">✦ <span id="paste-notice-txt"></span> included from your manual input and weighted in this analysis.</div>
+      <div class="ngrid" id="ngrid"></div>
+    </div>
+
+    <!-- DISCOURSE -->
+    <div class="sec">
+      <div class="divider"><div class="dl"></div><div class="dlbl">AI Discourse Analysis</div><div class="dlr"></div></div>
+      <div class="dlayout">
+        <div class="dmain">
+          <div class="dcard lav">
+            <div class="eye">Market Narrative — What the News Is Actually Saying</div>
+            <div class="ctitle">Dominant Market Story</div>
+            <div class="cbody" id="d-nar"></div>
+            <div class="pills" id="d-themes"></div>
+          </div>
+          <div class="dcard rose">
+            <div class="eye">Hedge Fund &amp; Institutional Signals</div>
+            <div class="ctitle">Smart Money Positioning</div>
+            <div class="cbody" id="d-hf"></div>
+          </div>
+          <div class="dcard gold">
+            <div class="eye">Capital Flow Analysis</div>
+            <div class="ctitle">Where Institutional Money Is Moving</div>
+            <div class="cbody" id="d-fl"></div>
+          </div>
+        </div>
+        <div class="dside">
+          <div class="scard">
+            <div class="stitle">Risk Sentiment</div>
+            <div class="rnum" id="rnum">—</div>
+            <div class="rlbl" id="rlbl">—</div>
+            <div class="mrow"><span>Bullish signals</span><span id="mb-pct" style="color:var(--green);font-weight:600">0%</span></div>
+            <div class="mtrack"><div class="mfill" id="mb" style="background:var(--green);width:0%"></div></div>
+            <div class="mrow"><span>Bearish signals</span><span id="mr-pct" style="color:var(--red);font-weight:600">0%</span></div>
+            <div class="mtrack"><div class="mfill" id="mr" style="background:var(--red);width:0%"></div></div>
+            <div class="mrow"><span>Neutral signals</span><span id="mn-pct" style="color:var(--gold);font-weight:600">0%</span></div>
+            <div class="mtrack"><div class="mfill" id="mn" style="background:var(--gold);width:0%"></div></div>
+          </div>
+          <div class="scard">
+            <div class="stitle">Key Entities &amp; Themes</div>
+            <div id="elist"></div>
+          </div>
         </div>
       </div>
-      <div class="explainer-box">
-        <div class="explainer-box-title">How to Read This</div>
-        <div class="explainer-text">
-          News sentiment is a <em>retail-facing lagging indicator</em> — it reflects what media is reporting, not what smart money is doing.<br><br>
-          <em>Extreme negative news</em> often coincides with smart money accumulation at bottoms.<br><br>
-          <em>Euphoric positive news</em> often coincides with smart money distribution at tops.<br><br>
-          When news sentiment diverges from the composite smart money signal above, the smart money signal wins — almost always.
+    </div>
+
+    <!-- THESIS -->
+    <div class="sec">
+      <div class="divider"><div class="dl"></div><div class="dlbl">Macro Thesis</div><div class="dlr"></div></div>
+      <div class="tgrid">
+        <div class="tcard rose">
+          <div class="eye">Short-Term · 1 to 4 Weeks</div>
+          <div class="thead" id="ts-h"></div>
+          <div class="cbody" id="ts-b"></div>
+          <div class="twlist" id="ts-tw"></div>
+        </div>
+        <div class="tcard blue">
+          <div class="eye">Long-Term · 3 to 12 Months</div>
+          <div class="thead" id="tl-h"></div>
+          <div class="cbody" id="tl-b"></div>
+          <div class="twlist" id="tl-tw"></div>
         </div>
       </div>
-    </div>`;
+    </div>
+
+    <!-- PICKS -->
+    <div class="sec">
+      <div class="divider"><div class="dl"></div><div class="dlbl">AI Stock Screening</div><div class="dlr"></div></div>
+      <div class="pbox">
+        <div class="ptabs">
+          <button class="ptab active" onclick="tab('trend',this)">Trend Trades · <span id="tc">0</span></button>
+          <button class="ptab"        onclick="tab('asymm',this)">Asymmetric · <span id="ac">0</span></button>
+        </div>
+        <div class="tpane active" id="tp-trend">
+          <div class="pintro">Quality stocks riding current macro momentum. Profitable, liquid companies aligned with the dominant institutional thesis.</div>
+          <div class="sgrid" id="g-trend"></div>
+        </div>
+        <div class="tpane" id="tp-asymm">
+          <div class="pintro">High upside, limited downside setups outside consensus. Contrarian, mispriced, or regime-shift plays. Size smaller — not financial advice.</div>
+          <div class="sgrid" id="g-asymm"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /res -->
+</div><!-- /page -->
+
+<script>
+const GROQ_KEY   = "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";
+const GROQ_URL   = "https://api.groq.com/openai/v1/chat/completions";
+const GROQ_MODEL = "llama-3.3-70b-versatile";
+const R2J        = "https://api.rss2json.com/v1/api.json";
+
+const FEEDS = [
+  { name:"ZeroHedge",   url:"https://cms.zerohedge.com/fullrss2.xml" },
+  { name:"Reuters",     url:"https://feeds.reuters.com/reuters/businessNews" },
+  { name:"CNBC",        url:"https://www.cnbc.com/id/100003114/device/rss/rss.html" },
+  { name:"MarketWatch", url:"https://feeds.content.dowjones.io/public/rss/mw_realtimeheadlines" },
+  { name:"FT",          url:"https://www.ft.com/rss/home/uk" },
+  { name:"Investing",   url:"https://www.investing.com/rss/news.rss" },
+];
+
+// source status tracking
+const srcStatus = {};
+FEEDS.forEach(f => srcStatus[f.name] = { state:"idle", count:0 });
+
+// ── UI helpers ────────────────────────────────────────────
+function setStatus(s, msg) {
+  document.getElementById("sdot").className = s;
+  document.getElementById("stxt").textContent = msg;
+  const b = document.getElementById("abtn");
+  b.disabled = s === "loading";
+  b.textContent = s === "loading" ? "Working..." : "Analyse Now";
+}
+function step(msg) {
+  document.getElementById("ltxt").textContent = msg;
+  document.getElementById("stxt").textContent = msg;
+}
+function showErr(msg) {
+  const b = document.getElementById("ebox");
+  b.textContent = "⚠ " + msg; b.style.display = "block";
+}
+function md(t="") {
+  return (t||"").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\*(.+?)\*/g,"<em>$1</em>");
 }
 
-function renderNewsEmpty() {
-  document.getElementById('newsLayout').innerHTML = `
-    <div class="explainer-box" style="grid-column:span 2;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:32px;">
-      <div class="explainer-box-title" style="font-family:var(--serif);font-size:15px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:12px">News Feed</div>
-      <div class="explainer-text">
-        Add a free <em>FMP API key</em> in the header to enable the news sentiment feed.<br><br>
-        Get your free key at <em>financialmodelingprep.com</em> — takes 2 minutes. Free tier gives 250 requests/day which is more than enough for this app.
+// ── Source health panel ───────────────────────────────────
+function initSrcPanel() {
+  document.getElementById("src-panel").style.display = "block";
+  document.getElementById("src-list").innerHTML = FEEDS.map(f =>
+    `<div class="src-chip checking" id="chip-${f.name.replace(/\s/g,'')}">
+      <div class="dot"></div>
+      <span>${f.name}</span>
+      <span class="count" id="cnt-${f.name.replace(/\s/g,'')}">checking...</span>
+    </div>`
+  ).join("");
+  document.getElementById("src-summary").textContent = "Checking sources...";
+}
+
+function updateChip(name, state, count) {
+  const id = name.replace(/\s/g,'');
+  const chip = document.getElementById("chip-"+id);
+  const cnt  = document.getElementById("cnt-"+id);
+  if (!chip) return;
+  chip.className = "src-chip " + state;
+  cnt.textContent = state === "live" ? `${count} articles` : "unavailable";
+  // update summary
+  const live = FEEDS.filter(f => srcStatus[f.name].state === "live").length;
+  const total = FEEDS.length;
+  document.getElementById("src-summary").textContent = `${live} of ${total} live`;
+}
+
+// ── Paste panel ───────────────────────────────────────────
+function togglePaste() {
+  const body    = document.getElementById("paste-body");
+  const toggle  = document.getElementById("paste-toggle");
+  const isOpen  = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  toggle.classList.toggle("open", !isOpen);
+}
+function clearPaste() {
+  document.getElementById("paste-input").value = "";
+  updatePasteBadge();
+}
+function updatePasteBadge() {
+  const val   = (document.getElementById("paste-input").value || "").trim();
+  const badge = document.getElementById("paste-badge");
+  badge.style.display = val.length > 20 ? "inline-block" : "none";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("paste-input").addEventListener("input", updatePasteBadge);
+  // show source panel and paste box immediately
+  document.getElementById("src-panel").style.display = "block";
+  document.getElementById("src-list").innerHTML = FEEDS.map(f =>
+    `<div class="src-chip" id="chip-${f.name.replace(/\s/g,'')}">
+      <div class="dot"></div>
+      <span>${f.name}</span>
+      <span class="count" id="cnt-${f.name.replace(/\s/g,'')}">—</span>
+    </div>`
+  ).join("");
+  document.getElementById("src-summary").textContent = "Hit Analyse Now to check";
+});
+
+// ── Fetch one RSS feed ────────────────────────────────────
+async function fetchFeed(src) {
+  const id = src.name.replace(/\s/g,'');
+  const chip = document.getElementById("chip-"+id);
+  if (chip) chip.className = "src-chip checking";
+  document.getElementById("cnt-"+id).textContent = "checking...";
+
+  try {
+    const r = await fetch(`${R2J}?rss_url=${encodeURIComponent(src.url)}&count=20`);
+    if (!r.ok) throw new Error("http "+r.status);
+    const d = await r.json();
+    if (d.status !== "ok" || !Array.isArray(d.items) || d.items.length === 0) throw new Error("empty");
+    const items = d.items.map(i => ({ title:(i.title||"").trim(), source:src.name, pubDate:i.pubDate||"" }));
+    srcStatus[src.name] = { state:"live", count:items.length };
+    updateChip(src.name, "live", items.length);
+    return items;
+  } catch(e) {
+    srcStatus[src.name] = { state:"down", count:0 };
+    updateChip(src.name, "down", 0);
+    return [];
+  }
+}
+
+async function fetchAll() {
+  step("Checking sources...");
+  const batches = await Promise.allSettled(FEEDS.map(fetchFeed));
+  const all = [];
+  batches.forEach(r => { if (r.status === "fulfilled") all.push(...r.value); });
+  all.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
+  const seen = new Set();
+  return all.filter(a => {
+    const k = a.title.slice(0,50).toLowerCase();
+    if (seen.has(k) || !a.title) return false;
+    seen.add(k); return true;
+  }).slice(0, 50);
+}
+
+// ── Groq call ─────────────────────────────────────────────
+async function groq(system, user) {
+  const r = await fetch(GROQ_URL, {
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+GROQ_KEY},
+    body:JSON.stringify({
+      model:GROQ_MODEL,
+      messages:[{role:"system",content:system},{role:"user",content:user}],
+      temperature:0.35,
+      max_tokens:3800,
+    })
+  });
+  if (!r.ok) { const t=await r.text(); throw new Error("Groq "+r.status+": "+t.slice(0,200)); }
+  const d = await r.json();
+  return d.choices[0].message.content;
+}
+
+async function analyse(articles, pastedText) {
+  step("Groq AI reading all sources...");
+
+  const lines = articles.slice(0,30).map((a,i)=>`${i+1}. [${a.source}] ${a.title}`).join("\n");
+
+  // Build pasted section if present
+  let pastedSection = "";
+  if (pastedText && pastedText.trim().length > 20) {
+    const snippet = pastedText.trim().slice(0, 3000); // cap at 3k chars to stay within token budget
+    pastedSection = `\n\nADDITIONAL RESEARCH (from user — treat as high-signal input, may include premium content):\n${snippet}`;
+  }
+
+  const raw = await groq(
+    "You are a senior macro analyst and hedge fund strategist. Return ONLY raw JSON — no markdown, no backticks, no explanation. Start with { end with }.",
+    `Analyse the following market intelligence as a senior macro strategist.\n\nLIVE HEADLINES:\n${lines}${pastedSection}\n\nReturn this JSON structure exactly:\n{"narrative":"2-3 sentences dominant story","dominant_themes":["t1","t2","t3","t4"],"hf_signals":"detailed HF/institutional signals — sectors, rotation, risk-on/off. If additional research was provided, weight it heavily.","smart_money_flows":"where institutional money moving — sectors, assets, geographies, direction","key_entities":[{"name":"...","direction":"bull","context":"one sentence"}],"risk_sentiment":"cautious","risk_score":52,"sentiment_breakdown":{"bullish_pct":35,"bearish_pct":40,"neutral_pct":25},"macro_short":{"headline":"punchy 1-4 week thesis","body":"3-4 sentences near-term","tailwinds":["↑ tailwind","↑ tailwind","↓ headwind","↓ headwind"]},"macro_long":{"headline":"punchy 3-12 month thesis","body":"3-4 sentences structural","tailwinds":["↑ tailwind","↑ tailwind","↓ risk"]},"trend_picks":[{"ticker":"NVDA","name":"Nvidia Corp","rationale":"2-3 sentences why fits thesis","catalyst":"specific catalyst","conviction":"High"}],"asymmetric_picks":[{"ticker":"XYZ","name":"Company","rationale":"2-3 sentences asymmetric setup","catalyst":"setup","conviction":"Medium"}]}\n\nRules: trend_picks=5 liquid US stocks. asymmetric_picks=4 stocks. key_entities=6-8. direction=bull/bear/neutral only. risk_sentiment=bullish/cautious/bearish only. Return ONLY the JSON.`
+  );
+
+  let s = raw.trim().replace(/^```json\s*/i,"").replace(/^```\s*/i,"").replace(/\s*```\s*$/i,"").trim();
+  const st=s.indexOf("{"), en=s.lastIndexOf("}");
+  if (st===-1||en<=st) throw new Error("Groq did not return valid JSON. Raw: "+raw.slice(0,300));
+  return JSON.parse(s.slice(st,en+1));
+}
+
+// ── Render ────────────────────────────────────────────────
+function sentCls(title) {
+  const t=title.toLowerCase();
+  const bull=["rally","surge","gain","rise","growth","strong","beat","upgrade","bull","recovery","rebound","boost","record","soar","jump"];
+  const bear=["fall","drop","crash","decline","loss","weak","miss","cut","downgrade","bear","recession","warn","fear","crisis","selloff","plunge","slump","tariff"];
+  let b=0,bn=0;
+  bull.forEach(w=>{if(t.includes(w))b++});
+  bear.forEach(w=>{if(t.includes(w))bn++});
+  return b>bn?"pos":bn>b?"neg":"";
+}
+
+function renderNews(articles, hasPasted) {
+  // paste notice
+  const notice = document.getElementById("paste-notice");
+  if (hasPasted) {
+    const words = (document.getElementById("paste-input").value||"").trim().split(/\s+/).length;
+    document.getElementById("paste-notice-txt").textContent = `~${words} words of your manual research`;
+    notice.style.display = "block";
+  } else {
+    notice.style.display = "none";
+  }
+
+  document.getElementById("ngrid").innerHTML = articles.slice(0,12).map(a=>{
+    const c=sentCls(a.title);
+    return `<div class="ni ${c}"><div class="nt">${a.title}</div><div class="nm"><div class="ndot ${c}"></div><span class="nsrc">${a.source}</span><span class="nsen ${c}">${c==="pos"?"Positive":c==="neg"?"Negative":"Neutral"}</span></div></div>`;
+  }).join("");
+}
+
+function renderTW(id, items=[]) {
+  document.getElementById(id).innerHTML = items.map(tw=>{
+    const up=tw.startsWith("↑")||(!tw.startsWith("↓")&&!tw.toLowerCase().includes("headwind")&&!tw.toLowerCase().includes("risk")&&!tw.toLowerCase().startsWith("down"));
+    return `<div class="twi${up?"":" down"}"><div class="twico">${up?"↑":"↓"}</div><div class="twtxt">${tw.replace(/^[↑↓]\s*/,"")}</div></div>`;
+  }).join("");
+}
+
+function renderStocks(gid, picks=[], type) {
+  document.getElementById(gid).innerHTML = picks.map(p=>`
+    <div class="sk ${type==="asymm"?"asymm":""}">
+      <div class="sktop">
+        <div><div class="sktick">${p.ticker||""}</div><div class="skname">${p.name||""}</div></div>
+        <span class="skbadge ${type}">${type==="trend"?"Trend":"Asymm"}</span>
       </div>
-    </div>`;
+      <div class="skwhy">${md(p.rationale||"")}</div>
+      <div class="skfoot">
+        <div class="skm"><div class="skml">Catalyst</div><div class="skmv">${p.catalyst||""}</div></div>
+        <div class="skm"><div class="skml">Conviction</div><div class="skmv ${p.conviction||""}">${p.conviction||""}</div></div>
+      </div>
+    </div>`).join("");
+}
+
+function render(articles, d, hasPasted) {
+  renderNews(articles, hasPasted);
+  document.getElementById("d-nar").innerHTML    = md(d.narrative||"");
+  document.getElementById("d-hf").innerHTML     = md(d.hf_signals||"");
+  document.getElementById("d-fl").innerHTML     = md(d.smart_money_flows||"");
+  document.getElementById("d-themes").innerHTML = (d.dominant_themes||[]).map(t=>`<span class="pill">${t}</span>`).join("");
+  const rc=d.risk_sentiment==="bullish"?"var(--green)":d.risk_sentiment==="bearish"?"var(--red)":"var(--gold)";
+  document.getElementById("rnum").textContent=d.risk_score||"—";
+  document.getElementById("rnum").style.color=rc;
+  document.getElementById("rlbl").textContent=(d.risk_sentiment||"").toUpperCase();
+  document.getElementById("rlbl").style.color=rc;
+  const sb=d.sentiment_breakdown||{};
+  [["mb",sb.bullish_pct||0],["mr",sb.bearish_pct||0],["mn",sb.neutral_pct||0]].forEach(([k,v])=>{
+    document.getElementById(k).style.width=v+"%";
+    document.getElementById(k+"-pct").textContent=v+"%";
+  });
+  document.getElementById("elist").innerHTML=(d.key_entities||[]).slice(0,8).map(e=>`
+    <div class="erow">
+      <div><div class="en">${e.name}</div><div class="ec">${e.context||""}</div></div>
+      <span class="etag ${e.direction==="bull"?"bull":e.direction==="bear"?"bear":"neu"}">${e.direction==="bull"?"↑ Bull":e.direction==="bear"?"↓ Bear":"◆ Watch"}</span>
+    </div>`).join("");
+  const ms=d.macro_short||{},ml=d.macro_long||{};
+  document.getElementById("ts-h").textContent=ms.headline||"";
+  document.getElementById("ts-b").innerHTML=md(ms.body||"");
+  renderTW("ts-tw",ms.tailwinds);
+  document.getElementById("tl-h").textContent=ml.headline||"";
+  document.getElementById("tl-b").innerHTML=md(ml.body||"");
+  renderTW("tl-tw",ml.tailwinds);
+  renderStocks("g-trend",d.trend_picks,"trend");
+  renderStocks("g-asymm",d.asymmetric_picks,"asymm");
+  document.getElementById("tc").textContent=(d.trend_picks||[]).length;
+  document.getElementById("ac").textContent=(d.asymmetric_picks||[]).length;
+}
+
+// ── Tabs ──────────────────────────────────────────────────
+function tab(id, btn) {
+  document.querySelectorAll(".ptab").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".tpane").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tp-"+id).classList.add("active");
+}
+
+// ── Main ──────────────────────────────────────────────────
+async function run() {
+  document.getElementById("ebox").style.display="none";
+  setStatus("loading","Fetching...");
+  document.getElementById("empty").style.display="none";
+  document.getElementById("ldg").style.display="flex";
+  document.getElementById("res").style.display="none";
+
+  try {
+    const articles    = await fetchAll();
+    const pastedText  = (document.getElementById("paste-input").value||"").trim();
+    const hasPasted   = pastedText.length > 20;
+
+    if (!articles.length && !hasPasted) {
+      throw new Error("No news fetched and no manual text provided. rss2json.com may be down — try again, or paste some article text to analyse.");
+    }
+
+    const count = articles.length;
+    step(`${count} articles fetched${hasPasted?" + your research":""} — sending to Groq...`);
+
+    const d = await analyse(articles, pastedText);
+    render(articles, d, hasPasted);
+
+    document.getElementById("ldg").style.display="none";
+    document.getElementById("res").style.display="block";
+    setStatus("done","Live");
+  } catch(e) {
+    console.error(e);
+    showErr(e.message);
+    setStatus("error","Error");
+    document.getElementById("ldg").style.display="none";
+    document.getElementById("empty").style.display="flex";
+  }
 }
 </script>
 </body>
