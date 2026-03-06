@@ -43,15 +43,16 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 .hdiv{width:1px;height:24px;background:var(--border2);flex-shrink:0;}
 .htag{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
 .hspace{flex:1;}
-.api-wrap{display:flex;align-items:center;gap:10px;}
+.header-right{display:flex;align-items:center;gap:12px;}
 .live-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);}
 .dot.live{background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite;}
 .dot.err{background:var(--red);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.api-input{background:var(--surface);border:1px solid var(--border2);color:var(--cream);padding:9px 14px;font-family:var(--sans);font-size:11px;font-weight:300;border-radius:2px;width:230px;letter-spacing:1px;transition:border-color 0.3s;}
-.api-input:focus{outline:none;border-color:var(--rose2);}
-.api-input::placeholder{color:var(--muted);}
+.fmp-input{background:var(--surface);border:1px solid var(--border2);color:var(--cream);padding:9px 14px;font-family:var(--sans);font-size:11px;font-weight:300;border-radius:2px;width:210px;letter-spacing:1px;transition:border-color 0.3s;}
+.fmp-input:focus{outline:none;border-color:var(--rose2);}
+.fmp-input::placeholder{color:var(--muted);}
+.fmp-label{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
 .btn-run{background:transparent;border:1px solid var(--rose2);color:var(--rose);padding:9px 24px;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s;white-space:nowrap;}
 .btn-run:hover{background:var(--rose2);color:var(--bg);}
 .btn-run:disabled{opacity:0.3;cursor:not-allowed;}
@@ -63,98 +64,114 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72vh;text-align:center;}
 .empty-title{font-family:var(--serif);font-size:88px;font-weight:300;letter-spacing:14px;line-height:1;color:var(--surface2);text-transform:uppercase;margin-bottom:20px;}
 .empty-title span{color:var(--border2);}
-.empty-sub{font-size:10px;color:var(--muted);letter-spacing:3px;line-height:2.2;font-weight:300;text-transform:uppercase;}
+.empty-sub{font-size:10px;color:var(--muted);letter-spacing:3px;line-height:2.4;font-weight:300;text-transform:uppercase;}
+.empty-note{margin-top:20px;font-size:10px;color:var(--muted2);letter-spacing:1px;font-weight:300;}
+.empty-note span{color:var(--rose2);}
 
 /* SECTION LABEL */
 .slbl{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
 .slbl::before{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border2));}
 .slbl::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border2));}
 
-/* PLAYER CARDS — the hero of this app */
-.players-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
+/* MARKET SNAPSHOT BAR */
+.snapshot-bar{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:32px;}
+.snap-tile{background:var(--surface);padding:16px 18px;position:relative;transition:background 0.2s;}
+.snap-tile:hover{background:var(--surface2);}
+.snap-label{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;font-weight:500;}
+.snap-value{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:-0.5px;line-height:1;margin-bottom:4px;}
+.snap-change{font-size:10px;font-weight:500;}
+.snap-accent{position:absolute;bottom:0;left:0;right:0;height:2px;opacity:0.5;}
 
+/* COMPOSITE SIGNAL */
+.composite-box{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:32px 40px;margin-bottom:32px;position:relative;overflow:hidden;}
+.composite-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--rose2),transparent);}
+.composite-inner{display:flex;align-items:center;gap:48px;flex-wrap:wrap;}
+.composite-left{flex:1;min-width:260px;}
+.composite-eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.composite-verdict{font-family:var(--serif);font-size:48px;font-weight:300;letter-spacing:3px;text-transform:uppercase;line-height:1;margin-bottom:14px;}
+.composite-desc{font-size:12px;color:var(--muted);line-height:1.8;font-weight:300;}
+.composite-ring{flex-shrink:0;width:120px;height:120px;position:relative;}
+.composite-ring svg{transform:rotate(-90deg);}
+.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-num{font-family:var(--serif);font-size:36px;font-weight:300;line-height:1;}
+.ring-lbl{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:4px;}
+.composite-bars{flex:1;min-width:260px;display:flex;flex-direction:column;gap:10px;}
+.cbar-row{display:flex;align-items:center;gap:12px;}
+.cbar-name{font-size:10px;letter-spacing:1px;color:var(--muted);width:150px;flex-shrink:0;}
+.cbar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.cbar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+.cbar-val{font-size:10px;width:52px;text-align:right;}
+
+/* PLAYER CARDS */
+.players-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
 .player-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:border-color 0.3s,transform 0.2s;}
 .player-card:hover{border-color:var(--border2);transform:translateY(-2px);}
-
 .player-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
 .player-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-
 .ph-gov::before{background:linear-gradient(to right,var(--blue),transparent);}
 .ph-hf::before{background:linear-gradient(to right,var(--rose),transparent);}
 .ph-cta::before{background:linear-gradient(to right,var(--orange),transparent);}
 .ph-retail::before{background:linear-gradient(to right,var(--lavender),transparent);}
 .ph-insider::before{background:linear-gradient(to right,var(--gold),transparent);}
 .ph-options::before{background:linear-gradient(to right,var(--green),transparent);}
-
-.player-eyebrow{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
-.player-name{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:1px;color:var(--cream);margin-bottom:4px;}
-.player-speed{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-
-.speed-bar{display:flex;gap:3px;margin-top:10px;}
-.speed-pip{width:18px;height:3px;border-radius:2px;background:var(--border2);}
-.speed-pip.active{background:var(--player-color,var(--rose));}
-
+.player-eyebrow{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+.player-name{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:1px;color:var(--cream);margin-bottom:4px;}
+.player-speed-label{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.speed-pips{display:flex;gap:3px;margin-top:10px;}
+.pip{width:16px;height:3px;border-radius:2px;background:var(--border2);}
+.pip.on{background:var(--player-color,var(--rose));}
 .player-body{padding:16px 24px 20px;}
-
-.player-source{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;font-weight:500;}
-
-.player-signal{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.signal-label{font-size:11px;color:var(--muted);font-weight:300;}
-.signal-value{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:-0.5px;}
-
-.positioning-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:6px;position:relative;}
+.player-source-tag{font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;font-weight:500;line-height:1.6;}
+.player-signal-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
+.psr-label{font-size:10px;color:var(--muted);}
+.psr-value{font-family:var(--serif);font-size:24px;font-weight:400;}
+.pos-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px;}
 .pos-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(0.4,0,0.2,1);}
-.pos-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+.pos-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+.player-insight{font-size:11px;color:var(--muted);line-height:1.75;font-weight:300;padding-top:12px;border-top:1px solid var(--border);}
+.player-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.verdict-badge{padding:4px 12px;border-radius:2px;font-size:9px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
+.vb-bull{background:rgba(126,203,161,0.1);color:var(--green);border:1px solid rgba(126,203,161,0.2);}
+.vb-bear{background:rgba(212,104,122,0.1);color:var(--red);border:1px solid rgba(212,104,122,0.2);}
+.vb-neu{background:rgba(201,169,110,0.1);color:var(--gold);border:1px solid rgba(201,169,110,0.2);}
+.vb-mix{background:rgba(184,168,216,0.1);color:var(--lavender);border:1px solid rgba(184,168,216,0.2);}
+.lag-note{font-size:8px;letter-spacing:1px;color:var(--muted2);text-transform:uppercase;}
 
-.player-insight{font-size:11px;color:var(--muted);line-height:1.7;font-weight:300;padding-top:12px;border-top:1px solid var(--border);margin-top:12px;}
-
-.player-verdict{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 12px;border-radius:2px;font-size:9px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
-.v-bull{background:rgba(126,203,161,0.1);color:var(--green);border:1px solid rgba(126,203,161,0.2);}
-.v-bear{background:rgba(212,104,122,0.1);color:var(--red);border:1px solid rgba(212,104,122,0.2);}
-.v-neu{background:rgba(201,169,110,0.1);color:var(--gold);border:1px solid rgba(201,169,110,0.2);}
-.v-mix{background:rgba(184,168,216,0.1);color:var(--lavender);border:1px solid rgba(184,168,216,0.2);}
-
-/* COMPOSITE SIGNAL */
-.composite-box{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:32px 40px;margin-bottom:40px;position:relative;overflow:hidden;}
-.composite-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--rose2),transparent);}
-.composite-inner{display:flex;align-items:center;gap:60px;}
-.composite-left{flex:1;}
-.composite-eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
-.composite-verdict{font-family:var(--serif);font-size:52px;font-weight:300;letter-spacing:3px;text-transform:uppercase;line-height:1;margin-bottom:14px;}
-.composite-desc{font-size:12px;color:var(--muted);line-height:1.8;max-width:500px;font-weight:300;}
-
-.composite-ring{flex-shrink:0;width:120px;height:120px;position:relative;}
-.composite-ring svg{transform:rotate(-90deg);}
-.composite-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.composite-score{font-family:var(--serif);font-size:36px;font-weight:300;line-height:1;}
-.composite-score-lbl{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:4px;}
-
-.player-breakdown{flex:1;display:flex;flex-direction:column;gap:8px;}
-.breakdown-row{display:flex;align-items:center;gap:12px;}
-.breakdown-name{font-size:10px;letter-spacing:1px;color:var(--muted);width:130px;flex-shrink:0;}
-.breakdown-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
-.breakdown-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
-.breakdown-val{font-size:10px;width:50px;text-align:right;font-family:var(--serif);}
-
-/* NEWS SENTIMENT */
-.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;}
-.news-feed{display:flex;flex-direction:column;gap:1px;}
-.news-item{padding:14px 20px;background:var(--surface2);border-left:2px solid transparent;transition:background 0.2s;cursor:default;}
+/* NEWS */
+.news-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:32px;}
+.news-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.news-card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;}
+.news-card-title{font-family:var(--serif);font-size:15px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;}
+.news-card-sub{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.news-list{display:flex;flex-direction:column;gap:1px;}
+.news-item{padding:13px 20px;background:var(--surface2);border-left:2px solid transparent;transition:background 0.2s;cursor:default;}
 .news-item:hover{background:var(--surface);}
 .news-item.pos{border-left-color:var(--green);}
 .news-item.neg{border-left-color:var(--red);}
 .news-item.neu{border-left-color:var(--gold);}
-.news-headline{font-size:12px;color:var(--cream);line-height:1.5;margin-bottom:5px;font-weight:400;}
-.news-meta{display:flex;gap:12px;font-size:9px;color:var(--muted);letter-spacing:1px;}
-.news-sent{font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+.news-headline{font-size:12px;color:var(--cream);line-height:1.5;margin-bottom:5px;}
+.news-meta{display:flex;gap:10px;font-size:9px;color:var(--muted);letter-spacing:1px;}
+.news-sent-tag{font-weight:600;text-transform:uppercase;}
 
-.sent-meter{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 24px;}
-.sent-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);margin-bottom:16px;text-transform:uppercase;}
-.sent-gauge{position:relative;height:12px;background:linear-gradient(to right,var(--red),var(--gold),var(--green));border-radius:6px;margin-bottom:8px;overflow:visible;}
-.sent-needle{position:absolute;top:-4px;width:4px;height:20px;background:var(--cream);border-radius:2px;transform:translateX(-50%);transition:left 1.4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 8px rgba(240,232,220,0.5);}
-.sent-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
-.sent-score-big{font-family:var(--serif);font-size:48px;font-weight:300;text-align:center;margin:16px 0 4px;}
-.sent-verdict{text-align:center;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+.sentiment-panel{display:flex;flex-direction:column;gap:12px;}
+.sent-box{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;}
+.sent-box-title{font-family:var(--serif);font-size:13px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:14px;}
+.gauge-wrap{position:relative;height:10px;background:linear-gradient(to right,var(--red),var(--gold) 50%,var(--green));border-radius:5px;margin-bottom:6px;}
+.gauge-needle{position:absolute;top:-5px;width:4px;height:20px;background:var(--cream);border-radius:2px;transform:translateX(-50%);transition:left 1.4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 6px rgba(240,232,220,0.6);}
+.gauge-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;}
+.sent-big{font-family:var(--serif);font-size:52px;font-weight:300;text-align:center;line-height:1;margin-bottom:4px;}
+.sent-verdict-lbl{text-align:center;font-size:9px;letter-spacing:3px;font-weight:600;text-transform:uppercase;}
+.breakdown-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.bk-row{display:flex;align-items:center;gap:8px;}
+.bk-lbl{font-size:9px;letter-spacing:1px;color:var(--muted);width:60px;text-transform:uppercase;}
+.bk-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.bk-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.bk-count{font-family:var(--serif);font-size:16px;width:24px;text-align:right;}
+
+.explainer-box{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;}
+.explainer-box-title{font-family:var(--serif);font-size:13px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:12px;}
+.explainer-text{font-size:11px;color:var(--muted);line-height:1.8;font-weight:300;}
+.explainer-text em{color:var(--rose);font-style:normal;}
 
 /* COLORS */
 .c-green{color:var(--green);}.c-red{color:var(--red);}.c-gold{color:var(--gold);}
@@ -167,17 +184,13 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* TOAST */
-.toast{position:fixed;bottom:32px;right:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:2px;padding:12px 22px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--surface2);border:1px solid var(--border2);border-radius:2px;padding:12px 20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.ok{border-color:var(--green);color:var(--green);}
 .toast.fail{border-color:var(--red);color:var(--red);}
 
-/* DATA FRESHNESS */
-.freshness{font-size:9px;letter-spacing:1px;color:var(--muted);text-align:right;margin-bottom:8px;}
-.freshness span{color:var(--gold);}
-
-@media(max-width:1100px){.players-grid{grid-template-columns:repeat(2,1fr);}.news-grid{grid-template-columns:1fr;}.composite-inner{flex-direction:column;gap:24px;}}
-@media(max-width:700px){.players-grid{grid-template-columns:1fr;}.hdiv,.htag{display:none;}.page{padding:20px;}.empty-title{font-size:52px;}}
+@media(max-width:1200px){.players-grid{grid-template-columns:repeat(2,1fr);}.news-layout{grid-template-columns:1fr;}.snapshot-bar{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:700px){.players-grid{grid-template-columns:1fr;}.snapshot-bar{grid-template-columns:repeat(2,1fr);}.hdiv,.htag{display:none;}.page{padding:20px;}.empty-title{font-size:52px;}.composite-inner{flex-direction:column;}}
 </style>
 </head>
 <body>
@@ -188,9 +201,10 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
     <div class="hdiv"></div>
     <div class="htag">Smart Money Intelligence</div>
     <div class="hspace"></div>
-    <div class="api-wrap">
+    <div class="header-right">
       <div class="live-pill"><div class="dot" id="dot"></div><span id="liveText">Offline</span></div>
-      <input type="password" class="api-input" id="apiKey" placeholder="FMP API key..." />
+      <span class="fmp-label">FMP key (optional for news):</span>
+      <input class="fmp-input" id="fmpKey" placeholder="Paste FMP key for news..." />
       <button class="btn-run" id="runBtn" onclick="runAnalysis()">Analyse</button>
     </div>
   </div>
@@ -198,34 +212,39 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 
 <div class="page z1">
 
-  <!-- EMPTY STATE -->
   <div id="emptyState" class="empty">
     <div class="empty-title">Macro<br><span>Lens</span></div>
     <div class="empty-sub">
-      Enter your FMP API key to begin<br>
-      Smart money positioning · COT · Sentiment · News intelligence<br>
-      See who is doing what — and why it matters
+      Smart money positioning · Who is doing what<br>
+      Governments · Hedge Funds · CTAs · Retail · Insiders · Options<br>
+      Click Analyse — no API key required
     </div>
+    <div class="empty-note">News feed requires a free <span>FMP API key</span> — all other data is free</div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div id="mainContent" style="display:none">
 
+    <!-- MARKET SNAPSHOT -->
+    <div class="slbl">Live Market Snapshot</div>
+    <div class="snapshot-bar" id="snapshotBar">
+      <div class="loading" style="grid-column:span 8"><div class="spinner"></div><span>Fetching market data</span></div>
+    </div>
+
     <!-- COMPOSITE SIGNAL -->
+    <div class="slbl">Composite Smart Money Signal</div>
     <div class="composite-box" id="compositeBox">
-      <div class="loading"><div class="spinner"></div><span>Computing composite signal</span></div>
+      <div class="loading"><div class="spinner"></div><span>Computing signal</span></div>
     </div>
 
     <!-- THE PLAYERS -->
     <div class="slbl">The Players — Who Is Positioned Where</div>
-    <div class="freshness">COT data: <span>Weekly (CFTC, Friday release)</span> · Sentiment: <span>Weekly surveys</span> · News: <span>Live</span></div>
     <div class="players-grid" id="playersGrid">
-      <div class="loading" style="grid-column:span 3"><div class="spinner"></div><span>Loading positioning data</span></div>
+      <div class="loading" style="grid-column:span 3"><div class="spinner"></div></div>
     </div>
 
     <!-- NEWS SENTIMENT -->
     <div class="slbl">News Sentiment</div>
-    <div class="news-grid" id="newsGrid">
+    <div class="news-layout" id="newsLayout">
       <div class="loading"><div class="spinner"></div><span>Loading news</span></div>
     </div>
 
@@ -235,391 +254,452 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 <div class="toast" id="toast"></div>
 
 <script>
-const BASE='https://financialmodelingprep.com/api/v3';
-const key=()=>document.getElementById('apiKey').value.trim();
+// ─────────────────────────────────────────────────────────
+// MACROLENS — Smart Money Intelligence
+// Data sources:
+//   Market data → Yahoo Finance via allorigins CORS proxy (free, no key)
+//   News        → FMP /stock_news (free tier, optional key)
+// ─────────────────────────────────────────────────────────
+
+const PROXY = 'https://api.allorigins.win/get?url=';
+const YF_BASE = 'https://query1.finance.yahoo.com/v8/finance/chart/';
+const fmpKey = () => document.getElementById('fmpKey').value.trim();
 
 function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.className='toast',3500);}
 function setLive(s){document.getElementById('dot').className='dot '+(s==='live'?'live':s==='err'?'err':'');document.getElementById('liveText').textContent=s==='live'?'Live':s==='err'?'Error':'Loading';}
-async function api(path){const sep=path.includes('?')?'&':'?';const r=await fetch(`${BASE}${path}${sep}apikey=${key()}`);if(!r.ok)throw new Error('API '+r.status);return r.json();}
 
-async function runAnalysis(){
-  if(!key()){toast('Please enter your FMP API key','fail');return;}
-  const btn=document.getElementById('runBtn');
-  btn.disabled=true;btn.textContent='Loading...';
+// Fetch Yahoo Finance quote via CORS proxy
+async function yf(symbol) {
+  const url = `${YF_BASE}${encodeURIComponent(symbol)}?interval=1d&range=5d`;
+  const res = await fetch(`${PROXY}${encodeURIComponent(url)}`);
+  const data = await res.json();
+  const parsed = JSON.parse(data.contents);
+  const result = parsed?.chart?.result?.[0];
+  if (!result) throw new Error('No data for ' + symbol);
+  const meta = result.meta;
+  const closes = result.indicators?.quote?.[0]?.close || [];
+  const prev = closes[closes.length - 2] || meta.chartPreviousClose || meta.regularMarketPrice;
+  const price = meta.regularMarketPrice;
+  const change = prev ? ((price - prev) / prev * 100) : 0;
+  return { symbol, price, change, prev, name: meta.shortName || symbol };
+}
+
+async function runAnalysis() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true; btn.textContent = 'Loading...';
   setLive('loading');
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('mainContent').style.display='block';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
 
-  try{
-    // Fetch news + stock quotes for sentiment proxies (all free tier)
-    const[news,spxQ,vixQ,goldQ,tltQ,uupQ]=await Promise.all([
-      api('/stock_news?limit=30'),
-      api('/quote/%5EGSPC'),
-      api('/quote/%5EVIX'),
-      api('/quote/GCUSD'),
-      api('/quote/TLT'),   // Bond ETF — gov/institutional positioning proxy
-      api('/quote/UUP'),   // Dollar ETF
-    ]);
+  try {
+    // Fetch all market data in parallel via Yahoo Finance
+    const symbols = [
+      '^GSPC',   // S&P 500
+      '^IXIC',   // NASDAQ
+      '^VIX',    // VIX fear index
+      '^TNX',    // 10Y Treasury yield
+      '^TYX',    // 30Y Treasury yield
+      '^IRX',    // 13-week T-bill (proxy for 2Y)
+      'GC=F',    // Gold futures
+      'CL=F',    // Crude oil
+      'DX-Y.NYB',// USD index
+      'TLT',     // 20Y bond ETF
+      'GLD',     // Gold ETF
+      'XLK','XLE','XLB','XLF','XLV','XLY','XLU','XLRE','XLI','XLP', // Sectors
+    ];
 
-    const marketData={
-      spx:spxQ[0]||{},
-      vix:vixQ[0]||{},
-      gold:goldQ[0]||{},
-      tlt:tltQ[0]||{},
-      uup:uupQ[0]||{},
-    };
+    const results = await Promise.allSettled(symbols.map(s => yf(s)));
+    const data = {};
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') data[symbols[i]] = r.value;
+    });
 
-    const players=buildPlayers(marketData);
+    const m = buildMarket(data);
+    renderSnapshot(m);
+    const players = buildPlayers(m);
     renderPlayers(players);
-    renderComposite(players);
-    renderNews(news,marketData);
+    renderComposite(players, m);
+
+    // News — optional FMP key
+    if (fmpKey()) {
+      renderNews(await fetchNews(), m);
+    } else {
+      renderNewsEmpty();
+    }
 
     setLive('live');
     toast('Analysis complete');
-  }catch(e){
+  } catch(e) {
     setLive('err');
-    toast('Error: '+e.message,'fail');
+    toast('Failed: ' + e.message, 'fail');
     console.error(e);
   }
-  btn.disabled=false;btn.textContent='Analyse';
+
+  btn.disabled = false; btn.textContent = 'Analyse';
 }
 
-// ─────────────────────────────────────────────
-// BUILD PLAYER SIGNALS
-// Each player gets a signal derived from the best
-// available public proxy for their positioning
-// ─────────────────────────────────────────────
-function buildPlayers(m){
-  const vix=m.vix.price||20;
-  const spxChg=m.spx.changesPercentage||0;
-  const goldChg=m.gold.changesPercentage||0;
-  const tltChg=m.tlt.changesPercentage||0;
-  const tltPrice=m.tlt.price||95;
-
-  // ── 1. GOVERNMENTS & CENTRAL BANKS ──
-  // Slowest moving. Signal via bond market (TLT).
-  // When CBs are tightening → bonds fall, TLT down
-  // When CBs are easing → bonds rise, TLT up
-  const govBull = tltPrice > 95;
-  const govScore = tltPrice > 100 ? 75 : tltPrice > 95 ? 58 : tltPrice > 88 ? 40 : 25;
-  const govPlayers = {
-    id:'gov', color:'var(--blue)', speed:1, speedLabel:'Slowest',
-    eyebrow:'Player 1 — Slowest Moving',
-    name:'Governments & Central Banks',
-    source:'Proxy: TLT (20Y Bond ETF) · Fed dot plot · FRED data',
-    signal: tltPrice > 95 ? 'Accommodative' : 'Restrictive',
-    signalColor: tltPrice > 95 ? 'c-green' : 'c-red',
-    bullPct: govScore,
-    posLabel: tltPrice > 95 ? 'Easing bias' : 'Tightening bias',
-    score: govScore,
-    verdict: govScore > 60 ? 'bull' : govScore > 40 ? 'neu' : 'bear',
-    verdictLabel: govScore > 60 ? 'Supportive' : govScore > 40 ? 'Neutral' : 'Restrictive',
-    insight: tltPrice > 100
-      ? 'Bond prices elevated — central banks in easing cycle or pause. Historically the most bullish environment for equities and risk assets. This regime can last 12–24 months.'
-      : tltPrice > 95
-      ? 'Bond market stable. CBs on hold — neither actively tightening nor easing. Markets pricing in a soft landing. Equity positive but not euphoric.'
-      : tltPrice > 88
-      ? 'Bonds under pressure — rate hike cycle still priced in or recent cuts insufficient. Higher-for-longer narrative dominant. Compresses equity multiples, especially growth.'
-      : 'Bond market in stress — aggressive tightening or inflation panic. This is the most hostile environment for equities. Only hard assets and defensive sectors survive here.',
-    lag: 'Signal lag: 3–6 months',
+function buildMarket(data) {
+  const g = sym => data[sym] || { price: 0, change: 0 };
+  const spx = g('^GSPC'), ndx = g('^IXIC'), vix = g('^VIX');
+  const y10raw = g('^TNX').price; // Yahoo gives yield * 10 for ^TNX
+  const y10 = y10raw > 10 ? y10raw / 10 : y10raw; // normalise
+  const y2raw = g('^IRX').price;
+  const y2 = y2raw > 10 ? y2raw / 10 : y2raw;
+  const gold = g('GC=F'), oil = g('CL=F'), usd = g('DX-Y.NYB'), tlt = g('TLT');
+  const sectors = {
+    'Technology': g('XLK'), 'Energy': g('XLE'), 'Materials': g('XLB'),
+    'Financials': g('XLF'), 'Healthcare': g('XLV'), 'Consumer Disc': g('XLY'),
+    'Utilities': g('XLU'), 'Real Estate': g('XLRE'), 'Industrials': g('XLI'), 'Staples': g('XLP'),
   };
-
-  // ── 2. MACRO HEDGE FUNDS ──
-  // Fast, directional. Signal via VIX + gold.
-  // Low VIX + falling gold = HFs risk-on, long equities
-  // High VIX + rising gold = HFs hedged or short
-  const hfScore = vix<15?(goldChg<0?82:68):vix<20?(goldChg<0?65:52):vix<28?(goldChg>0?38:45):22;
-  const hfPlayers = {
-    id:'hf', color:'var(--rose)', speed:5, speedLabel:'Fastest',
-    eyebrow:'Player 2 — Fastest Moving',
-    name:'Macro Hedge Funds',
-    source:'Proxy: VIX level + Gold flows · COT Non-Commercial · 13F filings (45d lag)',
-    signal: vix<18 ? 'Risk On' : vix<25 ? 'Cautious' : 'Hedged',
-    signalColor: vix<18?'c-green':vix<25?'c-gold':'c-red',
-    bullPct: hfScore,
-    posLabel: vix<18?'Net long equities':vix<25?'Reduced exposure':'Defensive/short',
-    score: hfScore,
-    verdict: hfScore>62?'bull':hfScore>42?'neu':'bear',
-    verdictLabel: hfScore>62?'Net Long':hfScore>42?'Neutral':'Net Short',
-    insight: vix<15
-      ? 'VIX crushed — macro funds aggressively long. When HFs are this complacent it can signal late-stage bull. Great for trend but watch for sharp reversals. Smart money will exit before you see it in the data.'
-      : vix<20
-      ? 'HFs moderately positioned. Standard risk-on environment. Not chasing but not hedging. This is the sweet spot — enough optimism to keep markets bid, enough caution to prevent blow-off tops.'
-      : vix<28
-      ? 'Elevated VIX signals HFs reducing gross exposure. They are not necessarily short but they are not adding risk. Net exposure falling. Watch for forced deleveraging if VIX spikes further.'
-      : 'High VIX — macro funds in full risk-off mode. Many will be net short or running maximum hedges. These environments create asymmetric long opportunities in quality names once VIX peaks.',
-    lag: 'Signal lag: Real-time (VIX) · 45 days (13F)',
-  };
-
-  // ── 3. CTAs / TREND FOLLOWERS ──
-  // Momentum driven. They are long when price is above moving average.
-  // Proxy: S&P momentum — if up strongly, CTAs are long.
-  // They are the LAST to buy tops and LAST to sell bottoms.
-  const ctaScore = spxChg>1.5?78:spxChg>0.5?65:spxChg>0?55:spxChg>-1?38:22;
-  const ctaPlayers = {
-    id:'cta', color:'var(--orange)', speed:3, speedLabel:'Medium — Momentum Driven',
-    eyebrow:'Player 3 — Trend Followers',
-    name:'CTAs & Systematic Funds',
-    source:'Proxy: Price momentum (S&P trend) · COT Managed Money · Vol-targeting models',
-    signal: spxChg>0.5?'Long Trend':spxChg>-0.5?'Flat':'Short Trend',
-    signalColor: spxChg>0.5?'c-green':spxChg>-0.5?'c-gold':'c-red',
-    bullPct: ctaScore,
-    posLabel: spxChg>0.5?'Adding length on momentum':spxChg>-0.5?'Neutral/flat':'Reducing / shorting',
-    score: ctaScore,
-    verdict: ctaScore>62?'bull':ctaScore>42?'neu':'bear',
-    verdictLabel: ctaScore>62?'Trend Long':ctaScore>42?'Neutral':'Trend Short',
-    insight: spxChg>1
-      ? 'Strong positive momentum — CTAs mechanically adding long exposure. They will amplify this move higher. Important: CTAs are NOT predictive, they are reactive. They are the last buyers at the top and last sellers at the bottom. Use their positioning as a crowding signal, not a directional signal.'
-      : spxChg>0
-      ? 'Mild positive momentum. CTAs marginally long or holding. No strong momentum signal either way. These environments are typically choppy — CTAs flip frequently.'
-      : spxChg>-1
-      ? 'Flat to slightly negative. CTAs reducing or flat. Momentum models not triggering shorts yet but long signals are fading. Watch the next 3-5 days for direction.'
-      : 'Negative momentum — CTAs selling mechanically. This creates overshoots to the downside. When CTAs are max short and sentiment is bearish, you often get the best buying opportunities. The unwind can be violent.',
-    lag: 'Signal lag: 1–3 days (price) · 3 days (COT)',
-  };
-
-  // ── 4. RETAIL / DUMB MONEY (contrarian signal) ──
-  // When retail is extremely bullish → contrarian bear signal
-  // When retail is extremely bearish → contrarian bull signal
-  // Proxy: VIX inverse — when VIX is low, retail is complacent (bearish contrarian)
-  const retailBull = vix < 18;
-  const retailScore = vix<14?25:vix<18?35:vix<22?55:vix<28?70:82;
-  // Note: high retail fear score = GOOD for markets (contrarian)
-  const retailPlayers = {
-    id:'retail', color:'var(--lavender)', speed:2, speedLabel:'Slow — Contrarian Indicator',
-    eyebrow:'Player 4 — Contrarian Signal',
-    name:'Retail & Dumb Money',
-    source:'Proxy: VIX sentiment · AAII survey (weekly) · Retail options flow',
-    signal: vix<18?'Euphoric':vix<22?'Optimistic':vix<28?'Worried':'Fearful',
-    signalColor: vix<18?'c-red':vix<22?'c-gold':vix<28?'c-green':'c-green',
-    bullPct: retailScore,
-    posLabel: vix<18?'Max long — contrarian sell signal':vix<22?'Moderately long':'Reducing exposure',
-    score: retailScore,
-    // INVERTED: high retail fear = bull signal for smart money
-    verdict: retailScore>65?'bull':retailScore>45?'neu':'bear',
-    verdictLabel: retailScore>65?'Contrarian Bull':retailScore>45?'Mixed':'Contrarian Bear',
-    insight: vix<15
-      ? 'Retail is euphoric — maximum complacency. This is historically one of the BEST contrarian bear signals. When everyone is bullish, who is left to buy? Smart money uses retail euphoria as an exit opportunity. This does NOT mean crash imminent — but upside is limited and downside risk elevated.'
-      : vix<20
-      ? 'Retail moderately bullish. Not yet at extreme complacency but optimism is elevated. Smart money is monitoring. Not a strong signal either way — markets can stay in this zone for extended periods.'
-      : vix<28
-      ? 'Retail getting nervous. Starting to reduce exposure. This is actually a mild contrarian positive — when retail starts selling, smart money starts buying. Watch for capitulation.'
-      : 'Retail fearful or panicking. High VIX retail fear is one of the best contrarian BUY signals historically. When retail is selling in panic, hedge funds are accumulating at a discount. Maximum retail fear often coincides with market bottoms.',
-    lag: 'Signal lag: Real-time (VIX) · 1 week (AAII)',
-  };
-
-  // ── 5. CORPORATE INSIDERS ──
-  // They know their own businesses better than anyone.
-  // Buying their own stock is one of the most bullish signals.
-  // Proxy: Gold as risk-off vs equity appetite proxy
-  // (In a real app this would use SEC Form 4 data)
-  const insiderScore = goldChg > 1.5 ? 30 : goldChg > 0.5 ? 42 : goldChg > -0.5 ? 58 : 72;
-  const insiderPlayers = {
-    id:'insider', color:'var(--gold)', speed:3, speedLabel:'Medium — High Conviction',
-    eyebrow:'Player 5 — Highest Conviction',
-    name:'Corporate Insiders',
-    source:'Proxy: Gold vs equity flows · SEC Form 4 filings · Buyback announcements',
-    signal: goldChg<0?'Buying equity':'Risk off',
-    signalColor: goldChg<0?'c-green':'c-red',
-    bullPct: insiderScore,
-    posLabel: goldChg<0?'Insiders buying own stock':'Insiders cautious',
-    score: insiderScore,
-    verdict: insiderScore>62?'bull':insiderScore>42?'neu':'bear',
-    verdictLabel: insiderScore>62?'Accumulating':insiderScore>42?'Neutral':'Selling',
-    insight: goldChg < -0.5
-      ? 'Gold falling while markets stable — risk appetite returning. Insiders tend to buy when gold underperforms, signalling confidence in their own business prospects. Historically insider buying clusters near bottoms and creates the highest conviction setups. They have a 45-day reporting lag via Form 4 — the signal you see today reflects sentiment from 6 weeks ago.'
-      : goldChg < 0.5
-      ? 'Neutral gold signal — insider activity likely mixed. No strong sector-wide buy or sell pattern. Individual company Form 4 filings would give better resolution here. Look for clusters of insider buying in specific sectors.'
-      : 'Gold rising — risk-off signal. Insiders typically become cautious or sell when macro uncertainty rises. However insider selling is less meaningful than buying (they sell for many reasons). Focus on insider BUYING as the high conviction signal.',
-    lag: 'Signal lag: 45 days (Form 4 mandatory filing)',
-  };
-
-  // ── 6. OPTIONS MARKET / SMART INSTITUTIONAL ──
-  // Options flow reveals institutional hedging and positioning
-  // Proxy: VIX term structure proxy
-  const optScore = vix<16?70:vix<20?60:vix<25?42:vix<32?28:18;
-  const optPlayers = {
-    id:'options', color:'var(--green)', speed:5, speedLabel:'Real-time Signal',
-    eyebrow:'Player 6 — Real-time Intelligence',
-    name:'Options Market',
-    source:'Proxy: VIX level · Put/Call ratio · Dark pool prints · Unusual activity',
-    signal: vix<18?'Calls dominant':vix<24?'Mixed':'Puts dominant',
-    signalColor: vix<18?'c-green':vix<24?'c-gold':'c-red',
-    bullPct: optScore,
-    posLabel: vix<18?'Institutions buying calls / selling puts':vix<24?'Balanced flow':'Institutions buying puts / hedging',
-    score: optScore,
-    verdict: optScore>60?'bull':optScore>40?'neu':'bear',
-    verdictLabel: optScore>60?'Call Skew':optScore>40?'Balanced':'Put Skew',
-    insight: vix<16
-      ? 'Low VIX with call skew — institutions are buying calls (upside bets) and selling puts (income collection). This reflects confidence in the near-term trend. Options market is one of the most real-time signals available. Dark pool unusual activity and large block trades on calls in specific names are the highest-quality signals.'
-      : vix<20
-      ? 'Moderate VIX — options flow balanced. Institutions neither aggressively hedging nor chasing upside. This is a stable environment. Watch for any sudden spike in put buying as an early warning signal.'
-      : vix<25
-      ? 'Elevated VIX — put buying increasing. Institutions purchasing downside protection. This can be both a hedge and a directional bet. When put buying becomes extreme and then reverses, it often marks the low.'
-      : 'High VIX, put-heavy flow. Panic hedging underway. When VIX spikes to extremes and open interest in puts is at maximum, it historically marks capitulation. The best risk/reward entries often emerge when everyone is buying puts.',
-    lag: 'Signal lag: Real-time (VIX) · 1 day (options data)',
-  };
-
-  return[govPlayers,hfPlayers,ctaPlayers,retailPlayers,insiderPlayers,optPlayers];
+  return { spx, ndx, vix, y10, y2, yieldCurve: y10 - y2, gold, oil, usd, tlt, sectors };
 }
 
-// ─────────────────────────────────────────────
-// RENDER PLAYERS
-// ─────────────────────────────────────────────
-function renderPlayers(players){
-  document.getElementById('playersGrid').innerHTML=players.map(p=>`
-    <div class="player-card">
-      <div class="player-header ph-${p.id}" style="--player-color:${p.color}">
-        <div class="player-eyebrow" style="color:${p.color}">${p.eyebrow}</div>
-        <div class="player-name">${p.name}</div>
-        <div class="player-speed">${p.speedLabel}</div>
-        <div class="speed-bar">
-          ${[1,2,3,4,5].map(i=>`<div class="speed-pip ${i<=p.speed?'active':''}" style="${i<=p.speed?'background:'+p.color:''}"></div>`).join('')}
-        </div>
-      </div>
-      <div class="player-body">
-        <div class="player-source">${p.source}</div>
-        <div class="player-signal">
-          <div class="signal-label">Current signal</div>
-          <div class="signal-value ${p.signalColor}">${p.signal}</div>
-        </div>
-        <div class="positioning-bar">
-          <div class="pos-fill" style="width:${p.bullPct}%;background:${p.color}"></div>
-        </div>
-        <div class="pos-labels"><span>Bearish</span><span>${p.posLabel}</span><span>Bullish</span></div>
-        <div class="player-insight">${p.insight}</div>
-        <div class="player-verdict v-${p.verdict}">${p.verdictLabel}</div>
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:8px">${p.lag}</div>
-      </div>
+function renderSnapshot(m) {
+  const fmt = (v, d=2) => v ? parseFloat(v).toFixed(d) : '—';
+  const ch = v => v >= 0 ? `<span class="c-green">▲ ${Math.abs(v).toFixed(2)}%</span>` : `<span class="c-red">▼ ${Math.abs(v).toFixed(2)}%</span>`;
+  const tiles = [
+    { lbl:'S&P 500', val: fmt(m.spx.price,0), chg: m.spx.change, col: m.spx.change>=0?'var(--green)':'var(--red)' },
+    { lbl:'NASDAQ', val: fmt(m.ndx.price,0), chg: m.ndx.change, col: m.ndx.change>=0?'var(--green)':'var(--red)' },
+    { lbl:'VIX', val: fmt(m.vix.price,1), chg: m.vix.change, col: m.vix.price<20?'var(--green)':'var(--red)' },
+    { lbl:'10Y Yield', val: m.y10 ? fmt(m.y10,2)+'%' : '—', chg: null, col: m.y10<4?'var(--green)':'var(--red)' },
+    { lbl:'Yield Curve', val: m.yieldCurve ? (m.yieldCurve>0?'+':'')+fmt(m.yieldCurve,2) : '—', chg: null, col: m.yieldCurve>0?'var(--green)':'var(--red)' },
+    { lbl:'Gold', val: fmt(m.gold.price,0), chg: m.gold.change, col: 'var(--gold)' },
+    { lbl:'Crude Oil', val: fmt(m.oil.price,1), chg: m.oil.change, col: m.oil.price<85?'var(--green)':'var(--red)' },
+    { lbl:'USD Index', val: fmt(m.usd.price,1), chg: m.usd.change, col: m.usd.change>0?'var(--red)':'var(--green)' },
+  ];
+  document.getElementById('snapshotBar').innerHTML = tiles.map(t => `
+    <div class="snap-tile">
+      <div class="snap-label">${t.lbl}</div>
+      <div class="snap-value" style="color:${t.col}">${t.val}</div>
+      <div class="snap-change">${t.chg !== null ? ch(t.chg) : ''}</div>
+      <div class="snap-accent" style="background:${t.col}"></div>
     </div>`).join('');
 }
 
 // ─────────────────────────────────────────────
-// COMPOSITE SIGNAL
+// PLAYER SIGNALS — derived from market data
 // ─────────────────────────────────────────────
-function renderComposite(players){
-  // Weight each player differently
-  const weights={gov:0.25,hf:0.25,cta:0.15,retail:0.10,insider:0.15,options:0.10};
-  // Retail is inverted — high fear is bullish
-  let weighted=0;
-  players.forEach(p=>{
-    const w=weights[p.id]||0.1;
-    const score=p.id==='retail'?p.score:p.score; // retail already inverted in build
-    weighted+=score*w;
-  });
-  const composite=Math.round(weighted);
+function buildPlayers(m) {
+  const vix = m.vix.price || 20;
+  const spxChg = m.spx.change || 0;
+  const goldChg = m.gold.change || 0;
+  const tltChg = m.tlt.change || 0;
+  const tltPrice = m.tlt.price || 95;
+  const y10 = m.y10 || 4.5;
+  const yc = m.yieldCurve || 0;
+  const usdChg = m.usd.change || 0;
 
-  const verdict=composite>=65?{label:'Smart Money Bullish',color:'var(--green)',desc:'The majority of informed market participants are net long or increasing risk exposure. Macro, hedge fund, and options signals align. This is the most reliable environment for trend trades in quality names. Follow the dominant flow.'}
-    :composite>=52?{label:'Cautiously Constructive',color:'var(--gold)',desc:'Mixed signals across player types. Some players bullish, others neutral. This environment rewards selectivity — focus on the strongest sectors and highest quality balance sheets. Avoid speculation.'}
-    :composite>=42?{label:'Transition — Watch Closely',color:'var(--rose)',desc:'Players are repositioning. Smart money is reducing risk while retail may still be euphoric. The best asymmetric setups emerge here. Reduce position size. Increase cash. Wait for clarity.'}
-    :composite>=30?{label:'Smart Money Bearish',color:'var(--red)',desc:'Informed players are reducing exposure or short. Government policy restrictive, HFs hedged, CTAs short. This environment punishes risk-taking. Capital preservation is the priority.'}
-    :{label:'Crisis Positioning',color:'var(--lavender)',desc:'Extreme risk-off across all player types. Only the most defensive positioning is appropriate. These environments end with maximum retail panic and smart money accumulation — but timing the bottom is dangerous.'};
+  // ── 1. GOVERNMENTS & CENTRAL BANKS (slowest) ──
+  // Read via bond market — TLT price and yields
+  const govScore = y10 < 3.5 ? 80 : y10 < 4.0 ? 65 : y10 < 4.5 ? 48 : y10 < 5.0 ? 32 : 18;
+  const gov = {
+    id:'gov', color:'var(--blue)', pips:1,
+    eyebrow:'Player 1 · Slowest Moving',
+    name:'Governments & Central Banks',
+    speedLabel:'Glacial — 3 to 12 month cycles',
+    source:'Data: 10Y yield · TLT bond ETF · Fed dot plot · FRED',
+    signal: y10 < 4 ? 'Easing Bias' : y10 < 4.5 ? 'On Hold' : 'Restrictive',
+    signalColor: y10 < 4 ? 'c-green' : y10 < 4.5 ? 'c-gold' : 'c-red',
+    bullPct: govScore, score: govScore,
+    posLabel: y10 < 4.5 ? 'Accommodative policy environment' : 'Tightening / restrictive policy',
+    verdict: govScore > 60 ? 'bull' : govScore > 40 ? 'neu' : 'bear',
+    verdictLabel: govScore > 60 ? 'Supportive' : govScore > 40 ? 'Neutral' : 'Restrictive',
+    lag: 'Lag: Policy signals 3–12 months ahead',
+    insight: y10 < 4.0
+      ? `10Y at ${y10.toFixed(2)}% — central banks in easing cycle or pause. The most bullish macro environment for equities. Lower rates expand P/E multiples and reduce corporate borrowing costs. This regime historically lasts 12–24 months. Growth stocks, tech, and real estate benefit most.`
+      : y10 < 4.5
+      ? `10Y at ${y10.toFixed(2)}% — CBs on hold, watching inflation data. Neutral environment. Markets can grind higher but multiple expansion is limited. Quality and earnings growth matter more in this regime than momentum alone.`
+      : `10Y at ${y10.toFixed(2)}% — elevated rates compress equity multiples and increase cost of capital. Stocks with weak balance sheets or negative free cash flow are most vulnerable. Favour value, dividends, and short-duration cash flows. This is the environment that separates quality from speculation.`,
+  };
 
-  const dashOffset=339-(339*composite/100);
+  // ── 2. MACRO HEDGE FUNDS (fastest) ──
+  // Proxied via VIX + gold movement
+  const hfScore = vix < 14 ? 78 : vix < 18 ? 65 : vix < 22 ? 52 : vix < 28 ? 35 : 18;
+  const hf = {
+    id:'hf', color:'var(--rose)', pips:5,
+    eyebrow:'Player 2 · Fastest Moving',
+    name:'Macro Hedge Funds',
+    speedLabel:'Fast — days to weeks',
+    source:'Data: VIX · Gold flows · COT Non-Commercial · 13F (45d lag)',
+    signal: vix < 16 ? 'Risk On' : vix < 22 ? 'Cautious' : 'Defensive',
+    signalColor: vix < 16 ? 'c-green' : vix < 22 ? 'c-gold' : 'c-red',
+    bullPct: hfScore, score: hfScore,
+    posLabel: `VIX at ${vix.toFixed(1)} — ${vix < 18 ? 'net long, low hedging' : vix < 25 ? 'moderate hedging' : 'heavy hedging / short'}`,
+    verdict: hfScore > 60 ? 'bull' : hfScore > 42 ? 'neu' : 'bear',
+    verdictLabel: hfScore > 60 ? 'Net Long' : hfScore > 42 ? 'Neutral' : 'Net Short',
+    lag: 'Lag: Real-time (VIX) · 45 days (13F filings)',
+    insight: vix < 16
+      ? `VIX at ${vix.toFixed(1)} — macro funds aggressively long. Complacency at this level is a late-cycle signal. Great for momentum but watch for sudden VIX spikes as HFs have crowded positioning to unwind. They will exit before the data confirms the move.`
+      : vix < 22
+      ? `VIX at ${vix.toFixed(1)} — HFs moderately positioned. Standard risk-on environment. Not chasing but not fleeing. This is the sweet spot for markets — enough optimism to keep assets bid, enough caution to prevent blow-off tops.`
+      : `VIX at ${vix.toFixed(1)} — HFs in defensive mode. Reducing gross exposure and increasing hedges. Not necessarily net short but risk-adjusted exposure is falling. Forced deleveraging risk increases above VIX 30. These environments create the best asymmetric setups once fear peaks.`,
+  };
 
-  document.getElementById('compositeBox').innerHTML=`
+  // ── 3. CTAs / TREND FOLLOWERS ──
+  // Pure momentum — they buy what is going up, sell what is going down
+  const ctaScore = spxChg > 1.5 ? 80 : spxChg > 0.5 ? 66 : spxChg > 0 ? 55 : spxChg > -1 ? 38 : 20;
+  const cta = {
+    id:'cta', color:'var(--orange)', pips:3,
+    eyebrow:'Player 3 · Momentum Driven',
+    name:'CTAs & Systematic Funds',
+    speedLabel:'Medium — trend signals 1–4 weeks',
+    source:'Data: Price momentum · COT Managed Money · Vol-targeting models',
+    signal: spxChg > 0.5 ? 'Long Trend' : spxChg > -0.5 ? 'Flat' : 'Short Signal',
+    signalColor: spxChg > 0.5 ? 'c-green' : spxChg > -0.5 ? 'c-gold' : 'c-red',
+    bullPct: ctaScore, score: ctaScore,
+    posLabel: spxChg > 0.5 ? 'Adding length mechanically' : spxChg > -0.5 ? 'Flat / waiting for signal' : 'Reducing / shorting on breakdown',
+    verdict: ctaScore > 60 ? 'bull' : ctaScore > 42 ? 'neu' : 'bear',
+    verdictLabel: ctaScore > 60 ? 'Trend Long' : ctaScore > 42 ? 'Neutral' : 'Trend Short',
+    lag: 'Lag: 1–3 days (price signal) · 3 days (COT)',
+    insight: spxChg > 1
+      ? `Strong positive day — CTAs mechanically adding longs. They amplify moves in both directions. Critical to understand: CTAs are NOT predictive. They are the last buyers at tops and last sellers at bottoms. Their crowding is a contrarian signal at extremes — when everyone knows CTAs are max long, the unwind risk is the trade.`
+      : spxChg > 0
+      ? `Mild positive momentum — CTAs holding or adding marginally. No strong trigger. In range-bound markets CTAs flip frequently and add noise. Focus on the multi-week trend rather than daily signals for CTA positioning.`
+      : `Negative momentum — CTAs selling mechanically. This creates overshoots to the downside as their selling is indiscriminate. When CTAs are max short and news sentiment is most bearish, quality assets are often at their best risk/reward. The CTA unwind from max short is one of the most violent and fast moves in markets.`,
+  };
+
+  // ── 4. RETAIL / DUMB MONEY (contrarian) ──
+  // Inverted — retail fear = smart money buying opportunity
+  const retailRaw = vix < 14 ? 15 : vix < 18 ? 28 : vix < 22 ? 50 : vix < 28 ? 68 : 85;
+  const retail = {
+    id:'retail', color:'var(--lavender)', pips:2,
+    eyebrow:'Player 4 · Contrarian Indicator',
+    name:'Retail Investors',
+    speedLabel:'Slow — always last to know',
+    source:'Data: VIX proxy · AAII sentiment survey · Retail options flow',
+    signal: vix < 16 ? 'Euphoric' : vix < 20 ? 'Optimistic' : vix < 26 ? 'Worried' : 'Fearful',
+    signalColor: vix < 16 ? 'c-red' : vix < 20 ? 'c-gold' : vix < 26 ? 'c-green' : 'c-green',
+    bullPct: retailRaw, score: retailRaw,
+    posLabel: vix < 18 ? 'Max long — CONTRARIAN SELL signal' : vix < 24 ? 'Reducing exposure' : 'Panic selling — CONTRARIAN BUY signal',
+    verdict: retailRaw > 65 ? 'bull' : retailRaw > 45 ? 'neu' : 'bear',
+    verdictLabel: retailRaw > 65 ? 'Contrarian Bull' : retailRaw > 45 ? 'Mixed' : 'Contrarian Bear',
+    lag: 'Lag: Real-time proxy · 1 week (AAII survey)',
+    insight: vix < 16
+      ? `Retail euphoric — maximum complacency. The AAII bull survey typically peaks here. This is historically one of the strongest contrarian BEAR signals. Who is left to buy when everyone is already long? Smart money uses retail euphoria as an exit ramp. This does not mean crash is imminent — markets can stay irrational — but risk/reward is worst here.`
+      : vix < 22
+      ? `Retail moderately positioned. Not at extremes. Mixed signal — markets can continue either direction. The best trading environments are when retail is slightly uncertain but not panicking.`
+      : `Retail fearful or panicking. VIX elevated and AAII bears outnumber bulls. This is the contrarian BUY zone. Every major market bottom in history was accompanied by maximum retail fear. Smart money accumulates from panicking retail sellers. The more extreme the fear, the better the eventual setup.`,
+  };
+
+  // ── 5. CORPORATE INSIDERS ──
+  // Highest conviction — they know their company best
+  // Proxied via gold vs equity flow divergence
+  const insiderScore = goldChg > 2 ? 25 : goldChg > 1 ? 38 : goldChg > 0 ? 52 : goldChg > -1 ? 65 : 78;
+  const insider = {
+    id:'insider', color:'var(--gold)', pips:3,
+    eyebrow:'Player 5 · Highest Conviction',
+    name:'Corporate Insiders',
+    speedLabel:'Medium — 45 day reporting lag',
+    source:'Data: Gold/equity divergence proxy · SEC Form 4 filings · Buyback announcements',
+    signal: goldChg < 0 ? 'Buying' : goldChg < 1 ? 'Neutral' : 'Cautious',
+    signalColor: goldChg < 0 ? 'c-green' : goldChg < 1 ? 'c-gold' : 'c-red',
+    bullPct: insiderScore, score: insiderScore,
+    posLabel: goldChg < 0 ? 'Insiders buying own stock' : 'Insiders on sidelines',
+    verdict: insiderScore > 60 ? 'bull' : insiderScore > 40 ? 'neu' : 'bear',
+    verdictLabel: insiderScore > 60 ? 'Accumulating' : insiderScore > 40 ? 'Neutral' : 'Selling',
+    lag: 'Lag: 45 days mandatory (SEC Form 4)',
+    insight: goldChg < -0.5
+      ? `Gold underperforming — risk appetite intact. Insiders tend to buy back their own stock and increase buybacks when they have high conviction in their business outlook. This is the highest quality signal in markets — insiders have the most information about their company. The 45-day Form 4 lag means you are seeing their conviction from 6 weeks ago, but clusters of insider buying across sectors remain highly predictive.`
+      : goldChg < 0.5
+      ? `Neutral signal. Insider activity likely mixed across companies. In this environment, individual company Form 4 filings give better resolution than macro proxies. Look for clusters of buying in specific sectors for the highest conviction setups.`
+      : `Gold rising — risk-off signal. Insiders become cautious when macro uncertainty rises. Note: insider SELLING is less meaningful (they sell for many reasons — diversification, taxes, liquidity). Focus on insider BUYING as the high-conviction signal. Absence of buying in elevated markets is itself a warning sign.`,
+  };
+
+  // ── 6. OPTIONS MARKET ──
+  // Real-time institutional positioning signal
+  const optScore = vix < 14 ? 76 : vix < 18 ? 64 : vix < 23 ? 48 : vix < 30 ? 30 : 16;
+  const options = {
+    id:'options', color:'var(--green)', pips:5,
+    eyebrow:'Player 6 · Real-time Signal',
+    name:'Options Market',
+    speedLabel:'Real-time — most current signal',
+    source:'Data: VIX level · Put/Call ratio proxy · Skew · Dark pool prints',
+    signal: vix < 18 ? 'Call Skew' : vix < 24 ? 'Balanced' : 'Put Skew',
+    signalColor: vix < 18 ? 'c-green' : vix < 24 ? 'c-gold' : 'c-red',
+    bullPct: optScore, score: optScore,
+    posLabel: vix < 18 ? 'Institutions buying calls / selling puts' : vix < 24 ? 'Balanced put/call flow' : 'Institutions buying puts / hedging',
+    verdict: optScore > 58 ? 'bull' : optScore > 40 ? 'neu' : 'bear',
+    verdictLabel: optScore > 58 ? 'Call Skew' : optScore > 40 ? 'Balanced' : 'Put Skew',
+    lag: 'Lag: Real-time (VIX) · 1 day (options flow)',
+    insight: vix < 16
+      ? `Low VIX with call skew — institutions buying calls and selling puts for income. Reflects confidence in near-term trend continuation. Options market is the most real-time signal available. Dark pool large block call buying on specific names is the highest conviction institutional signal you can access publicly. Watch for unusual options activity in sector leaders.`
+      : vix < 22
+      ? `Moderate VIX — balanced options flow. Institutions neither aggressively hedging nor chasing upside. Stable environment. The most interesting trades emerge in individual stocks with unusual options activity against a neutral market backdrop.`
+      : `Elevated VIX — put buying dominating. Institutions purchasing downside protection. When put buying becomes extreme and then reverses, it often marks the short-term low. The best entries come when implied volatility is elevated (options are expensive) but market is stabilising — sell the vol, not the market.`,
+  };
+
+  return [gov, hf, cta, retail, insider, options];
+}
+
+function renderPlayers(players) {
+  document.getElementById('playersGrid').innerHTML = players.map(p => `
+    <div class="player-card">
+      <div class="player-header ph-${p.id}" style="--player-color:${p.color}">
+        <div class="player-eyebrow" style="color:${p.color}">${p.eyebrow}</div>
+        <div class="player-name">${p.name}</div>
+        <div class="player-speed-label">${p.speedLabel}</div>
+        <div class="speed-pips">
+          ${[1,2,3,4,5].map(i=>`<div class="pip ${i<=p.pips?'on':''}" style="${i<=p.pips?'--player-color:'+p.color+';background:'+p.color:''}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="player-body">
+        <div class="player-source-tag">${p.source}</div>
+        <div class="player-signal-row">
+          <span class="psr-label">Current signal</span>
+          <span class="psr-value ${p.signalColor}">${p.signal}</span>
+        </div>
+        <div class="pos-bar"><div class="pos-fill" style="width:${p.bullPct}%;background:${p.color}"></div></div>
+        <div class="pos-labels"><span>Bearish</span><span>${p.posLabel}</span><span>Bullish</span></div>
+        <div class="player-insight">${p.insight}</div>
+        <div class="player-footer">
+          <div class="verdict-badge vb-${p.verdict}">${p.verdictLabel}</div>
+          <div class="lag-note">${p.lag}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderComposite(players, m) {
+  // Weighted composite — gov and HF weighted highest
+  const weights = { gov:0.25, hf:0.25, cta:0.15, retail:0.10, insider:0.15, options:0.10 };
+  let composite = 0;
+  players.forEach(p => { composite += (p.score || 0) * (weights[p.id] || 0.1); });
+  composite = Math.round(composite);
+
+  const regimes = [
+    { min:68, label:'Smart Money Bullish', color:'var(--green)', desc:'The majority of informed market participants are net long or increasing risk exposure. Macro, hedge fund, and options signals are aligned. Follow the dominant flow — trend trades in quality names have the best risk/reward here.' },
+    { min:54, label:'Cautiously Constructive', color:'var(--gold)', desc:'Mixed signals across player types. Some players bullish, others neutral. Selectivity matters — focus on the strongest sectors and highest quality balance sheets. Asymmetric setups are beginning to emerge.' },
+    { min:42, label:'Transition — Watch Closely', color:'var(--rose)', desc:'Players are repositioning. Smart money reducing risk while retail may still be complacent. The best asymmetric setups form in this environment. Reduce position size, increase cash, wait for clarity.' },
+    { min:28, label:'Smart Money Bearish', color:'var(--red)', desc:'Informed players are reducing exposure or short. Government policy restrictive, HFs hedged, CTAs going short. Capital preservation is the priority. Only the highest quality balance sheets deserve exposure.' },
+    { min:0,  label:'Crisis Positioning', color:'var(--lavender)', desc:'Extreme risk-off across all player types. Only the most defensive positioning is appropriate. These environments end with maximum retail panic and smart money accumulation — but timing the exact bottom requires patience.' },
+  ];
+
+  const regime = regimes.find(r => composite >= r.min) || regimes[regimes.length-1];
+  const dashOffset = 339 - (339 * composite / 100);
+
+  // Top sectors
+  const sectorArr = Object.entries(m.sectors).map(([name,d])=>({name,change:d.change||0})).sort((a,b)=>b.change-a.change);
+  const topSectors = sectorArr.slice(0,3).map(s=>`<span style="color:var(--green)">${s.name} +${s.change.toFixed(1)}%</span>`).join(' · ');
+  const botSectors = sectorArr.slice(-2).map(s=>`<span style="color:var(--red)">${s.name} ${s.change.toFixed(1)}%</span>`).join(' · ');
+
+  document.getElementById('compositeBox').innerHTML = `
     <div class="composite-inner">
       <div class="composite-left">
-        <div class="composite-eyebrow">Composite Smart Money Signal</div>
-        <div class="composite-verdict" style="color:${verdict.color}">${verdict.label}</div>
-        <div class="composite-desc">${verdict.desc}</div>
+        <div class="composite-eyebrow">Composite Smart Money Signal — Weighted 6-Player Model</div>
+        <div class="composite-verdict" style="color:${regime.color}">${regime.label}</div>
+        <div class="composite-desc">${regime.desc}</div>
+        <div style="margin-top:16px;font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.8">
+          Sector inflows: ${topSectors}<br>
+          Sector outflows: ${botSectors}
+        </div>
       </div>
       <div class="composite-ring">
         <svg width="120" height="120" viewBox="0 0 120 120">
           <circle cx="60" cy="60" r="54" fill="none" stroke="#251e35" stroke-width="6"/>
-          <circle cx="60" cy="60" r="54" fill="none" stroke="${verdict.color}" stroke-width="6"
+          <circle cx="60" cy="60" r="54" fill="none" stroke="${regime.color}" stroke-width="6"
             stroke-linecap="round" stroke-dasharray="339"
             style="stroke-dashoffset:${dashOffset};transition:stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1);transform:rotate(-90deg);transform-origin:60px 60px"/>
         </svg>
-        <div class="composite-ring-text">
-          <div class="composite-score" style="color:${verdict.color}">${composite}</div>
-          <div class="composite-score-lbl">Signal</div>
+        <div class="ring-text">
+          <div class="ring-num" style="color:${regime.color}">${composite}</div>
+          <div class="ring-lbl">Signal</div>
         </div>
       </div>
-      <div class="player-breakdown">
+      <div class="composite-bars">
         ${players.map(p=>`
-          <div class="breakdown-row">
-            <div class="breakdown-name" style="color:${p.color}">${p.name.split(' ').slice(0,2).join(' ')}</div>
-            <div class="breakdown-track"><div class="breakdown-fill" style="width:${p.score}%;background:${p.color}"></div></div>
-            <div class="breakdown-val" style="color:${p.score>60?'var(--green)':p.score>40?'var(--gold)':'var(--red)'}">${p.score}/100</div>
+          <div class="cbar-row">
+            <div class="cbar-name" style="color:${p.color}">${p.name.split(' ').slice(0,3).join(' ')}</div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:${p.score}%;background:${p.color}"></div></div>
+            <div class="cbar-val" style="color:${p.score>60?'var(--green)':p.score>40?'var(--gold)':'var(--red)'}">${p.score}/100</div>
           </div>`).join('')}
       </div>
     </div>`;
 }
 
 // ─────────────────────────────────────────────
-// NEWS SENTIMENT
+// NEWS
 // ─────────────────────────────────────────────
-function renderNews(news,m){
-  // Simple keyword-based sentiment
-  const bullWords=['rally','surge','gain','rise','growth','strong','beat','record','upgrade','buy','bull','recovery','high'];
-  const bearWords=['fall','drop','crash','decline','loss','weak','miss','cut','downgrade','sell','bear','recession','low','risk','warn','fear'];
+async function fetchNews() {
+  const k = fmpKey();
+  const res = await fetch(`https://financialmodelingprep.com/api/v3/stock_news?limit=20&apikey=${k}`);
+  if (!res.ok) throw new Error('News API ' + res.status);
+  return res.json();
+}
 
-  function scoreSentiment(text){
-    const t=text.toLowerCase();
-    let b=0,be=0;
-    bullWords.forEach(w=>{if(t.includes(w))b++;});
-    bearWords.forEach(w=>{if(t.includes(w))be++;});
-    if(b>be)return{label:'Positive',cls:'pos',color:'var(--green)'};
-    if(be>b)return{label:'Negative',cls:'neg',color:'var(--red)'};
-    return{label:'Neutral',cls:'neu',color:'var(--gold)'};
-  }
+function scoreSentiment(text) {
+  const t = text.toLowerCase();
+  const bull = ['rally','surge','gain','rise','growth','strong','beat','record','upgrade','bull','recovery','high','positive','optimism','rebound'];
+  const bear = ['fall','drop','crash','decline','loss','weak','miss','cut','downgrade','bear','recession','low','risk','warn','fear','crisis','concern','inflation'];
+  let b = 0, be = 0;
+  bull.forEach(w => { if(t.includes(w)) b++; });
+  bear.forEach(w => { if(t.includes(w)) be++; });
+  if(b > be) return { label:'Positive', cls:'pos', color:'var(--green)' };
+  if(be > b) return { label:'Negative', cls:'neg', color:'var(--red)' };
+  return { label:'Neutral', cls:'neu', color:'var(--gold)' };
+}
 
-  const scored=news.slice(0,12).map(n=>{
-    const s=scoreSentiment((n.title||'')+(n.text||''));
-    return{...n,sent:s};
-  });
+function renderNews(news, m) {
+  const scored = news.slice(0,14).map(n => ({ ...n, sent: scoreSentiment((n.title||'')+(n.text||'')) }));
+  const pos = scored.filter(n=>n.sent.label==='Positive').length;
+  const neg = scored.filter(n=>n.sent.label==='Negative').length;
+  const neu = scored.filter(n=>n.sent.label==='Neutral').length;
+  const total = scored.length || 1;
+  const sentScore = Math.round((pos/total)*100);
+  const sv = sentScore > 58 ? { v:'Bullish News Flow', c:'c-green' } : sentScore > 40 ? { v:'Neutral News Flow', c:'c-gold' } : { v:'Bearish News Flow', c:'c-red' };
 
-  const posCount=scored.filter(n=>n.sent.label==='Positive').length;
-  const negCount=scored.filter(n=>n.sent.label==='Negative').length;
-  const neuCount=scored.filter(n=>n.sent.label==='Neutral').length;
-  const total=scored.length||1;
-  const sentScore=Math.round((posCount/total)*100);
-
-  const sentVerdict=sentScore>60?{v:'Bullish',c:'c-green'}:sentScore>40?{v:'Neutral',c:'c-gold'}:{v:'Bearish',c:'c-red'};
-
-  document.getElementById('newsGrid').innerHTML=`
-    <div class="card" style="background:var(--surface);border:1px solid var(--border);border-radius:3px;">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);text-transform:uppercase">Latest Financial News</div>
-      <div class="news-feed">
+  document.getElementById('newsLayout').innerHTML = `
+    <div class="news-card">
+      <div class="news-card-head">
+        <div class="news-card-title">Latest Financial News</div>
+        <div class="news-card-sub">Sentiment scored automatically</div>
+      </div>
+      <div class="news-list">
         ${scored.map(n=>`
           <div class="news-item ${n.sent.cls}">
             <div class="news-headline">${n.title||'—'}</div>
             <div class="news-meta">
-              <span>${n.publishedDate?n.publishedDate.substring(0,10):''}</span>
+              <span>${(n.publishedDate||'').substring(0,10)}</span>
               <span>${n.site||''}</span>
-              <span class="news-sent" style="color:${n.sent.color}">${n.sent.label}</span>
+              <span class="news-sent-tag" style="color:${n.sent.color}">${n.sent.label}</span>
             </div>
           </div>`).join('')}
       </div>
     </div>
-    <div>
-      <div class="sent-meter" style="margin-bottom:16px">
-        <div class="sent-title">News Sentiment Score</div>
-        <div class="sent-gauge">
-          <div class="sent-needle" style="left:${sentScore}%"></div>
-        </div>
-        <div class="sent-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
-        <div class="sent-score-big ${sentVerdict.c}">${sentScore}</div>
-        <div class="sent-verdict ${sentVerdict.c}">${sentVerdict.v} News Flow</div>
-      </div>
-      <div class="sent-meter">
-        <div class="sent-title">Sentiment Breakdown</div>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
-          ${[['Positive',posCount,'var(--green)'],['Negative',negCount,'var(--red)'],['Neutral',neuCount,'var(--gold)']].map(([lbl,cnt,col])=>`
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="font-size:10px;letter-spacing:1px;color:var(--muted);width:70px">${lbl}</div>
-              <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
-                <div style="height:100%;width:${cnt/total*100}%;background:${col};border-radius:2px;transition:width 1s ease"></div>
-              </div>
-              <div style="font-family:var(--serif);font-size:18px;color:${col};width:30px;text-align:right">${cnt}</div>
+    <div class="sentiment-panel">
+      <div class="sent-box">
+        <div class="sent-box-title">News Sentiment Score</div>
+        <div class="gauge-wrap"><div class="gauge-needle" style="left:${sentScore}%"></div></div>
+        <div class="gauge-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
+        <div class="sent-big ${sv.c}">${sentScore}</div>
+        <div class="sent-verdict-lbl ${sv.c}">${sv.v}</div>
+        <div class="breakdown-list">
+          ${[['Positive',pos,'var(--green)'],['Negative',neg,'var(--red)'],['Neutral',neu,'var(--gold)']].map(([l,c,col])=>`
+            <div class="bk-row">
+              <div class="bk-lbl">${l}</div>
+              <div class="bk-track"><div class="bk-fill" style="width:${c/total*100}%;background:${col}"></div></div>
+              <div class="bk-count" style="color:${col}">${c}</div>
             </div>`).join('')}
         </div>
-        <div style="margin-top:16px;font-size:10px;color:var(--muted);line-height:1.7;font-weight:300">
-          News sentiment is a <em style="color:var(--rose)">retail-facing indicator</em> — it reflects what the media is reporting, not what smart money is doing. 
-          Extreme negative news flow often coincides with smart money accumulation. 
-          Treat bearish news consensus as a contrarian signal when other smart money indicators are bullish.
+      </div>
+      <div class="explainer-box">
+        <div class="explainer-box-title">How to Read This</div>
+        <div class="explainer-text">
+          News sentiment is a <em>retail-facing lagging indicator</em> — it reflects what media is reporting, not what smart money is doing.<br><br>
+          <em>Extreme negative news</em> often coincides with smart money accumulation at bottoms.<br><br>
+          <em>Euphoric positive news</em> often coincides with smart money distribution at tops.<br><br>
+          When news sentiment diverges from the composite smart money signal above, the smart money signal wins — almost always.
         </div>
+      </div>
+    </div>`;
+}
+
+function renderNewsEmpty() {
+  document.getElementById('newsLayout').innerHTML = `
+    <div class="explainer-box" style="grid-column:span 2;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:32px;">
+      <div class="explainer-box-title" style="font-family:var(--serif);font-size:15px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:12px">News Feed</div>
+      <div class="explainer-text">
+        Add a free <em>FMP API key</em> in the header to enable the news sentiment feed.<br><br>
+        Get your free key at <em>financialmodelingprep.com</em> — takes 2 minutes. Free tier gives 250 requests/day which is more than enough for this app.
       </div>
     </div>`;
 }
