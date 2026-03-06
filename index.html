@@ -66,7 +66,8 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 
 /* ── PASTE BOX ── */
 .paste-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;overflow:hidden}
-.paste-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
+.paste-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;user-select:none}
+.paste-header.open{border-bottom:1px solid var(--bdr)}
 .paste-header-left{display:flex;align-items:center;gap:12px}
 .paste-icon{font-size:14px;color:var(--lav)}
 .paste-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cream)}
@@ -270,7 +271,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
         <textarea class="ibox-ta" id="input-research" placeholder="Paste ZeroHedge premium articles, broker notes, or any research text. Treated as primary input — overrides RSS headlines." oninput="updateBadge('research')"></textarea>
         <div class="paste-footer">
           <div class="paste-hint"><span>Primary input</span> — RSS headlines are secondary context when this is filled.</div>
-          <button class="paste-clear" onclick="clearBox('research')">Clear ✕</button>
+          <button class="paste-clear" onclick="event.stopPropagation();clearBox('research')">Clear ✕</button>
         </div>
       </div>
     </div>
@@ -290,7 +291,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
         <textarea class="ibox-ta" id="input-aaii" style="min-height:80px" placeholder="Paste the latest AAII Sentiment Survey text directly from aaii.com. Include the full paragraph — Groq reads bullish/bearish/neutral %, bull-bear spread, and compares to historical averages." oninput="updateBadge('aaii')"></textarea>
         <div class="paste-footer">
           <div class="paste-hint">Saved between sessions. Update every Thursday. <span>Old data used if not updated — dated automatically.</span></div>
-          <button class="paste-clear" onclick="clearBox('aaii')">Clear ✕</button>
+          <button class="paste-clear" onclick="event.stopPropagation();clearBox('aaii')">Clear ✕</button>
         </div>
       </div>
     </div>
@@ -310,7 +311,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
         <textarea class="ibox-ta" id="input-naaim" style="min-height:80px" placeholder="Paste the NAAIM Exposure Index table from naaim.org. Include the date column and exposure number — Groq extracts the latest reading and uses prior weeks for trend context." oninput="updateBadge('naaim')"></textarea>
         <div class="paste-footer">
           <div class="paste-hint">Saved between sessions. Update every Wednesday. <span>Old data used if not updated — Groq notes the date.</span></div>
-          <button class="paste-clear" onclick="clearBox('naaim')">Clear ✕</button>
+          <button class="paste-clear" onclick="event.stopPropagation();clearBox('naaim')">Clear ✕</button>
         </div>
       </div>
     </div>
@@ -501,9 +502,11 @@ function updateChip(name, state, count) {
 function toggleBox(id) {
   const body   = document.getElementById("body-"+id);
   const toggle = document.getElementById("toggle-"+id);
+  const header = body.previousElementSibling;
   const isOpen = body.classList.contains("open");
   body.classList.toggle("open", !isOpen);
   toggle.classList.toggle("open", !isOpen);
+  if (header) header.classList.toggle("open", !isOpen);
 }
 function clearBox(id) {
   document.getElementById("input-"+id).value = "";
@@ -525,6 +528,7 @@ function loadInputs() {
   const naaim = localStorage.getItem("ml_naaim") || "";
   document.getElementById("input-aaii").value  = aaii;
   document.getElementById("input-naaim").value = naaim;
+  updateBadge("research");
   updateBadge("aaii");
   updateBadge("naaim");
 }
