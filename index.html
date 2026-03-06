@@ -180,7 +180,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .skm{background:var(--surf);border:1px solid var(--bdr);border-radius:2px;padding:8px 10px}
 .skml{font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
 .skmv{font-size:11px;color:var(--sub);line-height:1.4}
-.skmv.High{color:var(--green);font-weight:600}.skmv.Medium{color:var(--gold);font-weight:600}.skmv.Low{color:var(--red);font-weight:600}
+.skmv.High{color:var(--green);font-weight:600}.skmv.MedHigh{color:var(--blue);font-weight:600}.skmv.Medium{color:var(--gold);font-weight:600}.skmv.Low{color:var(--red);font-weight:600}
 
 /* ── PASTED ARTICLES BADGE in news section ── */
 .paste-notice{background:rgba(204,192,238,.07);border:1px solid rgba(204,192,238,.15);border-radius:2px;padding:10px 16px;font-size:11px;color:var(--lav);margin-bottom:12px;display:none}
@@ -197,6 +197,16 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .ubanner-txt strong{color:var(--lav)}
 .ubanner-time{font-size:10px;color:var(--muted);letter-spacing:1px}
 .update-tag{display:inline-block;background:rgba(144,224,184,.1);border:1px solid rgba(144,224,184,.2);color:var(--green);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
+
+
+/* ── FUNDAMENTALS STRIP ── */
+.fund-strip{margin-top:10px;padding:10px 12px;background:var(--surf);border:1px solid var(--bdr);border-radius:2px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fund-cell{display:flex;flex-direction:column;gap:2px}
+.fund-lbl{font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;font-weight:600}
+.fund-val{font-size:12px;color:var(--cream);font-weight:500}
+.fund-val.pos{color:var(--green)}.fund-val.neg{color:var(--red)}
+.fund-val.loading{color:var(--bdr2);animation:fp 1s infinite}
+.fund-err{font-size:10px;color:var(--muted);font-style:italic;padding:4px 0}
 
 @media(max-width:1100px){.dlayout{grid-template-columns:1fr}.dside{flex-direction:row;flex-wrap:wrap}.scard{flex:1;min-width:280px}}
 @media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:24px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}}
@@ -574,15 +584,96 @@ async function analyse(articles, pastedText) {
   const lines = articles.slice(0,30).map((a,i)=>`${i+1}. [${a.source}] ${a.title}`).join("\n");
 
   // Build pasted section if present
+  const hasPastedContent = pastedText && pastedText.trim().length > 20;
   let pastedSection = "";
-  if (pastedText && pastedText.trim().length > 20) {
-    const snippet = pastedText.trim().slice(0, 3000); // cap at 3k chars to stay within token budget
-    pastedSection = `\n\nADDITIONAL RESEARCH (from user — treat as high-signal input, may include premium content):\n${snippet}`;
+  let pastedPreamble = "";
+  if (hasPastedContent) {
+    const snippet = pastedText.trim().slice(0, 4000);
+    pastedSection = `\n\n━━━ PRIMARY RESEARCH INPUT (USER-PROVIDED) ━━━\n${snippet}\n━━━ END PRIMARY RESEARCH ━━━`;
+    pastedPreamble = `The user has provided PRIMARY RESEARCH that must be the dominant input for your analysis. The RSS headlines are secondary context only — they support or add colour to the primary research, they do not override it. All stock picks, thesis, and signals must be grounded first in the primary research.\n\n`;
   }
 
   const raw = await groq(
-    "You are a senior macro analyst and hedge fund strategist. Return ONLY raw JSON — no markdown, no backticks, no explanation. Start with { end with }.",
-    `Analyse the following market intelligence as a senior macro strategist.\n\nLIVE HEADLINES:\n${lines}${pastedSection}\n\nReturn this JSON structure exactly:\n{"narrative":"2-3 sentences dominant story","dominant_themes":["t1","t2","t3","t4"],"hf_signals":"detailed HF/institutional signals — sectors, rotation, risk-on/off. If additional research was provided, weight it heavily.","smart_money_flows":"where institutional money moving — sectors, assets, geographies, direction","key_entities":[{"name":"...","direction":"bull","context":"one sentence"}],"risk_sentiment":"cautious","risk_score":52,"sentiment_breakdown":{"bullish_pct":35,"bearish_pct":40,"neutral_pct":25},"macro_short":{"headline":"punchy 1-4 week thesis","body":"3-4 sentences near-term","tailwinds":["↑ tailwind","↑ tailwind","↓ headwind","↓ headwind"]},"macro_long":{"headline":"punchy 3-12 month thesis","body":"3-4 sentences structural","tailwinds":["↑ tailwind","↑ tailwind","↓ risk"]},"trend_picks":[{"ticker":"NVDA","name":"Nvidia Corp","rationale":"2-3 sentences why fits thesis","catalyst":"specific catalyst","conviction":"High"}],"asymmetric_picks":[{"ticker":"XYZ","name":"Company","rationale":"2-3 sentences asymmetric setup","catalyst":"setup","conviction":"Medium"}]}\n\nRules: trend_picks=5 liquid US stocks. asymmetric_picks=4 stocks. key_entities=6-8. direction=bull/bear/neutral only. risk_sentiment=bullish/cautious/bearish only. Return ONLY the JSON.`
+    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. Return ONLY raw JSON — no markdown, no backticks, no explanation. Start with { end with }.",
+    `${pastedPreamble}Analyse the following market intelligence and generate a full trading-oriented macro analysis.
+
+${hasPastedContent ? "SECONDARY CONTEXT (RSS headlines — use to add colour, do not let these override the primary research above):" : "LIVE HEADLINES:"}
+${lines}${pastedSection}
+
+Return this exact JSON structure:
+{
+  "narrative": "2-3 sentences on the dominant market story right now",
+  "dominant_themes": ["theme1","theme2","theme3","theme4"],
+  "hf_signals": "Detailed HF and institutional positioning signals. Sectors, rotation, risk-on/off, leverage, exposure changes. Weight any additional research heavily.",
+  "smart_money_flows": "Where institutional money is flowing. Specific sectors, assets, geographies, direction.",
+  "key_entities": [{"name":"...","direction":"bull","context":"one sentence"}],
+  "risk_sentiment": "cautious",
+  "risk_score": 52,
+  "sentiment_breakdown": {"bullish_pct":35,"bearish_pct":40,"neutral_pct":25},
+  "macro_short": {
+    "headline": "Punchy 1-4 week thesis",
+    "body": "3-4 sentences near-term outlook",
+    "tailwinds": ["↑ tailwind","↑ tailwind","↓ headwind","↓ headwind"]
+  },
+  "macro_long": {
+    "headline": "Punchy 3-12 month thesis",
+    "body": "3-4 sentences structural outlook",
+    "tailwinds": ["↑ tailwind","↑ tailwind","↓ risk"]
+  },
+  "trend_picks": [
+    {
+      "ticker": "NVDA",
+      "name": "Nvidia Corp",
+      "asset_type": "stock",
+      "direction": "long",
+      "rationale": "2-3 sentences directly connecting this trade to the macro thesis and news flow. Be specific.",
+      "qualifier": "Why this instrument specifically — liquidity, sector leadership, direct exposure to the theme.",
+      "catalyst": "Specific near-term catalyst or trigger",
+      "invalidation": "What would make this thesis wrong",
+      "conviction": "High"
+    }
+  ],
+  "asymmetric_picks": [
+    {
+      "ticker": "EURUSD",
+      "name": "Euro / US Dollar",
+      "asset_type": "fx",
+      "direction": "short",
+      "rationale": "2-3 sentences on the asymmetric setup. What is the market missing or mispricing?",
+      "qualifier": "Why this instrument — what gives it asymmetry here.",
+      "catalyst": "Specific setup, event, or trigger",
+      "invalidation": "What would invalidate this trade",
+      "conviction": "Med-High"
+    }
+  ]
+}
+
+TREND PICKS rules:
+- Include as many picks as the macro thesis genuinely supports — no fixed limit, no padding
+- Mix of stocks, ETFs and major FX pairs as the thesis dictates
+- Both long AND short directions — if the thesis is bearish on a sector, include shorts
+- Stocks and ETFs: large-cap, highly liquid, well-known names only (S&P 500 members, major sector ETFs like SPY/QQQ/XLF/GLD/TLT etc)
+- FX: major pairs only (EURUSD, GBPUSD, USDJPY, USDCHF, AUDUSD, USDCAD, NZDUSD, GBPJPY etc)
+- Each pick must have a clear, direct link to the news flow — no generic picks
+- conviction: exactly "Medium", "Med-High", or "High" — nothing else
+- Only include picks with at least Med-High conviction
+
+ASYMMETRIC PICKS rules:
+- Include as many as genuinely qualify — no fixed limit, no padding
+- These are contrarian, mispriced, or regime-shift trades where risk/reward is skewed
+- Both long and short — a short on an overbought name is valid asymmetry
+- Same liquidity rules: large-cap stocks, major ETFs, major FX pairs only
+- Must have a clear asymmetric setup — down 30%+ with intact thesis, under-owned sector, positioning extreme, event mispricing
+- Each must state what the market is getting wrong
+- conviction: "Medium", "Med-High", or "High" only
+- Only include if genuinely asymmetric — fewer high-quality picks beats padding
+
+GLOBAL rules:
+- asset_type: exactly "stock", "etf", or "fx"
+- direction: exactly "long" or "short"
+- key_entities: 6-8 entries, direction = bull/bear/neutral only
+- risk_sentiment: exactly "bullish", "cautious", or "bearish"
+- Return ONLY the JSON. Nothing else.`
   );
 
   let s = raw.trim().replace(/^```json\s*/i,"").replace(/^```\s*/i,"").replace(/\s*```\s*$/i,"").trim();
@@ -628,18 +719,35 @@ function renderTW(id, items=[]) {
 }
 
 function renderStocks(gid, picks=[], type) {
-  document.getElementById(gid).innerHTML = picks.map(p=>`
+  document.getElementById(gid).innerHTML = picks.map(p=>{
+    const isLong = (p.direction||"long").toLowerCase() === "long";
+    const dirCol = isLong ? "var(--green)" : "var(--red)";
+    const dirLbl = isLong ? "▲ Long" : "▼ Short";
+    const convCls = (p.conviction||"").replace("-","").replace(" ","");
+    const assetLbl = p.asset_type === "fx" ? "FX" : p.asset_type === "etf" ? "ETF" : "Stock";
+    return `
     <div class="sk ${type==="asymm"?"asymm":""}">
       <div class="sktop">
-        <div><div class="sktick">${p.ticker||""}</div><div class="skname">${p.name||""}</div></div>
+        <div>
+          <div class="sktick">${p.ticker||""}</div>
+          <div class="skname">${p.name||""}</div>
+          <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
+            <span style="font-size:9px;font-weight:700;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;background:${isLong?"rgba(144,224,184,.12)":"rgba(232,120,136,.12)"};color:${dirCol};border:1px solid ${isLong?"rgba(144,224,184,.25)":"rgba(232,120,136,.25)"}">${dirLbl}</span>
+            <span style="font-size:9px;font-weight:600;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;background:rgba(224,192,128,.08);color:var(--gold);border:1px solid rgba(224,192,128,.15);text-transform:uppercase">${assetLbl}</span>
+          </div>
+        </div>
         <span class="skbadge ${type}">${type==="trend"?"Trend":"Asymm"}</span>
       </div>
       <div class="skwhy">${md(p.rationale||"")}</div>
+      ${p.qualifier ? `<div style="font-size:12px;color:var(--sub);line-height:1.6;margin-bottom:12px;padding:8px 12px;background:rgba(204,192,238,.05);border-left:2px solid var(--bdr2);border-radius:0 2px 2px 0">${md(p.qualifier)}</div>` : ""}
       <div class="skfoot">
         <div class="skm"><div class="skml">Catalyst</div><div class="skmv">${p.catalyst||""}</div></div>
-        <div class="skm"><div class="skml">Conviction</div><div class="skmv ${p.conviction||""}">${p.conviction||""}</div></div>
+        <div class="skm"><div class="skml">Conviction</div><div class="skmv ${convCls}">${p.conviction||""}</div></div>
       </div>
-    </div>`).join("");
+      ${p.invalidation ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(232,120,136,.05);border:1px solid rgba(232,120,136,.12);border-radius:2px"><span style="font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;font-weight:600">Invalidation · </span><span style="font-size:11px;color:var(--sub)">${p.invalidation}</span></div>` : ""}
+      ${p.asset_type !== "fx" ? `<div class="fund-strip" id="fund-${p.ticker}"><div class="fund-cell"><div class="fund-lbl">Market Cap</div><div class="fund-val loading" id="f-mktcap-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">P/E Ratio</div><div class="fund-val loading" id="f-pe-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">Day Change</div><div class="fund-val loading" id="f-chg-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">52W Range</div><div class="fund-val loading" id="f-52w-${p.ticker}">—</div></div></div>` : ""}
+    </div>`;
+  }).join("");
 }
 
 function render(articles, d, hasPasted, newCount=0) {
@@ -711,6 +819,10 @@ async function run() {
     document.getElementById("ldg").style.display="none";
     document.getElementById("res").style.display="block";
     setStatus("done","Live");
+
+    // fetch fundamentals async after render — non-blocking
+    const allPicks = [...(d.trend_picks||[]), ...(d.asymmetric_picks||[])];
+    fetchAllFundamentals(allPicks);
   } catch(e) {
     console.error(e);
     showErr(e.message);
@@ -759,9 +871,12 @@ async function analyseUpdate(newArticles, newPaste, existingAnalysis) {
     `${i+1}. [${a.source}] ${a.title}`
   ).join("\n");
 
+  const hasNewPastedContent = newPaste && newPaste.trim().length > 20;
   let pastedSection = "";
-  if (newPaste && newPaste.trim().length > 20) {
-    pastedSection = "\n\nNEW RESEARCH FROM USER:\n" + newPaste.trim().slice(0,2000);
+  let pastedPreamble = "";
+  if (hasNewPastedContent) {
+    pastedSection = "\n\n━━━ NEW PRIMARY RESEARCH (USER-PROVIDED — DOMINANT INPUT) ━━━\n" + newPaste.trim().slice(0,4000) + "\n━━━ END NEW RESEARCH ━━━";
+    pastedPreamble = "The user has provided NEW PRIMARY RESEARCH. This must be the dominant driver of any updates. The new headlines are secondary context only.\n\n";
   }
 
   const existingJSON = JSON.stringify({
@@ -781,12 +896,12 @@ async function analyseUpdate(newArticles, newPaste, existingAnalysis) {
 
   const raw = await groq(
     "You are a senior macro analyst. You are updating an existing analysis with new information. Return ONLY raw JSON — no markdown, no backticks. Start with { end with }.",
-    `You have an existing macro analysis. New market intelligence has arrived. Update the analysis to reflect the new information.
+    `${pastedPreamble}You have an existing macro analysis. New market intelligence has arrived. Update the analysis to reflect the new information.
 
 EXISTING ANALYSIS:
 ${existingJSON}
 
-NEW ARTICLES (${newArticles.length}):
+${hasNewPastedContent ? "SECONDARY CONTEXT (new headlines):" : "NEW ARTICLES (" + newArticles.length + "):"}
 ${newLines}${pastedSection}
 
 Instructions:
@@ -843,6 +958,10 @@ async function runUpdate() {
     render(allArticles, updated, hasNewPaste, newArticles.length);
     saveState(newArticles, updated);
 
+    // fetch fundamentals after update
+    const updatedPicks = [...(updated.trend_picks||[]), ...(updated.asymmetric_picks||[])];
+    fetchAllFundamentals(updatedPicks);
+
     // clear paste after update
     if (hasNewPaste) {
       document.getElementById("paste-input").value = "";
@@ -858,6 +977,88 @@ async function runUpdate() {
 
   document.getElementById("ubtn").disabled = false;
   document.getElementById("abtn").disabled = false;
+}
+
+
+// ── Yahoo Finance fundamentals ────────────────────────────
+const YF_PROXIES = [
+  t => `https://corsproxy.io/?${encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/quote?symbols="+t+"&fields=marketCap,trailingPE,regularMarketChangePercent,fiftyTwoWeekLow,fiftyTwoWeekHigh,regularMarketPrice,shortName")}`,
+  t => `https://api.allorigins.win/get?url=${encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/quote?symbols="+t+"&fields=marketCap,trailingPE,regularMarketChangePercent,fiftyTwoWeekLow,fiftyTwoWeekHigh,regularMarketPrice,shortName")}`,
+  t => `https://thingproxy.freeboard.io/fetch/https://query1.finance.yahoo.com/v8/finance/quote?symbols=${t}&fields=marketCap,trailingPE,regularMarketChangePercent,fiftyTwoWeekLow,fiftyTwoWeekHigh,regularMarketPrice,shortName`,
+];
+
+function fmtMktCap(v) {
+  if (!v) return "—";
+  if (v >= 1e12) return (v/1e12).toFixed(2)+"T";
+  if (v >= 1e9)  return (v/1e9).toFixed(1)+"B";
+  if (v >= 1e6)  return (v/1e6).toFixed(0)+"M";
+  return v;
+}
+
+async function fetchYahoo(ticker) {
+  for (const proxyFn of YF_PROXIES) {
+    try {
+      const r = await fetch(proxyFn(ticker), { signal: AbortSignal.timeout(6000) });
+      if (!r.ok) continue;
+      let raw = await r.json();
+      // allorigins wraps in {contents:"..."}
+      if (raw.contents) raw = JSON.parse(raw.contents);
+      const q = raw?.quoteResponse?.result?.[0];
+      if (!q) continue;
+      return {
+        mktCap : fmtMktCap(q.marketCap),
+        pe     : q.trailingPE ? q.trailingPE.toFixed(1) : "N/A",
+        chg    : q.regularMarketChangePercent != null ? q.regularMarketChangePercent.toFixed(2) : null,
+        low52  : q.fiftyTwoWeekLow  ? q.fiftyTwoWeekLow.toFixed(2)  : "—",
+        high52 : q.fiftyTwoWeekHigh ? q.fiftyTwoWeekHigh.toFixed(2) : "—",
+        price  : q.regularMarketPrice ? q.regularMarketPrice.toFixed(2) : "—",
+      };
+    } catch(e) { continue; }
+  }
+  return null;
+}
+
+function applyFundamentals(ticker, data) {
+  const set = (id, val, cls="") => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val;
+    el.className = "fund-val" + (cls ? " "+cls : "");
+  };
+  if (!data) {
+    set(`f-mktcap-${ticker}`, "—");
+    set(`f-pe-${ticker}`,     "—");
+    set(`f-chg-${ticker}`,    "unavailable", "");
+    set(`f-52w-${ticker}`,    "—");
+    const strip = document.getElementById("fund-"+ticker);
+    if (strip) {
+      const err = document.createElement("div");
+      err.className = "fund-err";
+      err.textContent = "Live data unavailable — verify manually";
+      err.style.cssText = "grid-column:1/-1;font-size:10px;color:var(--muted)";
+      strip.innerHTML = "";
+      strip.appendChild(err);
+    }
+    return;
+  }
+  set(`f-mktcap-${ticker}`, data.mktCap);
+  set(`f-pe-${ticker}`,     data.pe);
+  const chgNum = parseFloat(data.chg);
+  const chgStr = data.chg != null ? (chgNum >= 0 ? "+" : "") + data.chg + "%" : "—";
+  const chgCls = data.chg != null ? (chgNum >= 0 ? "pos" : "neg") : "";
+  set(`f-chg-${ticker}`, chgStr, chgCls);
+  set(`f-52w-${ticker}`, data.low52 + " – " + data.high52);
+}
+
+async function fetchAllFundamentals(picks) {
+  // only stocks and ETFs, skip FX
+  const targets = picks.filter(p => p.asset_type !== "fx");
+  if (!targets.length) return;
+  // batch: fetch all in parallel
+  await Promise.all(targets.map(async p => {
+    const data = await fetchYahoo(p.ticker);
+    applyFundamentals(p.ticker, data);
+  }));
 }
 
 </script>
