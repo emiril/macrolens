@@ -186,6 +186,27 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .paste-notice span{font-weight:600}
 
 
+
+/* ── SENTIMENT PANEL ── */
+#sent-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;margin-bottom:28px;overflow:hidden}
+.sent-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
+.sent-header-left{display:flex;align-items:center;gap:12px}
+#sent-body{display:none;padding:16px 20px}
+#sent-body.open{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.sent-block{display:flex;flex-direction:column;gap:10px}
+.sent-title{font-size:9px;letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:2px}
+.sent-row{display:flex;align-items:center;gap:10px}
+.sent-lbl{font-size:10px;color:var(--sub);width:72px;flex-shrink:0}
+.sent-input{background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--cream);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:6px 10px;width:72px;outline:none;text-align:center;transition:border-color .2s}
+.sent-input:focus{border-color:var(--rose2)}
+.sent-unit{font-size:10px;color:var(--muted)}
+.sent-date{background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--sub);font-family:'Montserrat',sans-serif;font-size:11px;padding:6px 10px;outline:none;transition:border-color .2s;flex:1}
+.sent-date:focus{border-color:var(--rose2)}
+.sent-hint{font-size:10px;color:var(--muted);line-height:1.6;margin-top:4px}
+.sent-hint a{color:var(--lav);text-decoration:none}
+.sent-hint a:hover{text-decoration:underline}
+#sent-badge{display:none;background:rgba(144,224,184,.1);border:1px solid rgba(144,224,184,.2);color:var(--green);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px;margin-left:10px}
+
 /* ── UPDATE BUTTON + BANNER ── */
 #ubtn{background:transparent;color:var(--lav);border:1px solid var(--bdr2);padding:11px 20px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;display:none}
 #ubtn:hover{background:rgba(204,192,238,.1);border-color:var(--lav)}
@@ -224,7 +245,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
     <div id="sdot"></div>
     <div id="stxt">Ready</div>
   </div>
-  <div id="token-box"><div class="tok-val">S: <span id="tok-session">0</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-s" style="width:0%"></div></div><div class="tok-val">D: <span id="tok-daily">500k</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div><div class="vline" style="height:16px;margin:0 4px"></div><div class="tok-val">FMP: <span id="tok-fmp">250</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-fmp" style="width:100%"></div></div></div>
+  <div id="token-box"><div class="tok-val">Groq <span id="tok-daily">500k</span></div><div class="tok-bar" style="width:60px"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div><div class="vline" style="height:16px;margin:0 4px"></div><div class="tok-val">FMP <span id="tok-fmp">250</span></div><div class="tok-bar" style="width:36px"><div class="tok-fill" id="tok-bar-fmp" style="width:100%"></div></div></div>
   <button id="ubtn" onclick="runUpdate()">+ Update</button>
   <button id="abtn" onclick="run()">Analyse Now</button>
 </div>
@@ -265,6 +286,38 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
       <div class="paste-footer">
         <div class="paste-hint">This text will be labelled <span>Manual Input</span> and weighted alongside live headlines in the Groq analysis.</div>
         <button class="paste-clear" onclick="clearPaste()">Clear ✕</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SENTIMENT PANEL -->
+  <div id="sent-panel">
+    <div class="sent-header" onclick="toggleSent()">
+      <div class="sent-header-left">
+        <span class="paste-icon">◈</span>
+        <span class="paste-title">Sentiment Survey Data</span>
+        <span id="sent-badge">Active</span>
+        <span class="paste-sub">AAII · NAAIM — weekly, enter latest figures</span>
+      </div>
+      <span class="paste-toggle" id="sent-toggle">▼</span>
+    </div>
+    <div id="sent-body">
+      <div class="sent-block">
+        <div class="sent-title">AAII Investor Sentiment Survey</div>
+        <div class="sent-row"><span class="sent-lbl">Bullish</span><input class="sent-input" id="aaii-bull" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
+        <div class="sent-row"><span class="sent-lbl">Bearish</span><input class="sent-input" id="aaii-bear" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
+        <div class="sent-row"><span class="sent-lbl">Neutral</span><input class="sent-input" id="aaii-neut" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
+        <div class="sent-row"><span class="sent-lbl">As of</span><input class="sent-date" id="aaii-date" type="text" placeholder="e.g. 5 Mar 2026" oninput="saveSent()"></div>
+        <div class="sent-hint">Updated Thursdays · <a href="https://www.aaii.com/sentimentsurvey" target="_blank">aaii.com/sentimentsurvey</a></div>
+      </div>
+      <div class="sent-block">
+        <div class="sent-title">NAAIM Exposure Index</div>
+        <div class="sent-row"><span class="sent-lbl">Exposure</span><input class="sent-input" id="naaim-exp" type="number" min="-200" max="200" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
+        <div class="sent-row"><span class="sent-lbl">Bullish</span><input class="sent-input" id="naaim-bull" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
+        <div class="sent-row"><span class="sent-lbl">Bearish</span><input class="sent-input" id="naaim-bear" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
+        <div class="sent-row"><span class="sent-lbl">As of</span><input class="sent-date" id="naaim-date" type="text" placeholder="e.g. 5 Mar 2026" oninput="saveSent()"></div>
+        <div class="sent-hint">Updated Wednesdays · <a href="https://www.naaim.org/programs/naaim-exposure-index/" target="_blank">naaim.org</a></div>
       </div>
     </div>
   </div>
@@ -388,11 +441,13 @@ const GROQ_MODEL = "llama-3.3-70b-versatile";
 
 const FEEDS = [
   { name:"BBC Business",  url:"https://feeds.bbci.co.uk/news/business/rss.xml" },
-  { name:"Guardian",      url:"https://www.theguardian.com/uk/business/rss" },
-  { name:"AP Business",   url:"https://feeds.apnews.com/rss/apf-business" },
   { name:"CNBC Markets",  url:"https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664" },
-  { name:"Reuters",       url:"https://feeds.reuters.com/reuters/businessNews" },
+  { name:"ZeroHedge",     url:"https://cms.zerohedge.com/fullrss2.xml" },
+  { name:"Guardian",      url:"https://www.theguardian.com/business/rss" },
+  { name:"AP Business",   url:"https://feeds.apnews.com/rss/apf-business" },
+  { name:"Reuters",       url:"https://feeds.reuters.com/reuters/marketsNews" },
   { name:"NYT Business",  url:"https://rss.nytimes.com/services/xml/rss/nyt/Business.xml" },
+  { name:"FT",            url:"https://www.ft.com/rss/home/uk" },
 ];
 
 // source status tracking
@@ -445,6 +500,107 @@ function updateChip(name, state, count) {
   document.getElementById("src-summary").textContent = `${live} of ${total} live`;
 }
 
+
+// ── Sentiment panel ───────────────────────────────────────
+function toggleSent() {
+  const body   = document.getElementById("sent-body");
+  const toggle = document.getElementById("sent-toggle");
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  toggle.classList.toggle("open", !isOpen);
+}
+
+function saveSent() {
+  const keys = ["aaii-bull","aaii-bear","aaii-neut","aaii-date","naaim-exp","naaim-bull","naaim-bear","naaim-date"];
+  const data = {};
+  keys.forEach(k => { data[k] = document.getElementById(k).value; });
+  localStorage.setItem("macrolens_sentiment", JSON.stringify(data));
+  updateSentBadge();
+}
+
+function lastWeekday(targetDay) {
+  // targetDay: 0=Sun,1=Mon,...,4=Thu,3=Wed
+  const now = new Date();
+  const day = now.getDay();
+  let diff = day - targetDay;
+  if (diff < 0) diff += 7;
+  // if today IS the publish day, use today
+  const d = new Date(now);
+  d.setDate(now.getDate() - diff);
+  return d.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+}
+
+function loadSent() {
+  try {
+    const raw = localStorage.getItem("macrolens_sentiment");
+    if (raw) {
+      const data = JSON.parse(raw);
+      Object.keys(data).forEach(k => {
+        const el = document.getElementById(k);
+        if (el) el.value = data[k];
+      });
+    } else {
+      // No saved data — pre-fill dates only
+      document.getElementById("aaii-date").value  = lastWeekday(4); // Thursday
+      document.getElementById("naaim-date").value = lastWeekday(3); // Wednesday
+    }
+    updateSentBadge();
+  } catch {}
+}
+
+function updateSentBadge() {
+  const hasData = ["aaii-bull","naaim-exp"].some(k => {
+    const v = document.getElementById(k).value;
+    return v && v.trim() !== "";
+  });
+  document.getElementById("sent-badge").style.display = hasData ? "inline-block" : "none";
+}
+
+function getSentimentContext() {
+  const aaiiBull = document.getElementById("aaii-bull").value;
+  const aaiiBear = document.getElementById("aaii-bear").value;
+  const aaiiNeut = document.getElementById("aaii-neut").value;
+  const aaiiDate = document.getElementById("aaii-date").value;
+  const naaimExp  = document.getElementById("naaim-exp").value;
+  const naaimBull = document.getElementById("naaim-bull").value;
+  const naaimBear = document.getElementById("naaim-bear").value;
+  const naaimDate = document.getElementById("naaim-date").value;
+
+  const hasAaii  = aaiiBull || aaiiBear;
+  const hasNaaim = naaimExp;
+  if (!hasAaii && !hasNaaim) return "";
+
+  let ctx = "\n\n━━━ SENTIMENT SURVEY DATA ━━━";
+
+  if (hasAaii) {
+    ctx += `\nAAII Investor Sentiment Survey (as of ${aaiiDate||"recent"}):`;
+    if (aaiiBull) ctx += `\n  Bullish: ${aaiiBull}%`;
+    if (aaiiBear) ctx += `\n  Bearish: ${aaiiBear}%`;
+    if (aaiiNeut) ctx += `\n  Neutral: ${aaiiNeut}%`;
+    const spread = aaiiBull && aaiiBear ? (parseFloat(aaiiBull) - parseFloat(aaiiBear)).toFixed(1) : null;
+    if (spread) ctx += `\n  Bull-Bear Spread: ${spread}% (historical avg ~7.5%)`;
+    const extremeBull = parseFloat(aaiiBull) > 50;
+    const extremeBear = parseFloat(aaiiBear) > 40;
+    if (extremeBull) ctx += `\n  ⚠ Extreme bullishness — historically contrarian bearish signal`;
+    if (extremeBear) ctx += `\n  ⚠ Extreme bearishness — historically contrarian bullish signal`;
+  }
+
+  if (hasNaaim) {
+    ctx += `\nNAAIM Exposure Index (as of ${naaimDate||"recent"}):`;
+    ctx += `\n  Mean Equity Exposure: ${naaimExp}%`;
+    if (naaimBull) ctx += `\n  Managers bullish: ${naaimBull}%`;
+    if (naaimBear) ctx += `\n  Managers bearish: ${naaimBear}%`;
+    const exp = parseFloat(naaimExp);
+    if (exp > 80)  ctx += `\n  ⚠ High exposure — positioning crowded, elevated reversal risk`;
+    if (exp < 30)  ctx += `\n  ⚠ Low exposure — managers defensive, potential capitulation signal`;
+    if (exp < 0)   ctx += `\n  ⚠ Net short — extreme defensive positioning`;
+  }
+
+  ctx += "\n━━━ END SENTIMENT DATA ━━━";
+  ctx += "\nNote: AAII and NAAIM are weekly surveys. Use as contrarian context — extremes signal positioning crowding, not direction.";
+  return ctx;
+}
+
 // ── Paste panel ───────────────────────────────────────────
 function togglePaste() {
   const body    = document.getElementById("paste-body");
@@ -466,9 +622,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // restore daily token display on load
   // restore FMP display
   updateFmpUI();
-  // restore session display
-  document.getElementById("tok-session").textContent = sessionTokens >= 1000 ? (sessionTokens/1000).toFixed(1)+"k" : sessionTokens;
-  document.getElementById("tok-bar-s").style.width = Math.min((sessionTokens/50000)*100,100)+"%";
   const _remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
   const _pct = (dailyUsed / DAILY_LIMIT) * 100;
   document.getElementById("tok-daily").textContent = _remaining >= 1000 ? Math.round(_remaining/1000)+"k" : _remaining;
@@ -476,6 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (_pct > 90) document.getElementById("tok-bar-d").className = "tok-fill crit";
   else if (_pct > 70) document.getElementById("tok-bar-d").className = "tok-fill warn";
   document.getElementById("paste-input").addEventListener("input", updatePasteBadge);
+  loadSent();
   // show source panel and paste box immediately
   document.getElementById("src-panel").style.display = "block";
   document.getElementById("src-list").innerHTML = FEEDS.map(f =>
@@ -508,20 +662,26 @@ async function fetchFeed(src) {
   const cntEl = document.getElementById("cnt-"+id);
   if (cntEl) cntEl.textContent = "checking...";
 
-  // Try two proxies
+  // Try proxies in order — allorigins wraps JSON, corsproxy returns raw XML text
   const proxies = [
-    `https://api.allorigins.win/get?url=${encodeURIComponent(src.url)}`,
-    `https://corsproxy.io/?${encodeURIComponent(src.url)}`,
+    { url: `https://api.allorigins.win/get?url=${encodeURIComponent(src.url)}`, mode: "json" },
+    { url: `https://corsproxy.io/?${encodeURIComponent(src.url)}`,              mode: "text" },
+    { url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(src.url)}`, mode: "text" },
   ];
 
-  for (const proxyUrl of proxies) {
+  for (const proxy of proxies) {
     try {
-      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(7000) });
+      const r = await fetch(proxy.url, { signal: AbortSignal.timeout(8000) });
       if (!r.ok) continue;
-      const data = await r.json().catch(() => null);
-      // allorigins wraps in {contents}; corsproxy returns raw text
-      const xmlStr = data?.contents || await r.text?.() || "";
-      const items = parseRSS(xmlStr || (typeof data === "string" ? data : ""));
+      let xmlStr = "";
+      if (proxy.mode === "json") {
+        const data = await r.json();
+        xmlStr = data?.contents || "";
+      } else {
+        xmlStr = await r.text();
+      }
+      if (!xmlStr || xmlStr.length < 100) continue;
+      const items = parseRSS(xmlStr);
       if (!items.length) continue;
       const mapped = items.map(i => ({ title:i.title, source:src.name, pubDate:i.pubDate }));
       srcStatus[src.name] = { state:"live", count:mapped.length };
@@ -573,17 +733,10 @@ function updateTokenUI(promptTokens, completionTokens) {
   const remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
   const dailyPct  = (dailyUsed / DAILY_LIMIT) * 100;
 
-  document.getElementById("tok-session").textContent = sessionTokens >= 1000 ? (sessionTokens/1000).toFixed(1)+"k" : sessionTokens;
   document.getElementById("tok-daily").textContent = remaining >= 1000 ? Math.round(remaining/1000)+"k" : remaining;
-
-  const barS = document.getElementById("tok-bar-s");
   const barD = document.getElementById("tok-bar-d");
-  barS.style.width = Math.min((sessionTokens / 50000) * 100, 100) + "%";
   barD.style.width = Math.max(0, 100 - dailyPct) + "%";
-
-  // colour warnings
-  const cls = dailyPct > 90 ? "crit" : dailyPct > 70 ? "warn" : "";
-  barD.className = "tok-fill " + cls;
+  barD.className = "tok-fill" + (dailyPct > 90 ? " crit" : dailyPct > 70 ? " warn" : "");
 }
 
 async function groq(system, user) {
@@ -623,7 +776,7 @@ async function analyse(articles, pastedText) {
     `${pastedPreamble}Analyse the following market intelligence and generate a full trading-oriented macro analysis.
 
 ${hasPastedContent ? "SECONDARY CONTEXT (RSS headlines — use to add colour, do not let these override the primary research above):" : "LIVE HEADLINES:"}
-${lines}${pastedSection}
+${lines}${pastedSection}${getSentimentContext()}
 
 Return this exact JSON structure:
 {
@@ -927,7 +1080,7 @@ EXISTING ANALYSIS:
 ${existingJSON}
 
 ${hasNewPastedContent ? "SECONDARY CONTEXT (new headlines):" : "NEW ARTICLES (" + newArticles.length + "):"}
-${newLines}${pastedSection}
+${newLines}${pastedSection}${getSentimentContext()}
 
 Instructions:
 - Only update fields that the new information actually changes
