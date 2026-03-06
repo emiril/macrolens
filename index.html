@@ -65,7 +65,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .src-chip.down{color:var(--muted);opacity:.6}
 
 /* ── PASTE BOX ── */
-#paste-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;margin-bottom:28px;overflow:hidden}
+.paste-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;overflow:hidden}
 .paste-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
 .paste-header-left{display:flex;align-items:center;gap:12px}
 .paste-icon{font-size:14px;color:var(--lav)}
@@ -73,17 +73,17 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .paste-sub{font-size:10px;color:var(--muted)}
 .paste-toggle{font-size:10px;color:var(--muted);letter-spacing:1px;transition:transform .2s}
 .paste-toggle.open{transform:rotate(180deg)}
-#paste-body{display:none;padding:16px 20px}
-#paste-body.open{display:block}
-#paste-input{width:100%;min-height:120px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:12px;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;transition:border-color .2s}
-#paste-input:focus{border-color:var(--rose2)}
-#paste-input::placeholder{color:var(--muted)}
+.ibox-body{display:none;padding:16px 20px}
+.ibox-body.open{display:block}
+.ibox-ta{width:100%;min-height:100px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:12px;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;transition:border-color .2s}
+.ibox-ta:focus{border-color:var(--rose2)}
+.ibox-ta::placeholder{color:var(--muted)}
 .paste-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
 .paste-hint{font-size:10px;color:var(--muted);line-height:1.6}
 .paste-hint span{color:var(--lav)}
 .paste-clear{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0}
 .paste-clear:hover{color:var(--red)}
-#paste-badge{display:none;background:rgba(204,192,238,.1);border:1px solid rgba(204,192,238,.2);color:var(--lav);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px;margin-left:10px}
+.ibox-badge{display:none;background:rgba(204,192,238,.1);border:1px solid rgba(204,192,238,.2);color:var(--lav);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px;margin-left:10px}
 
 /* ── EMPTY ── */
 #empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center}
@@ -187,25 +187,6 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 
 
 
-/* ── SENTIMENT PANEL ── */
-#sent-panel{background:var(--surf);border:1px solid var(--bdr);border-radius:3px;margin-bottom:28px;overflow:hidden}
-.sent-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;user-select:none}
-.sent-header-left{display:flex;align-items:center;gap:12px}
-#sent-body{display:none;padding:16px 20px}
-#sent-body.open{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.sent-block{display:flex;flex-direction:column;gap:10px}
-.sent-title{font-size:9px;letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:2px}
-.sent-row{display:flex;align-items:center;gap:10px}
-.sent-lbl{font-size:10px;color:var(--sub);width:72px;flex-shrink:0}
-.sent-input{background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--cream);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:6px 10px;width:72px;outline:none;text-align:center;transition:border-color .2s}
-.sent-input:focus{border-color:var(--rose2)}
-.sent-unit{font-size:10px;color:var(--muted)}
-.sent-date{background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--sub);font-family:'Montserrat',sans-serif;font-size:11px;padding:6px 10px;outline:none;transition:border-color .2s;flex:1}
-.sent-date:focus{border-color:var(--rose2)}
-.sent-hint{font-size:10px;color:var(--muted);line-height:1.6;margin-top:4px}
-.sent-hint a{color:var(--lav);text-decoration:none}
-.sent-hint a:hover{text-decoration:underline}
-#sent-badge{display:none;background:rgba(144,224,184,.1);border:1px solid rgba(144,224,184,.2);color:var(--green);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px;margin-left:10px}
 
 /* ── UPDATE BUTTON + BANNER ── */
 #ubtn{background:transparent;color:var(--lav);border:1px solid var(--bdr2);padding:11px 20px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;display:none}
@@ -271,55 +252,69 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
   </div>
 
   <!-- PASTE BOX -->
-  <div id="paste-panel">
-    <div class="paste-header" onclick="togglePaste()">
-      <div class="paste-header-left">
-        <span class="paste-icon">✦</span>
-        <span class="paste-title">Add Your Own Research</span>
-        <span id="paste-badge">Active</span>
-        <span class="paste-sub">ZeroHedge premium · broker reports · any article text</span>
-      </div>
-      <span class="paste-toggle" id="paste-toggle">▼</span>
-    </div>
-    <div id="paste-body">
-      <textarea id="paste-input" placeholder="Paste any article text, research notes, or ZeroHedge premium content here. It will be included in the AI analysis alongside the live RSS news.&#10;&#10;Tip: you can paste multiple articles — just separate them with a blank line."></textarea>
-      <div class="paste-footer">
-        <div class="paste-hint">This text will be labelled <span>Manual Input</span> and weighted alongside live headlines in the Groq analysis.</div>
-        <button class="paste-clear" onclick="clearPaste()">Clear ✕</button>
-      </div>
-    </div>
-  </div>
+  <!-- INPUT BOXES -->
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
 
+    <!-- Research -->
+    <div class="paste-panel">
+      <div class="paste-header" onclick="toggleBox('research')">
+        <div class="paste-header-left">
+          <span class="paste-icon">✦</span>
+          <span class="paste-title">Your Research</span>
+          <span class="ibox-badge" id="badge-research">Active</span>
+          <span class="paste-sub">ZeroHedge premium · broker reports · any article text</span>
+        </div>
+        <span class="paste-toggle" id="toggle-research">▼</span>
+      </div>
+      <div class="ibox-body" id="body-research">
+        <textarea class="ibox-ta" id="input-research" placeholder="Paste ZeroHedge premium articles, broker notes, or any research text. Treated as primary input — overrides RSS headlines." oninput="updateBadge('research')"></textarea>
+        <div class="paste-footer">
+          <div class="paste-hint"><span>Primary input</span> — RSS headlines are secondary context when this is filled.</div>
+          <button class="paste-clear" onclick="clearBox('research')">Clear ✕</button>
+        </div>
+      </div>
+    </div>
 
-  <!-- SENTIMENT PANEL -->
-  <div id="sent-panel">
-    <div class="sent-header" onclick="toggleSent()">
-      <div class="sent-header-left">
-        <span class="paste-icon">◈</span>
-        <span class="paste-title">Sentiment Survey Data</span>
-        <span id="sent-badge">Active</span>
-        <span class="paste-sub">AAII · NAAIM — weekly, enter latest figures</span>
+    <!-- AAII -->
+    <div class="paste-panel">
+      <div class="paste-header" onclick="toggleBox('aaii')">
+        <div class="paste-header-left">
+          <span class="paste-icon" style="color:var(--gold)">◈</span>
+          <span class="paste-title">AAII Sentiment</span>
+          <span class="ibox-badge" id="badge-aaii">Active</span>
+          <span class="paste-sub">Weekly · published Thursdays · aaii.com/sentimentsurvey</span>
+        </div>
+        <span class="paste-toggle" id="toggle-aaii">▼</span>
       </div>
-      <span class="paste-toggle" id="sent-toggle">▼</span>
-    </div>
-    <div id="sent-body">
-      <div class="sent-block">
-        <div class="sent-title">AAII Investor Sentiment Survey</div>
-        <div class="sent-row"><span class="sent-lbl">Bullish</span><input class="sent-input" id="aaii-bull" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
-        <div class="sent-row"><span class="sent-lbl">Bearish</span><input class="sent-input" id="aaii-bear" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
-        <div class="sent-row"><span class="sent-lbl">Neutral</span><input class="sent-input" id="aaii-neut" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
-        <div class="sent-row"><span class="sent-lbl">As of</span><input class="sent-date" id="aaii-date" type="text" placeholder="e.g. 5 Mar 2026" oninput="saveSent()"></div>
-        <div class="sent-hint">Updated Thursdays · <a href="https://www.aaii.com/sentimentsurvey" target="_blank">aaii.com/sentimentsurvey</a></div>
-      </div>
-      <div class="sent-block">
-        <div class="sent-title">NAAIM Exposure Index</div>
-        <div class="sent-row"><span class="sent-lbl">Exposure</span><input class="sent-input" id="naaim-exp" type="number" min="-200" max="200" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
-        <div class="sent-row"><span class="sent-lbl">Bullish</span><input class="sent-input" id="naaim-bull" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
-        <div class="sent-row"><span class="sent-lbl">Bearish</span><input class="sent-input" id="naaim-bear" type="number" min="0" max="100" placeholder="—" oninput="saveSent()"><span class="sent-unit">%</span></div>
-        <div class="sent-row"><span class="sent-lbl">As of</span><input class="sent-date" id="naaim-date" type="text" placeholder="e.g. 5 Mar 2026" oninput="saveSent()"></div>
-        <div class="sent-hint">Updated Wednesdays · <a href="https://www.naaim.org/programs/naaim-exposure-index/" target="_blank">naaim.org</a></div>
+      <div class="ibox-body" id="body-aaii">
+        <textarea class="ibox-ta" id="input-aaii" style="min-height:80px" placeholder="Paste the latest AAII Sentiment Survey text directly from aaii.com. Include the full paragraph — Groq reads bullish/bearish/neutral %, bull-bear spread, and compares to historical averages." oninput="updateBadge('aaii')"></textarea>
+        <div class="paste-footer">
+          <div class="paste-hint">Saved between sessions. Update every Thursday. <span>Old data used if not updated — dated automatically.</span></div>
+          <button class="paste-clear" onclick="clearBox('aaii')">Clear ✕</button>
+        </div>
       </div>
     </div>
+
+    <!-- NAAIM -->
+    <div class="paste-panel">
+      <div class="paste-header" onclick="toggleBox('naaim')">
+        <div class="paste-header-left">
+          <span class="paste-icon" style="color:var(--green)">◈</span>
+          <span class="paste-title">NAAIM Exposure Index</span>
+          <span class="ibox-badge" id="badge-naaim">Active</span>
+          <span class="paste-sub">Weekly · published Wednesdays · naaim.org</span>
+        </div>
+        <span class="paste-toggle" id="toggle-naaim">▼</span>
+      </div>
+      <div class="ibox-body" id="body-naaim">
+        <textarea class="ibox-ta" id="input-naaim" style="min-height:80px" placeholder="Paste the NAAIM Exposure Index table from naaim.org. Include the date column and exposure number — Groq extracts the latest reading and uses prior weeks for trend context." oninput="updateBadge('naaim')"></textarea>
+        <div class="paste-footer">
+          <div class="paste-hint">Saved between sessions. Update every Wednesday. <span>Old data used if not updated — Groq notes the date.</span></div>
+          <button class="paste-clear" onclick="clearBox('naaim')">Clear ✕</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- EMPTY STATE -->
@@ -501,123 +496,42 @@ function updateChip(name, state, count) {
 }
 
 
-// ── Sentiment panel ───────────────────────────────────────
-function toggleSent() {
-  const body   = document.getElementById("sent-body");
-  const toggle = document.getElementById("sent-toggle");
+
+// ── Paste panel ───────────────────────────────────────────
+function toggleBox(id) {
+  const body   = document.getElementById("body-"+id);
+  const toggle = document.getElementById("toggle-"+id);
   const isOpen = body.classList.contains("open");
   body.classList.toggle("open", !isOpen);
   toggle.classList.toggle("open", !isOpen);
 }
-
-function saveSent() {
-  const keys = ["aaii-bull","aaii-bear","aaii-neut","aaii-date","naaim-exp","naaim-bull","naaim-bear","naaim-date"];
-  const data = {};
-  keys.forEach(k => { data[k] = document.getElementById(k).value; });
-  localStorage.setItem("macrolens_sentiment", JSON.stringify(data));
-  updateSentBadge();
+function clearBox(id) {
+  document.getElementById("input-"+id).value = "";
+  updateBadge(id);
+  if (id === "aaii" || id === "naaim") saveInputs();
 }
-
-function lastWeekday(targetDay) {
-  // targetDay: 0=Sun,1=Mon,...,4=Thu,3=Wed
-  const now = new Date();
-  const day = now.getDay();
-  let diff = day - targetDay;
-  if (diff < 0) diff += 7;
-  // if today IS the publish day, use today
-  const d = new Date(now);
-  d.setDate(now.getDate() - diff);
-  return d.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+function updateBadge(id) {
+  const val   = (document.getElementById("input-"+id).value || "").trim();
+  const badge = document.getElementById("badge-"+id);
+  if (badge) badge.style.display = val.length > 10 ? "inline-block" : "none";
 }
-
-function loadSent() {
-  try {
-    const raw = localStorage.getItem("macrolens_sentiment");
-    if (raw) {
-      const data = JSON.parse(raw);
-      Object.keys(data).forEach(k => {
-        const el = document.getElementById(k);
-        if (el) el.value = data[k];
-      });
-    } else {
-      // No saved data — pre-fill dates only
-      document.getElementById("aaii-date").value  = lastWeekday(4); // Thursday
-      document.getElementById("naaim-date").value = lastWeekday(3); // Wednesday
-    }
-    updateSentBadge();
-  } catch {}
+// Persist AAII + NAAIM in localStorage (research is session-only)
+function saveInputs() {
+  localStorage.setItem("ml_aaii",  document.getElementById("input-aaii").value  || "");
+  localStorage.setItem("ml_naaim", document.getElementById("input-naaim").value || "");
 }
-
-function updateSentBadge() {
-  const hasData = ["aaii-bull","naaim-exp"].some(k => {
-    const v = document.getElementById(k).value;
-    return v && v.trim() !== "";
-  });
-  document.getElementById("sent-badge").style.display = hasData ? "inline-block" : "none";
+function loadInputs() {
+  const aaii  = localStorage.getItem("ml_aaii")  || "";
+  const naaim = localStorage.getItem("ml_naaim") || "";
+  document.getElementById("input-aaii").value  = aaii;
+  document.getElementById("input-naaim").value = naaim;
+  updateBadge("aaii");
+  updateBadge("naaim");
 }
-
-function getSentimentContext() {
-  const aaiiBull = document.getElementById("aaii-bull").value;
-  const aaiiBear = document.getElementById("aaii-bear").value;
-  const aaiiNeut = document.getElementById("aaii-neut").value;
-  const aaiiDate = document.getElementById("aaii-date").value;
-  const naaimExp  = document.getElementById("naaim-exp").value;
-  const naaimBull = document.getElementById("naaim-bull").value;
-  const naaimBear = document.getElementById("naaim-bear").value;
-  const naaimDate = document.getElementById("naaim-date").value;
-
-  const hasAaii  = aaiiBull || aaiiBear;
-  const hasNaaim = naaimExp;
-  if (!hasAaii && !hasNaaim) return "";
-
-  let ctx = "\n\n━━━ SENTIMENT SURVEY DATA ━━━";
-
-  if (hasAaii) {
-    ctx += `\nAAII Investor Sentiment Survey (as of ${aaiiDate||"recent"}):`;
-    if (aaiiBull) ctx += `\n  Bullish: ${aaiiBull}%`;
-    if (aaiiBear) ctx += `\n  Bearish: ${aaiiBear}%`;
-    if (aaiiNeut) ctx += `\n  Neutral: ${aaiiNeut}%`;
-    const spread = aaiiBull && aaiiBear ? (parseFloat(aaiiBull) - parseFloat(aaiiBear)).toFixed(1) : null;
-    if (spread) ctx += `\n  Bull-Bear Spread: ${spread}% (historical avg ~7.5%)`;
-    const extremeBull = parseFloat(aaiiBull) > 50;
-    const extremeBear = parseFloat(aaiiBear) > 40;
-    if (extremeBull) ctx += `\n  ⚠ Extreme bullishness — historically contrarian bearish signal`;
-    if (extremeBear) ctx += `\n  ⚠ Extreme bearishness — historically contrarian bullish signal`;
-  }
-
-  if (hasNaaim) {
-    ctx += `\nNAAIM Exposure Index (as of ${naaimDate||"recent"}):`;
-    ctx += `\n  Mean Equity Exposure: ${naaimExp}%`;
-    if (naaimBull) ctx += `\n  Managers bullish: ${naaimBull}%`;
-    if (naaimBear) ctx += `\n  Managers bearish: ${naaimBear}%`;
-    const exp = parseFloat(naaimExp);
-    if (exp > 80)  ctx += `\n  ⚠ High exposure — positioning crowded, elevated reversal risk`;
-    if (exp < 30)  ctx += `\n  ⚠ Low exposure — managers defensive, potential capitulation signal`;
-    if (exp < 0)   ctx += `\n  ⚠ Net short — extreme defensive positioning`;
-  }
-
-  ctx += "\n━━━ END SENTIMENT DATA ━━━";
-  ctx += "\nNote: AAII and NAAIM are weekly surveys. Use as contrarian context — extremes signal positioning crowding, not direction.";
-  return ctx;
-}
-
-// ── Paste panel ───────────────────────────────────────────
-function togglePaste() {
-  const body    = document.getElementById("paste-body");
-  const toggle  = document.getElementById("paste-toggle");
-  const isOpen  = body.classList.contains("open");
-  body.classList.toggle("open", !isOpen);
-  toggle.classList.toggle("open", !isOpen);
-}
-function clearPaste() {
-  document.getElementById("paste-input").value = "";
-  updatePasteBadge();
-}
-function updatePasteBadge() {
-  const val   = (document.getElementById("paste-input").value || "").trim();
-  const badge = document.getElementById("paste-badge");
-  badge.style.display = val.length > 20 ? "inline-block" : "none";
-}
+// compat shims
+function togglePaste() { toggleBox("research"); }
+function clearPaste()  { clearBox("research"); }
+function updatePasteBadge() { updateBadge("research"); }
 document.addEventListener("DOMContentLoaded", () => {
   // restore daily token display on load
   // restore FMP display
@@ -628,8 +542,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tok-bar-d").style.width = Math.max(0, 100 - _pct) + "%";
   if (_pct > 90) document.getElementById("tok-bar-d").className = "tok-fill crit";
   else if (_pct > 70) document.getElementById("tok-bar-d").className = "tok-fill warn";
-  document.getElementById("paste-input").addEventListener("input", updatePasteBadge);
-  loadSent();
+  document.getElementById("input-research").addEventListener("input", () => updateBadge("research"));
+  document.getElementById("input-aaii").addEventListener("input",  () => { updateBadge("aaii");  saveInputs(); });
+  document.getElementById("input-naaim").addEventListener("input", () => { updateBadge("naaim"); saveInputs(); });
+  loadInputs();
   // show source panel and paste box immediately
   document.getElementById("src-panel").style.display = "block";
   document.getElementById("src-list").innerHTML = FEEDS.map(f =>
@@ -756,7 +672,7 @@ async function groq(system, user) {
   return d.choices[0].message.content;
 }
 
-async function analyse(articles, pastedText) {
+async function analyse(articles, pastedText, aaiiText="", naaimText="") {
   step("Groq AI reading all sources...");
 
   const lines = articles.slice(0,30).map((a,i)=>`${i+1}. [${a.source}] ${a.title}`).join("\n");
@@ -772,11 +688,23 @@ async function analyse(articles, pastedText) {
   }
 
   const raw = await groq(
-    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. Return ONLY raw JSON — no markdown, no backticks, no explanation. Start with { end with }.",
+    "You are a senior macro analyst, hedge fund strategist and active trader who trades both long and short across equities, ETFs and FX. If AAII or NAAIM sentiment survey data is included in the research input, extract and use it as key contrarian context. If no sentiment survey data is present, note 'No AAII/NAAIM data provided' in hf_signals. Return ONLY raw JSON — no markdown, no backticks, no explanation. Start with { end with }.",
     `${pastedPreamble}Analyse the following market intelligence and generate a full trading-oriented macro analysis.
 
 ${hasPastedContent ? "SECONDARY CONTEXT (RSS headlines — use to add colour, do not let these override the primary research above):" : "LIVE HEADLINES:"}
-${lines}${pastedSection}${getSentimentContext()}
+${lines}${pastedSection}${aaiiText ? `
+
+━━━ AAII INVESTOR SENTIMENT SURVEY (weekly, contrarian indicator) ━━━
+${aaiiText.slice(0,2000)}
+━━━ END AAII ━━━` : "
+
+AAII Sentiment Survey: No data provided."}${naaimText ? `
+
+━━━ NAAIM EXPOSURE INDEX (active manager positioning, weekly) ━━━
+${naaimText.slice(0,2000)}
+━━━ END NAAIM ━━━` : "
+
+NAAIM Exposure Index: No data provided."}
 
 Return this exact JSON structure:
 {
@@ -875,7 +803,7 @@ function renderNews(articles, hasPasted, newCount=0) {
   // paste notice
   const notice = document.getElementById("paste-notice");
   if (hasPasted) {
-    const words = (document.getElementById("paste-input").value||"").trim().split(/\s+/).length;
+    const words = (document.getElementById("input-research").value||"").trim().split(/\s+/).length;
     document.getElementById("paste-notice-txt").textContent = `~${words} words of your manual research`;
     notice.style.display = "block";
   } else {
@@ -980,17 +908,20 @@ async function run() {
 
   try {
     const articles    = await fetchAll();
-    const pastedText  = (document.getElementById("paste-input").value||"").trim();
-    const hasPasted   = pastedText.length > 20;
+    const researchText = (document.getElementById("input-research").value||"").trim();
+    const aaiiText     = (document.getElementById("input-aaii").value||"").trim();
+    const naaimText    = (document.getElementById("input-naaim").value||"").trim();
+    const hasPasted    = researchText.length > 20;
 
-    if (!articles.length && !hasPasted) {
-      throw new Error("No news fetched and no manual text provided. All RSS sources may be down — try again, or paste article text to analyse.");
+    if (!articles.length && !researchText && !aaiiText && !naaimText) {
+      throw new Error("No news fetched and no manual input provided. All RSS sources may be down — try again, or paste some text.");
     }
 
     const count = articles.length;
-    step(`${count} articles fetched${hasPasted?" + your research":""} — sending to Groq...`);
+    const extras = [researchText && "research", aaiiText && "AAII", naaimText && "NAAIM"].filter(Boolean);
+    step(`${count} articles fetched${extras.length ? " + " + extras.join(" + ") : ""} — sending to Groq...`);
 
-    const d = await analyse(articles, pastedText);
+    const d = await analyse(articles, researchText, aaiiText, naaimText);
     render(articles, d, hasPasted, 0);
     saveState(articles, d);
 
@@ -1042,7 +973,7 @@ function diffArticles(articles) {
 }
 
 // ── Incremental Groq call ─────────────────────────────────
-async function analyseUpdate(newArticles, newPaste, existingAnalysis) {
+async function analyseUpdate(newArticles, newPaste, existingAnalysis, aaiiText="", naaimText="") {
   step("Merging new intel with existing thesis...");
 
   const newLines = newArticles.slice(0,20).map((a,i)=>
@@ -1080,9 +1011,7 @@ EXISTING ANALYSIS:
 ${existingJSON}
 
 ${hasNewPastedContent ? "SECONDARY CONTEXT (new headlines):" : "NEW ARTICLES (" + newArticles.length + "):"}
-${newLines}${pastedSection}${getSentimentContext()}
-
-Instructions:
+${newLines}${pastedSection}${aaiiText ? `\n\n━━━ AAII SENTIMENT (weekly) ━━━\n${aaiiText.slice(0,1500)}\n━━━ END AAII ━━━` : "\n\nAAII: No data."}${naaimText ? `\n\n━━━ NAAIM EXPOSURE (weekly) ━━━\n${naaimText.slice(0,1500)}\n━━━ END NAAIM ━━━` : "\n\nNAAIM: No data."}\n\nInstructions:
 - Only update fields that the new information actually changes
 - If the new articles reinforce existing thesis, strengthen the language
 - If new articles contradict the thesis, revise accordingly  
@@ -1112,7 +1041,9 @@ async function runUpdate() {
   try {
     const articles   = await fetchAll();
     const newArticles = diffArticles(articles);
-    const newPaste    = (document.getElementById("paste-input").value||"").trim();
+    const newPaste    = (document.getElementById("input-research").value||"").trim();
+    const aaiiText    = (document.getElementById("input-aaii").value||"").trim();
+    const naaimText   = (document.getElementById("input-naaim").value||"").trim();
     const hasNewPaste = newPaste.length > 20;
 
     if (newArticles.length === 0 && !hasNewPaste) {
@@ -1125,7 +1056,7 @@ async function runUpdate() {
 
     step(`${newArticles.length} new articles${hasNewPaste?" + new research":""} — updating thesis...`);
 
-    const updated = await analyseUpdate(newArticles, newPaste, lastAnalysis);
+    const updated = await analyseUpdate(newArticles, newPaste, lastAnalysis, aaiiText, naaimText);
 
     // merge new articles into display (prepend new ones)
     const allArticles = [
