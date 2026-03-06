@@ -10,49 +10,50 @@
   --bg: #0a0810;
   --bg2: #0e0b14;
   --surface: #141020;
-  --surface2: #1a1528;
-  --border: #251e35;
-  --border2: #352845;
-  --rose: #e8a0b0;
-  --rose2: #c4728a;
-  --gold: #c9a96e;
-  --cream: #f0e8dc;
-  --green: #7ecba1;
-  --red: #d4687a;
-  --blue: #7ab8d4;
-  --lavender: #b8a8d8;
-  --orange: #e8965a;
-  --text: #ede8f0;
-  --muted: #7a6888;
-  --muted2: #3d3050;
+  --surface2: #1c1730;
+  --border: #2a2040;
+  --border2: #3d2f55;
+  --rose: #f2bfce;
+  --rose2: #d4829a;
+  --gold: #e0c080;
+  --cream: #faf4ee;
+  --green: #90e0b8;
+  --red: #e87888;
+  --blue: #90c8e0;
+  --lavender: #ccc0ee;
+  --orange: #f4b07a;
+  --text: #f2eef8;
+  --sub: #c8b8d8;
+  --muted: #9888a8;
+  --muted2: #6a5578;
   --serif: 'Cormorant Garamond', serif;
   --sans: 'Montserrat', sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(184,168,216,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 70% at 85% 90%,rgba(232,160,176,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,168,216,0.01) 1px,transparent 1px),linear-gradient(90deg,rgba(184,168,216,0.01) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,168,216,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(184,168,216,0.012) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
 .z1{position:relative;z-index:1;}
 
 /* HEADER */
-header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
 .header-inner{max-width:1500px;margin:0 auto;padding:0 40px;height:68px;display:flex;align-items:center;gap:24px;}
 .logo{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:10px;text-transform:uppercase;flex-shrink:0;}
 .logo-m{color:var(--rose);}
 .logo-l{color:var(--cream);}
 .hdiv{width:1px;height:24px;background:var(--border2);flex-shrink:0;}
-.htag{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
+.htag{font-size:10px;color:var(--sub);letter-spacing:3px;text-transform:uppercase;}
 .hspace{flex:1;}
 .header-right{display:flex;align-items:center;gap:12px;}
-.live-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.live-pill{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);}
 .dot.live{background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite;}
 .dot.err{background:var(--red);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.fmp-input{background:var(--surface);border:1px solid var(--border2);color:var(--cream);padding:9px 14px;font-family:var(--sans);font-size:11px;font-weight:300;border-radius:2px;width:210px;letter-spacing:1px;transition:border-color 0.3s;}
+.fmp-input{background:var(--surface);border:1px solid var(--border2);color:var(--cream);padding:9px 14px;font-family:var(--sans);font-size:11px;font-weight:400;border-radius:2px;width:220px;letter-spacing:0.5px;transition:border-color 0.3s;}
 .fmp-input:focus{outline:none;border-color:var(--rose2);}
 .fmp-input::placeholder{color:var(--muted);}
-.fmp-label{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+.fmp-label{font-size:10px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
 .btn-run{background:transparent;border:1px solid var(--rose2);color:var(--rose);padding:9px 24px;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s;white-space:nowrap;}
 .btn-run:hover{background:var(--rose2);color:var(--bg);}
 .btn-run:disabled{opacity:0.3;cursor:not-allowed;}
@@ -64,43 +65,43 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72vh;text-align:center;}
 .empty-title{font-family:var(--serif);font-size:88px;font-weight:300;letter-spacing:14px;line-height:1;color:var(--surface2);text-transform:uppercase;margin-bottom:20px;}
 .empty-title span{color:var(--border2);}
-.empty-sub{font-size:10px;color:var(--muted);letter-spacing:3px;line-height:2.4;font-weight:300;text-transform:uppercase;}
-.empty-note{margin-top:20px;font-size:10px;color:var(--muted2);letter-spacing:1px;font-weight:300;}
+.empty-sub{font-size:12px;color:var(--sub);letter-spacing:2px;line-height:2.4;font-weight:400;text-transform:uppercase;}
+.empty-note{margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:300;}
 .empty-note span{color:var(--rose2);}
 
 /* SECTION LABEL */
-.slbl{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
+.slbl{font-family:var(--serif);font-size:12px;letter-spacing:4px;color:var(--sub);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
 .slbl::before{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border2));}
 .slbl::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border2));}
 
-/* MARKET SNAPSHOT BAR */
+/* SNAPSHOT BAR */
 .snapshot-bar{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:32px;}
 .snap-tile{background:var(--surface);padding:16px 18px;position:relative;transition:background 0.2s;}
 .snap-tile:hover{background:var(--surface2);}
-.snap-label{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;font-weight:500;}
-.snap-value{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:-0.5px;line-height:1;margin-bottom:4px;}
-.snap-change{font-size:10px;font-weight:500;}
+.snap-label{font-size:10px;letter-spacing:1.5px;color:var(--sub);text-transform:uppercase;margin-bottom:8px;font-weight:500;}
+.snap-value{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:-0.5px;line-height:1;margin-bottom:5px;}
+.snap-change{font-size:11px;font-weight:500;}
 .snap-accent{position:absolute;bottom:0;left:0;right:0;height:2px;opacity:0.5;}
 
-/* COMPOSITE SIGNAL */
+/* COMPOSITE */
 .composite-box{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:32px 40px;margin-bottom:32px;position:relative;overflow:hidden;}
 .composite-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--rose2),transparent);}
 .composite-inner{display:flex;align-items:center;gap:48px;flex-wrap:wrap;}
 .composite-left{flex:1;min-width:260px;}
-.composite-eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.composite-eyebrow{font-size:10px;letter-spacing:3px;color:var(--sub);text-transform:uppercase;margin-bottom:10px;}
 .composite-verdict{font-family:var(--serif);font-size:48px;font-weight:300;letter-spacing:3px;text-transform:uppercase;line-height:1;margin-bottom:14px;}
-.composite-desc{font-size:12px;color:var(--muted);line-height:1.8;font-weight:300;}
+.composite-desc{font-size:14px;color:var(--text);line-height:1.85;font-weight:300;}
 .composite-ring{flex-shrink:0;width:120px;height:120px;position:relative;}
 .composite-ring svg{transform:rotate(-90deg);}
 .ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .ring-num{font-family:var(--serif);font-size:36px;font-weight:300;line-height:1;}
-.ring-lbl{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:4px;}
+.ring-lbl{font-size:9px;letter-spacing:2px;color:var(--sub);text-transform:uppercase;margin-top:4px;}
 .composite-bars{flex:1;min-width:260px;display:flex;flex-direction:column;gap:10px;}
 .cbar-row{display:flex;align-items:center;gap:12px;}
-.cbar-name{font-size:10px;letter-spacing:1px;color:var(--muted);width:150px;flex-shrink:0;}
+.cbar-name{font-size:11px;letter-spacing:0.5px;color:var(--sub);width:160px;flex-shrink:0;}
 .cbar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
 .cbar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
-.cbar-val{font-size:10px;width:52px;text-align:right;}
+.cbar-val{font-size:11px;width:52px;text-align:right;font-weight:500;}
 
 /* PLAYER CARDS */
 .players-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
@@ -114,63 +115,63 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 .ph-retail::before{background:linear-gradient(to right,var(--lavender),transparent);}
 .ph-insider::before{background:linear-gradient(to right,var(--gold),transparent);}
 .ph-options::before{background:linear-gradient(to right,var(--green),transparent);}
-.player-eyebrow{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+.player-eyebrow{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
 .player-name{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:1px;color:var(--cream);margin-bottom:4px;}
-.player-speed-label{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.player-speed-label{font-size:10px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;}
 .speed-pips{display:flex;gap:3px;margin-top:10px;}
 .pip{width:16px;height:3px;border-radius:2px;background:var(--border2);}
 .pip.on{background:var(--player-color,var(--rose));}
 .player-body{padding:16px 24px 20px;}
-.player-source-tag{font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;font-weight:500;line-height:1.6;}
+.player-source-tag{font-size:10px;letter-spacing:0.5px;color:var(--sub);margin-bottom:12px;font-weight:400;line-height:1.7;}
 .player-signal-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
-.psr-label{font-size:10px;color:var(--muted);}
+.psr-label{font-size:11px;color:var(--sub);}
 .psr-value{font-family:var(--serif);font-size:24px;font-weight:400;}
 .pos-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px;}
 .pos-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(0.4,0,0.2,1);}
-.pos-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
-.player-insight{font-size:11px;color:var(--muted);line-height:1.75;font-weight:300;padding-top:12px;border-top:1px solid var(--border);}
-.player-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
-.verdict-badge{padding:4px 12px;border-radius:2px;font-size:9px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
-.vb-bull{background:rgba(126,203,161,0.1);color:var(--green);border:1px solid rgba(126,203,161,0.2);}
-.vb-bear{background:rgba(212,104,122,0.1);color:var(--red);border:1px solid rgba(212,104,122,0.2);}
-.vb-neu{background:rgba(201,169,110,0.1);color:var(--gold);border:1px solid rgba(201,169,110,0.2);}
-.vb-mix{background:rgba(184,168,216,0.1);color:var(--lavender);border:1px solid rgba(184,168,216,0.2);}
-.lag-note{font-size:8px;letter-spacing:1px;color:var(--muted2);text-transform:uppercase;}
+.pos-labels{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.5px;color:var(--sub);margin-bottom:14px;}
+.player-insight{font-size:13px;color:var(--text);line-height:1.85;font-weight:300;padding-top:14px;border-top:1px solid var(--border);}
+.player-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px;}
+.verdict-badge{padding:5px 12px;border-radius:2px;font-size:9px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
+.vb-bull{background:rgba(144,224,184,0.12);color:var(--green);border:1px solid rgba(144,224,184,0.25);}
+.vb-bear{background:rgba(232,120,136,0.12);color:var(--red);border:1px solid rgba(232,120,136,0.25);}
+.vb-neu{background:rgba(224,192,128,0.12);color:var(--gold);border:1px solid rgba(224,192,128,0.25);}
+.vb-mix{background:rgba(204,192,238,0.12);color:var(--lavender);border:1px solid rgba(204,192,238,0.25);}
+.lag-note{font-size:10px;letter-spacing:0.5px;color:var(--muted);font-style:italic;}
 
 /* NEWS */
 .news-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:32px;}
 .news-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
 .news-card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;}
-.news-card-title{font-family:var(--serif);font-size:15px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;}
-.news-card-sub{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.news-card-title{font-family:var(--serif);font-size:16px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;}
+.news-card-sub{font-size:10px;letter-spacing:1.5px;color:var(--sub);text-transform:uppercase;}
 .news-list{display:flex;flex-direction:column;gap:1px;}
 .news-item{padding:13px 20px;background:var(--surface2);border-left:2px solid transparent;transition:background 0.2s;cursor:default;}
 .news-item:hover{background:var(--surface);}
 .news-item.pos{border-left-color:var(--green);}
 .news-item.neg{border-left-color:var(--red);}
 .news-item.neu{border-left-color:var(--gold);}
-.news-headline{font-size:12px;color:var(--cream);line-height:1.5;margin-bottom:5px;}
-.news-meta{display:flex;gap:10px;font-size:9px;color:var(--muted);letter-spacing:1px;}
+.news-headline{font-size:13px;color:var(--cream);line-height:1.55;margin-bottom:6px;}
+.news-meta{display:flex;gap:10px;font-size:10px;color:var(--sub);letter-spacing:0.5px;}
 .news-sent-tag{font-weight:600;text-transform:uppercase;}
 
 .sentiment-panel{display:flex;flex-direction:column;gap:12px;}
 .sent-box{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;}
-.sent-box-title{font-family:var(--serif);font-size:13px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:14px;}
-.gauge-wrap{position:relative;height:10px;background:linear-gradient(to right,var(--red),var(--gold) 50%,var(--green));border-radius:5px;margin-bottom:6px;}
+.sent-box-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:14px;}
+.gauge-wrap{position:relative;height:10px;background:linear-gradient(to right,var(--red),var(--gold) 50%,var(--green));border-radius:5px;margin-bottom:8px;}
 .gauge-needle{position:absolute;top:-5px;width:4px;height:20px;background:var(--cream);border-radius:2px;transform:translateX(-50%);transition:left 1.4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 6px rgba(240,232,220,0.6);}
-.gauge-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;}
+.gauge-labels{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.5px;color:var(--sub);text-transform:uppercase;margin-bottom:14px;}
 .sent-big{font-family:var(--serif);font-size:52px;font-weight:300;text-align:center;line-height:1;margin-bottom:4px;}
-.sent-verdict-lbl{text-align:center;font-size:9px;letter-spacing:3px;font-weight:600;text-transform:uppercase;}
-.breakdown-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.sent-verdict-lbl{text-align:center;font-size:10px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
+.breakdown-list{display:flex;flex-direction:column;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
 .bk-row{display:flex;align-items:center;gap:8px;}
-.bk-lbl{font-size:9px;letter-spacing:1px;color:var(--muted);width:60px;text-transform:uppercase;}
+.bk-lbl{font-size:11px;letter-spacing:0.5px;color:var(--sub);width:64px;text-transform:uppercase;}
 .bk-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
 .bk-fill{height:100%;border-radius:2px;transition:width 1s ease;}
-.bk-count{font-family:var(--serif);font-size:16px;width:24px;text-align:right;}
+.bk-count{font-family:var(--serif);font-size:18px;width:24px;text-align:right;}
 
 .explainer-box{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px;}
-.explainer-box-title{font-family:var(--serif);font-size:13px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:12px;}
-.explainer-text{font-size:11px;color:var(--muted);line-height:1.8;font-weight:300;}
+.explainer-box-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);text-transform:uppercase;margin-bottom:12px;}
+.explainer-text{font-size:13px;color:var(--text);line-height:1.85;font-weight:300;}
 .explainer-text em{color:var(--rose);font-style:normal;}
 
 /* COLORS */
@@ -179,7 +180,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 .c-orange{color:var(--orange);}.c-muted{color:var(--muted);}.c-cream{color:var(--cream);}
 
 /* LOADING */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px;gap:14px;color:var(--muted);font-size:9px;letter-spacing:3px;text-transform:uppercase;}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px;gap:14px;color:var(--sub);font-size:10px;letter-spacing:3px;text-transform:uppercase;}
 .spinner{width:22px;height:22px;border:1px solid var(--border2);border-top-color:var(--rose);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
@@ -203,8 +204,8 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
     <div class="hspace"></div>
     <div class="header-right">
       <div class="live-pill"><div class="dot" id="dot"></div><span id="liveText">Offline</span></div>
-      <span class="fmp-label">FMP key (optional for news):</span>
-      <input class="fmp-input" id="fmpKey" placeholder="Paste FMP key for news..." />
+      <span class="fmp-label">FMP API key required:</span>
+      <input class="fmp-input" id="fmpKey" placeholder="Paste FMP API key..." />
       <button class="btn-run" id="runBtn" onclick="runAnalysis()">Analyse</button>
     </div>
   </div>
@@ -217,9 +218,9 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
     <div class="empty-sub">
       Smart money positioning · Who is doing what<br>
       Governments · Hedge Funds · CTAs · Retail · Insiders · Options<br>
-      Click Analyse — no API key required
+      Enter your FMP API key and click Analyse
     </div>
-    <div class="empty-note">News feed requires a free <span>FMP API key</span> — all other data is free</div>
+    <div class="empty-note">Free FMP key at <span>financialmodelingprep.com</span> — takes 2 minutes · 250 requests/day free</div>
   </div>
 
   <div id="mainContent" style="display:none">
@@ -257,34 +258,33 @@ header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-
 // ─────────────────────────────────────────────────────────
 // MACROLENS — Smart Money Intelligence
 // Data sources:
-//   Market data → Yahoo Finance via allorigins CORS proxy (free, no key)
-//   News        → FMP /stock_news (free tier, optional key)
+//   Market data → FMP free tier batch quotes (requires key)
+//   News        → FMP /stock_news (same key)
 // ─────────────────────────────────────────────────────────
 
-const PROXY = 'https://api.allorigins.win/get?url=';
-const YF_BASE = 'https://query1.finance.yahoo.com/v8/finance/chart/';
+const FMP = 'https://financialmodelingprep.com/api/v3';
 const fmpKey = () => document.getElementById('fmpKey').value.trim();
 
 function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.className='toast',3500);}
 function setLive(s){document.getElementById('dot').className='dot '+(s==='live'?'live':s==='err'?'err':'');document.getElementById('liveText').textContent=s==='live'?'Live':s==='err'?'Error':'Loading';}
 
-// Fetch Yahoo Finance quote via CORS proxy
-async function yf(symbol) {
-  const url = `${YF_BASE}${encodeURIComponent(symbol)}?interval=1d&range=5d`;
-  const res = await fetch(`${PROXY}${encodeURIComponent(url)}`);
-  const data = await res.json();
-  const parsed = JSON.parse(data.contents);
-  const result = parsed?.chart?.result?.[0];
-  if (!result) throw new Error('No data for ' + symbol);
-  const meta = result.meta;
-  const closes = result.indicators?.quote?.[0]?.close || [];
-  const prev = closes[closes.length - 2] || meta.chartPreviousClose || meta.regularMarketPrice;
-  const price = meta.regularMarketPrice;
-  const change = prev ? ((price - prev) / prev * 100) : 0;
-  return { symbol, price, change, prev, name: meta.shortName || symbol };
+async function fmpFetch(path) {
+  const sep = path.includes('?') ? '&' : '?';
+  const r = await fetch(`${FMP}${path}${sep}apikey=${fmpKey()}`);
+  if (!r.ok) throw new Error('FMP ' + r.status);
+  return r.json();
+}
+
+// Batch fetch multiple tickers in one call — saves daily quota
+async function batchQuotes(tickers) {
+  const data = await fmpFetch(`/quote/${tickers.join(',')}`);
+  const map = {};
+  (data || []).forEach(q => { map[q.symbol] = { symbol: q.symbol, price: q.price, change: q.changesPercentage, name: q.name }; });
+  return map;
 }
 
 async function runAnalysis() {
+  if (!fmpKey()) { toast('Please enter your FMP API key', 'fail'); return; }
   const btn = document.getElementById('runBtn');
   btn.disabled = true; btn.textContent = 'Loading...';
   setLive('loading');
@@ -292,46 +292,26 @@ async function runAnalysis() {
   document.getElementById('mainContent').style.display = 'block';
 
   try {
-    // Fetch all market data in parallel via Yahoo Finance
-    const symbols = [
-      '^GSPC',   // S&P 500
-      '^IXIC',   // NASDAQ
-      '^VIX',    // VIX fear index
-      '^TNX',    // 10Y Treasury yield
-      '^TYX',    // 30Y Treasury yield
-      '^IRX',    // 13-week T-bill (proxy for 2Y)
-      'GC=F',    // Gold futures
-      'CL=F',    // Crude oil
-      'DX-Y.NYB',// USD index
-      'TLT',     // 20Y bond ETF
-      'GLD',     // Gold ETF
-      'XLK','XLE','XLB','XLF','XLV','XLY','XLU','XLRE','XLI','XLP', // Sectors
-    ];
+    // Two batch calls — indices/macro + sectors (saves quota vs individual calls)
+    const [macroMap, sectorMap, news] = await Promise.all([
+      batchQuotes(['^GSPC','^IXIC','^VIX','^TNX','^IRX','GC=F','CL=F','DX-Y.NYB','TLT']),
+      batchQuotes(['XLK','XLE','XLB','XLF','XLV','XLY','XLU','XLRE','XLI','XLP']),
+      fmpFetch('/stock_news?limit=20'),
+    ]);
 
-    const results = await Promise.allSettled(symbols.map(s => yf(s)));
-    const data = {};
-    results.forEach((r, i) => {
-      if (r.status === 'fulfilled') data[symbols[i]] = r.value;
-    });
-
+    const data = { ...macroMap, ...sectorMap };
     const m = buildMarket(data);
     renderSnapshot(m);
     const players = buildPlayers(m);
     renderPlayers(players);
     renderComposite(players, m);
-
-    // News — optional FMP key
-    if (fmpKey()) {
-      renderNews(await fetchNews(), m);
-    } else {
-      renderNewsEmpty();
-    }
+    renderNews(news, m);
 
     setLive('live');
     toast('Analysis complete');
   } catch(e) {
     setLive('err');
-    toast('Failed: ' + e.message, 'fail');
+    toast('Error: ' + e.message + ' — check your FMP key', 'fail');
     console.error(e);
   }
 
@@ -341,10 +321,9 @@ async function runAnalysis() {
 function buildMarket(data) {
   const g = sym => data[sym] || { price: 0, change: 0 };
   const spx = g('^GSPC'), ndx = g('^IXIC'), vix = g('^VIX');
-  const y10raw = g('^TNX').price; // Yahoo gives yield * 10 for ^TNX
-  const y10 = y10raw > 10 ? y10raw / 10 : y10raw; // normalise
-  const y2raw = g('^IRX').price;
-  const y2 = y2raw > 10 ? y2raw / 10 : y2raw;
+  // FMP returns ^TNX as actual yield value (e.g. 4.35)
+  const y10 = g('^TNX').price || 4.5;
+  const y2 = g('^IRX').price || 4.0;
   const gold = g('GC=F'), oil = g('CL=F'), usd = g('DX-Y.NYB'), tlt = g('TLT');
   const sectors = {
     'Technology': g('XLK'), 'Energy': g('XLE'), 'Materials': g('XLB'),
@@ -588,7 +567,7 @@ function renderComposite(players, m) {
         <div class="composite-eyebrow">Composite Smart Money Signal — Weighted 6-Player Model</div>
         <div class="composite-verdict" style="color:${regime.color}">${regime.label}</div>
         <div class="composite-desc">${regime.desc}</div>
-        <div style="margin-top:16px;font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.8">
+        <div style="margin-top:16px;font-size:12px;color:var(--sub);letter-spacing:0.5px;line-height:1.9">
           Sector inflows: ${topSectors}<br>
           Sector outflows: ${botSectors}
         </div>
@@ -619,12 +598,6 @@ function renderComposite(players, m) {
 // ─────────────────────────────────────────────
 // NEWS
 // ─────────────────────────────────────────────
-async function fetchNews() {
-  const k = fmpKey();
-  const res = await fetch(`https://financialmodelingprep.com/api/v3/stock_news?limit=20&apikey=${k}`);
-  if (!res.ok) throw new Error('News API ' + res.status);
-  return res.json();
-}
 
 function scoreSentiment(text) {
   const t = text.toLowerCase();
