@@ -1231,8 +1231,10 @@ if (fmpDay !== todayKey) {
 function updateFmpUI() {
   const remaining = Math.max(0, FMP_LIMIT - fmpUsed);
   const pct = (fmpUsed / FMP_LIMIT) * 100;
-  document.getElementById("tok-fmp").textContent = remaining;
+  const fmpEl = document.getElementById("tok-fmp");
+  if (fmpEl) fmpEl.textContent = remaining;
   const bar = document.getElementById("tok-bar-fmp");
+  if (!bar) return;
   bar.style.width = Math.max(0, 100 - pct) + "%";
   bar.className = "tok-fill" + (pct > 90 ? " crit" : pct > 70 ? " warn" : "");
 }
