@@ -36,6 +36,14 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 #stxt{font-size:10px;color:var(--sub);letter-spacing:2px;text-transform:uppercase;min-width:130px}
 #abtn{background:var(--rose2);color:var(--bg);border:none;padding:11px 30px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:opacity .2s}
 #abtn:disabled{opacity:.45;cursor:not-allowed}
+#token-box{display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding:8px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:2px;min-width:140px}
+.tok-row{display:flex;align-items:center;gap:8px;width:100%}
+.tok-label{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1}
+.tok-val{font-size:11px;font-weight:600;color:var(--sub);font-family:"Montserrat",sans-serif}
+.tok-bar{height:2px;background:var(--bdr);border-radius:1px;width:100%;margin-top:1px}
+.tok-fill{height:100%;border-radius:1px;transition:width .6s;background:var(--green)}
+.tok-fill.warn{background:var(--gold)}
+.tok-fill.crit{background:var(--red)}
 
 /* ── PAGE ── */
 #page{max-width:1400px;margin:0 auto;padding:40px 40px 100px}
@@ -178,6 +186,18 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .paste-notice{background:rgba(204,192,238,.07);border:1px solid rgba(204,192,238,.15);border-radius:2px;padding:10px 16px;font-size:11px;color:var(--lav);margin-bottom:12px;display:none}
 .paste-notice span{font-weight:600}
 
+
+/* ── UPDATE BUTTON + BANNER ── */
+#ubtn{background:transparent;color:var(--lav);border:1px solid var(--bdr2);padding:11px 20px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;display:none}
+#ubtn:hover{background:rgba(204,192,238,.1);border-color:var(--lav)}
+#ubtn:disabled{opacity:.45;cursor:not-allowed}
+#update-banner{background:rgba(204,192,238,.07);border:1px solid rgba(204,192,238,.2);border-radius:3px;padding:12px 18px;margin-bottom:20px;display:none;align-items:center;gap:14px;flex-wrap:wrap}
+.ubanner-dot{width:6px;height:6px;border-radius:50%;background:var(--lav);flex-shrink:0}
+.ubanner-txt{font-size:11px;color:var(--sub);flex:1}
+.ubanner-txt strong{color:var(--lav)}
+.ubanner-time{font-size:10px;color:var(--muted);letter-spacing:1px}
+.update-tag{display:inline-block;background:rgba(144,224,184,.1);border:1px solid rgba(144,224,184,.2);color:var(--green);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
+
 @media(max-width:1100px){.dlayout{grid-template-columns:1fr}.dside{flex-direction:row;flex-wrap:wrap}.scard{flex:1;min-width:280px}}
 @media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:24px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}}
 @media(max-width:560px){.ngrid,.sgrid,.steps{grid-template-columns:1fr}}
@@ -195,12 +215,26 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
     <div id="sdot"></div>
     <div id="stxt">Ready</div>
   </div>
+  <div id="token-box">
+    <div class="tok-row"><span class="tok-label">Session tokens</span><span class="tok-val" id="tok-session">0</span></div>
+    <div class="tok-bar"><div class="tok-fill" id="tok-bar-s" style="width:0%"></div></div>
+    <div class="tok-row"><span class="tok-label">Daily remaining</span><span class="tok-val" id="tok-daily">500,000</span></div>
+    <div class="tok-bar"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div>
+  </div>
+  <button id="ubtn" onclick="runUpdate()">+ Update</button>
   <button id="abtn" onclick="run()">Analyse Now</button>
 </div>
 
 <!-- PAGE -->
 <div id="page">
   <div id="ebox" class="ebox"></div>
+
+  <!-- UPDATE BANNER -->
+  <div id="update-banner">
+    <div class="ubanner-dot"></div>
+    <div class="ubanner-txt" id="ubanner-txt">Analysis up to date</div>
+    <div class="ubanner-time" id="ubanner-time"></div>
+  </div>
 
   <!-- SOURCE HEALTH PANEL -->
   <div id="src-panel">
@@ -350,12 +384,12 @@ const GROQ_MODEL = "llama-3.3-70b-versatile";
 const R2J        = "https://api.rss2json.com/v1/api.json";
 
 const FEEDS = [
-  { name:"ZeroHedge",   url:"https://cms.zerohedge.com/fullrss2.xml" },
-  { name:"Reuters",     url:"https://feeds.reuters.com/reuters/businessNews" },
-  { name:"CNBC",        url:"https://www.cnbc.com/id/100003114/device/rss/rss.html" },
-  { name:"MarketWatch", url:"https://feeds.content.dowjones.io/public/rss/mw_realtimeheadlines" },
-  { name:"FT",          url:"https://www.ft.com/rss/home/uk" },
-  { name:"Investing",   url:"https://www.investing.com/rss/news.rss" },
+  { name:"Yahoo Finance", url:"https://finance.yahoo.com/news/rssindex" },
+  { name:"MarketWatch",  url:"https://www.marketwatch.com/rss/topstories" },
+  { name:"Nasdaq",       url:"https://www.nasdaq.com/feed/rssoutbound?category=Markets" },
+  { name:"Investopedia", url:"https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_headline" },
+  { name:"Seeking Alpha",url:"https://seekingalpha.com/feed.xml" },
+  { name:"ZeroHedge",    url:"https://feeds.feedburner.com/zerohedge/feed" },
 ];
 
 // source status tracking
@@ -426,6 +460,13 @@ function updatePasteBadge() {
   badge.style.display = val.length > 20 ? "inline-block" : "none";
 }
 document.addEventListener("DOMContentLoaded", () => {
+  // restore daily token display on load
+  const _remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
+  const _pct = (dailyUsed / DAILY_LIMIT) * 100;
+  document.getElementById("tok-daily").textContent = _remaining.toLocaleString() + " left";
+  document.getElementById("tok-bar-d").style.width = Math.max(0, 100 - _pct) + "%";
+  if (_pct > 90) document.getElementById("tok-bar-d").className = "tok-fill crit";
+  else if (_pct > 70) document.getElementById("tok-bar-d").className = "tok-fill warn";
   document.getElementById("paste-input").addEventListener("input", updatePasteBadge);
   // show source panel and paste box immediately
   document.getElementById("src-panel").style.display = "block";
@@ -477,6 +518,39 @@ async function fetchAll() {
 }
 
 // ── Groq call ─────────────────────────────────────────────
+// token tracking
+let sessionTokens = 0;
+const DAILY_LIMIT = 500000;
+let dailyUsed = parseInt(localStorage.getItem("groq_daily_used")||"0");
+const todayKey = new Date().toISOString().slice(0,10);
+if (localStorage.getItem("groq_day") !== todayKey) {
+  dailyUsed = 0;
+  localStorage.setItem("groq_day", todayKey);
+  localStorage.setItem("groq_daily_used", "0");
+}
+
+function updateTokenUI(promptTokens, completionTokens) {
+  const total = promptTokens + completionTokens;
+  sessionTokens += total;
+  dailyUsed += total;
+  localStorage.setItem("groq_daily_used", dailyUsed);
+
+  const remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
+  const dailyPct  = (dailyUsed / DAILY_LIMIT) * 100;
+
+  document.getElementById("tok-session").textContent = sessionTokens.toLocaleString() + " tok";
+  document.getElementById("tok-daily").textContent   = remaining.toLocaleString() + " left";
+
+  const barS = document.getElementById("tok-bar-s");
+  const barD = document.getElementById("tok-bar-d");
+  barS.style.width = Math.min((sessionTokens / 50000) * 100, 100) + "%";
+  barD.style.width = Math.max(0, 100 - dailyPct) + "%";
+
+  // colour warnings
+  const cls = dailyPct > 90 ? "crit" : dailyPct > 70 ? "warn" : "";
+  barD.className = "tok-fill " + cls;
+}
+
 async function groq(system, user) {
   const r = await fetch(GROQ_URL, {
     method:"POST",
@@ -490,6 +564,7 @@ async function groq(system, user) {
   });
   if (!r.ok) { const t=await r.text(); throw new Error("Groq "+r.status+": "+t.slice(0,200)); }
   const d = await r.json();
+  if (d.usage) updateTokenUI(d.usage.prompt_tokens||0, d.usage.completion_tokens||0);
   return d.choices[0].message.content;
 }
 
@@ -527,7 +602,7 @@ function sentCls(title) {
   return b>bn?"pos":bn>b?"neg":"";
 }
 
-function renderNews(articles, hasPasted) {
+function renderNews(articles, hasPasted, newCount=0) {
   // paste notice
   const notice = document.getElementById("paste-notice");
   if (hasPasted) {
@@ -540,7 +615,8 @@ function renderNews(articles, hasPasted) {
 
   document.getElementById("ngrid").innerHTML = articles.slice(0,12).map(a=>{
     const c=sentCls(a.title);
-    return `<div class="ni ${c}"><div class="nt">${a.title}</div><div class="nm"><div class="ndot ${c}"></div><span class="nsrc">${a.source}</span><span class="nsen ${c}">${c==="pos"?"Positive":c==="neg"?"Negative":"Neutral"}</span></div></div>`;
+    const newTag = a.isNew ? '<span class="update-tag">New</span>' : '';
+    return `<div class="ni ${c}"><div class="nt">${a.title}${newTag}</div><div class="nm"><div class="ndot ${c}"></div><span class="nsrc">${a.source}</span><span class="nsen ${c}">${c==="pos"?"Positive":c==="neg"?"Negative":"Neutral"}</span></div></div>`;
   }).join("");
 }
 
@@ -566,8 +642,8 @@ function renderStocks(gid, picks=[], type) {
     </div>`).join("");
 }
 
-function render(articles, d, hasPasted) {
-  renderNews(articles, hasPasted);
+function render(articles, d, hasPasted, newCount=0) {
+  renderNews(articles, hasPasted, newCount);
   document.getElementById("d-nar").innerHTML    = md(d.narrative||"");
   document.getElementById("d-hf").innerHTML     = md(d.hf_signals||"");
   document.getElementById("d-fl").innerHTML     = md(d.smart_money_flows||"");
@@ -629,7 +705,8 @@ async function run() {
     step(`${count} articles fetched${hasPasted?" + your research":""} — sending to Groq...`);
 
     const d = await analyse(articles, pastedText);
-    render(articles, d, hasPasted);
+    render(articles, d, hasPasted, 0);
+    saveState(articles, d);
 
     document.getElementById("ldg").style.display="none";
     document.getElementById("res").style.display="block";
@@ -642,6 +719,147 @@ async function run() {
     document.getElementById("empty").style.display="flex";
   }
 }
+
+// ── Incremental update state ──────────────────────────────
+let lastAnalysis    = null;   // full analysis object from last run
+let seenTitles      = new Set(); // titles already analysed
+let lastRunTime     = null;
+
+function saveState(articles, analysis) {
+  lastAnalysis = analysis;
+  lastRunTime  = new Date();
+  articles.forEach(a => seenTitles.add(a.title.slice(0,60).toLowerCase()));
+  showUpdateBanner(0);
+  document.getElementById("ubtn").style.display = "inline-block";
+}
+
+function showUpdateBanner(newCount) {
+  const banner = document.getElementById("update-banner");
+  const txt    = document.getElementById("ubanner-txt");
+  const time   = document.getElementById("ubanner-time");
+  banner.style.display = "flex";
+  time.textContent = lastRunTime ? "Last run " + lastRunTime.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}) : "";
+  if (newCount === 0) {
+    txt.innerHTML = "Analysis is current — <strong>no new articles</strong> detected since last run";
+  } else {
+    txt.innerHTML = `<strong>${newCount} new article${newCount>1?"s":""}</strong> detected since last analysis — hit <em>+ Update</em> to merge them in`;
+  }
+}
+
+// diff articles against already-seen titles
+function diffArticles(articles) {
+  return articles.filter(a => !seenTitles.has(a.title.slice(0,60).toLowerCase()));
+}
+
+// ── Incremental Groq call ─────────────────────────────────
+async function analyseUpdate(newArticles, newPaste, existingAnalysis) {
+  step("Merging new intel with existing thesis...");
+
+  const newLines = newArticles.slice(0,20).map((a,i)=>
+    `${i+1}. [${a.source}] ${a.title}`
+  ).join("\n");
+
+  let pastedSection = "";
+  if (newPaste && newPaste.trim().length > 20) {
+    pastedSection = "\n\nNEW RESEARCH FROM USER:\n" + newPaste.trim().slice(0,2000);
+  }
+
+  const existingJSON = JSON.stringify({
+    narrative:          existingAnalysis.narrative,
+    dominant_themes:    existingAnalysis.dominant_themes,
+    hf_signals:         existingAnalysis.hf_signals,
+    smart_money_flows:  existingAnalysis.smart_money_flows,
+    key_entities:       existingAnalysis.key_entities,
+    risk_sentiment:     existingAnalysis.risk_sentiment,
+    risk_score:         existingAnalysis.risk_score,
+    sentiment_breakdown:existingAnalysis.sentiment_breakdown,
+    macro_short:        existingAnalysis.macro_short,
+    macro_long:         existingAnalysis.macro_long,
+    trend_picks:        existingAnalysis.trend_picks,
+    asymmetric_picks:   existingAnalysis.asymmetric_picks,
+  });
+
+  const raw = await groq(
+    "You are a senior macro analyst. You are updating an existing analysis with new information. Return ONLY raw JSON — no markdown, no backticks. Start with { end with }.",
+    `You have an existing macro analysis. New market intelligence has arrived. Update the analysis to reflect the new information.
+
+EXISTING ANALYSIS:
+${existingJSON}
+
+NEW ARTICLES (${newArticles.length}):
+${newLines}${pastedSection}
+
+Instructions:
+- Only update fields that the new information actually changes
+- If the new articles reinforce existing thesis, strengthen the language
+- If new articles contradict the thesis, revise accordingly  
+- Add new entities to key_entities if important ones appear
+- Adjust risk_score and sentiment_breakdown based on new signal
+- Update stock picks only if new information materially affects the thesis
+- Keep everything that is still valid from the existing analysis
+
+Return the complete updated JSON in the EXACT same structure as the existing analysis. Return ONLY the JSON.`
+  );
+
+  let s = raw.trim().replace(/^\`\`\`json\s*/i,"").replace(/^\`\`\`\s*/i,"").replace(/\s*\`\`\`\s*$/i,"").trim();
+  const st=s.indexOf("{"), en=s.lastIndexOf("}");
+  if (st===-1||en<=st) throw new Error("Groq update did not return valid JSON: "+raw.slice(0,200));
+  return JSON.parse(s.slice(st,en+1));
+}
+
+// ── Run update ────────────────────────────────────────────
+async function runUpdate() {
+  if (!lastAnalysis) { run(); return; }
+
+  document.getElementById("ebox").style.display = "none";
+  document.getElementById("ubtn").disabled = true;
+  document.getElementById("abtn").disabled = true;
+  setStatus("loading","Checking for new articles...");
+
+  try {
+    const articles   = await fetchAll();
+    const newArticles = diffArticles(articles);
+    const newPaste    = (document.getElementById("paste-input").value||"").trim();
+    const hasNewPaste = newPaste.length > 20;
+
+    if (newArticles.length === 0 && !hasNewPaste) {
+      showUpdateBanner(0);
+      setStatus("done","Live");
+      document.getElementById("ubtn").disabled = false;
+      document.getElementById("abtn").disabled = false;
+      return;
+    }
+
+    step(`${newArticles.length} new articles${hasNewPaste?" + new research":""} — updating thesis...`);
+
+    const updated = await analyseUpdate(newArticles, newPaste, lastAnalysis);
+
+    // merge new articles into display (prepend new ones)
+    const allArticles = [
+      ...newArticles.map(a=>({...a, isNew:true})),
+      ...articles.filter(a=>seenTitles.has(a.title.slice(0,60).toLowerCase()))
+    ];
+
+    render(allArticles, updated, hasNewPaste, newArticles.length);
+    saveState(newArticles, updated);
+
+    // clear paste after update
+    if (hasNewPaste) {
+      document.getElementById("paste-input").value = "";
+      updatePasteBadge();
+    }
+
+    setStatus("done","Updated");
+  } catch(e) {
+    console.error(e);
+    showErr(e.message);
+    setStatus("error","Error");
+  }
+
+  document.getElementById("ubtn").disabled = false;
+  document.getElementById("abtn").disabled = false;
+}
+
 </script>
 </body>
 </html>
