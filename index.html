@@ -224,7 +224,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
     <div id="sdot"></div>
     <div id="stxt">Ready</div>
   </div>
-  <div id="token-box"><div class="tok-val">S: <span id="tok-session">0</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-s" style="width:0%"></div></div><div class="tok-val">D: <span id="tok-daily">500k</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div></div>
+  <div id="token-box"><div class="tok-val">S: <span id="tok-session">0</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-s" style="width:0%"></div></div><div class="tok-val">D: <span id="tok-daily">500k</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div><div class="vline" style="height:16px;margin:0 4px"></div><div class="tok-val">FMP: <span id="tok-fmp">250</span></div><div class="tok-bar"><div class="tok-fill" id="tok-bar-fmp" style="width:100%"></div></div></div>
   <button id="ubtn" onclick="runUpdate()">+ Update</button>
   <button id="abtn" onclick="run()">Analyse Now</button>
 </div>
@@ -385,15 +385,14 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 const GROQ_KEY   = "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";
 const GROQ_URL   = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "llama-3.3-70b-versatile";
-const R2J        = "https://api.rss2json.com/v1/api.json";
 
 const FEEDS = [
-  { name:"Yahoo Finance", url:"https://finance.yahoo.com/news/rssindex" },
-  { name:"MarketWatch",  url:"https://www.marketwatch.com/rss/topstories" },
-  { name:"Nasdaq",       url:"https://www.nasdaq.com/feed/rssoutbound?category=Markets" },
-  { name:"Investopedia", url:"https://www.investopedia.com/feedbuilder/feed/getfeed/?feedName=rss_headline" },
-  { name:"Seeking Alpha",url:"https://seekingalpha.com/feed.xml" },
-  { name:"ZeroHedge",    url:"https://feeds.feedburner.com/zerohedge/feed" },
+  { name:"BBC Business",  url:"https://feeds.bbci.co.uk/news/business/rss.xml" },
+  { name:"Guardian",      url:"https://www.theguardian.com/uk/business/rss" },
+  { name:"AP Business",   url:"https://feeds.apnews.com/rss/apf-business" },
+  { name:"CNBC Markets",  url:"https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664" },
+  { name:"Reuters",       url:"https://feeds.reuters.com/reuters/businessNews" },
+  { name:"NYT Business",  url:"https://rss.nytimes.com/services/xml/rss/nyt/Business.xml" },
 ];
 
 // source status tracking
@@ -465,6 +464,11 @@ function updatePasteBadge() {
 }
 document.addEventListener("DOMContentLoaded", () => {
   // restore daily token display on load
+  // restore FMP display
+  updateFmpUI();
+  // restore session display
+  document.getElementById("tok-session").textContent = sessionTokens >= 1000 ? (sessionTokens/1000).toFixed(1)+"k" : sessionTokens;
+  document.getElementById("tok-bar-s").style.width = Math.min((sessionTokens/50000)*100,100)+"%";
   const _remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
   const _pct = (dailyUsed / DAILY_LIMIT) * 100;
   document.getElementById("tok-daily").textContent = _remaining >= 1000 ? Math.round(_remaining/1000)+"k" : _remaining;
@@ -484,27 +488,51 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("src-summary").textContent = "Hit Analyse Now to check";
 });
 
-// ── Fetch one RSS feed ────────────────────────────────────
+// ── Fetch one RSS feed via allorigins XML proxy ───────────
+function parseRSS(xmlStr) {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlStr, "text/xml");
+    const items = [...doc.querySelectorAll("item")];
+    return items.map(item => ({
+      title:   (item.querySelector("title")?.textContent || "").trim().replace(/<[^>]+>/g,""),
+      pubDate: item.querySelector("pubDate")?.textContent || "",
+    })).filter(i => i.title.length > 5);
+  } catch { return []; }
+}
+
 async function fetchFeed(src) {
   const id = src.name.replace(/\s/g,'');
   const chip = document.getElementById("chip-"+id);
   if (chip) chip.className = "src-chip checking";
-  document.getElementById("cnt-"+id).textContent = "checking...";
+  const cntEl = document.getElementById("cnt-"+id);
+  if (cntEl) cntEl.textContent = "checking...";
 
-  try {
-    const r = await fetch(`${R2J}?rss_url=${encodeURIComponent(src.url)}&count=20`);
-    if (!r.ok) throw new Error("http "+r.status);
-    const d = await r.json();
-    if (d.status !== "ok" || !Array.isArray(d.items) || d.items.length === 0) throw new Error("empty");
-    const items = d.items.map(i => ({ title:(i.title||"").trim(), source:src.name, pubDate:i.pubDate||"" }));
-    srcStatus[src.name] = { state:"live", count:items.length };
-    updateChip(src.name, "live", items.length);
-    return items;
-  } catch(e) {
-    srcStatus[src.name] = { state:"down", count:0 };
-    updateChip(src.name, "down", 0);
-    return [];
+  // Try two proxies
+  const proxies = [
+    `https://api.allorigins.win/get?url=${encodeURIComponent(src.url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(src.url)}`,
+  ];
+
+  for (const proxyUrl of proxies) {
+    try {
+      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(7000) });
+      if (!r.ok) continue;
+      const data = await r.json().catch(() => null);
+      // allorigins wraps in {contents}; corsproxy returns raw text
+      const xmlStr = data?.contents || await r.text?.() || "";
+      const items = parseRSS(xmlStr || (typeof data === "string" ? data : ""));
+      if (!items.length) continue;
+      const mapped = items.map(i => ({ title:i.title, source:src.name, pubDate:i.pubDate }));
+      srcStatus[src.name] = { state:"live", count:mapped.length };
+      updateChip(src.name, "live", mapped.length);
+      return mapped;
+    } catch { continue; }
   }
+
+  srcStatus[src.name] = { state:"down", count:0 };
+  updateChip(src.name, "down", 0);
+  return [];
 }
 
 async function fetchAll() {
@@ -523,14 +551,16 @@ async function fetchAll() {
 
 // ── Groq call ─────────────────────────────────────────────
 // token tracking
-let sessionTokens = 0;
+let sessionTokens = parseInt(localStorage.getItem("groq_session_tokens")||"0");
 const DAILY_LIMIT = 500000;
 let dailyUsed = parseInt(localStorage.getItem("groq_daily_used")||"0");
 const todayKey = new Date().toISOString().slice(0,10);
 if (localStorage.getItem("groq_day") !== todayKey) {
   dailyUsed = 0;
+  sessionTokens = 0;
   localStorage.setItem("groq_day", todayKey);
   localStorage.setItem("groq_daily_used", "0");
+  localStorage.setItem("groq_session_tokens", "0");
 }
 
 function updateTokenUI(promptTokens, completionTokens) {
@@ -538,6 +568,7 @@ function updateTokenUI(promptTokens, completionTokens) {
   sessionTokens += total;
   dailyUsed += total;
   localStorage.setItem("groq_daily_used", dailyUsed);
+  localStorage.setItem("groq_session_tokens", sessionTokens);
 
   const remaining = Math.max(0, DAILY_LIMIT - dailyUsed);
   const dailyPct  = (dailyUsed / DAILY_LIMIT) * 100;
@@ -800,7 +831,7 @@ async function run() {
     const hasPasted   = pastedText.length > 20;
 
     if (!articles.length && !hasPasted) {
-      throw new Error("No news fetched and no manual text provided. rss2json.com may be down — try again, or paste some article text to analyse.");
+      throw new Error("No news fetched and no manual text provided. All RSS sources may be down — try again, or paste article text to analyse.");
     }
 
     const count = articles.length;
@@ -974,12 +1005,25 @@ async function runUpdate() {
 }
 
 
-// ── Yahoo Finance fundamentals ────────────────────────────
-const YF_PROXIES = [
-  t => `https://corsproxy.io/?${encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/quote?symbols="+t+"&fields=marketCap,trailingPE,regularMarketChangePercent,fiftyTwoWeekLow,fiftyTwoWeekHigh,regularMarketPrice,shortName")}`,
-  t => `https://api.allorigins.win/get?url=${encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/quote?symbols="+t+"&fields=marketCap,trailingPE,regularMarketChangePercent,fiftyTwoWeekLow,fiftyTwoWeekHigh,regularMarketPrice,shortName")}`,
-  t => `https://thingproxy.freeboard.io/fetch/https://query1.finance.yahoo.com/v8/finance/quote?symbols=${t}&fields=marketCap,trailingPE,regularMarketChangePercent,fiftyTwoWeekLow,fiftyTwoWeekHigh,regularMarketPrice,shortName`,
-];
+// ── FMP fundamentals (direct CORS, no proxy needed) ──────
+const FMP_KEY = "VDQu2wLylibOFQUNoLhMi044M7tFJHZS";
+const FMP_LIMIT = 250;
+let fmpUsed = parseInt(localStorage.getItem("fmp_daily_used")||"0");
+const fmpDay = localStorage.getItem("fmp_day");
+if (fmpDay !== todayKey) {
+  fmpUsed = 0;
+  localStorage.setItem("fmp_day", todayKey);
+  localStorage.setItem("fmp_daily_used", "0");
+}
+
+function updateFmpUI() {
+  const remaining = Math.max(0, FMP_LIMIT - fmpUsed);
+  const pct = (fmpUsed / FMP_LIMIT) * 100;
+  document.getElementById("tok-fmp").textContent = remaining;
+  const bar = document.getElementById("tok-bar-fmp");
+  bar.style.width = Math.max(0, 100 - pct) + "%";
+  bar.className = "tok-fill" + (pct > 90 ? " crit" : pct > 70 ? " warn" : "");
+}
 
 function fmtMktCap(v) {
   if (!v) return "—";
@@ -990,26 +1034,27 @@ function fmtMktCap(v) {
 }
 
 async function fetchYahoo(ticker) {
-  for (const proxyFn of YF_PROXIES) {
-    try {
-      const r = await fetch(proxyFn(ticker), { signal: AbortSignal.timeout(6000) });
-      if (!r.ok) continue;
-      let raw = await r.json();
-      // allorigins wraps in {contents:"..."}
-      if (raw.contents) raw = JSON.parse(raw.contents);
-      const q = raw?.quoteResponse?.result?.[0];
-      if (!q) continue;
-      return {
-        mktCap : fmtMktCap(q.marketCap),
-        pe     : q.trailingPE ? q.trailingPE.toFixed(1) : "N/A",
-        chg    : q.regularMarketChangePercent != null ? q.regularMarketChangePercent.toFixed(2) : null,
-        low52  : q.fiftyTwoWeekLow  ? q.fiftyTwoWeekLow.toFixed(2)  : "—",
-        high52 : q.fiftyTwoWeekHigh ? q.fiftyTwoWeekHigh.toFixed(2) : "—",
-        price  : q.regularMarketPrice ? q.regularMarketPrice.toFixed(2) : "—",
-      };
-    } catch(e) { continue; }
-  }
-  return null;
+  try {
+    const r = await fetch(
+      `https://financialmodelingprep.com/api/v3/quote/${ticker}?apikey=${FMP_KEY}`,
+      { signal: AbortSignal.timeout(6000) }
+    );
+    if (!r.ok) return null;
+    const d = await r.json();
+    const q = Array.isArray(d) ? d[0] : null;
+    if (!q) return null;
+    fmpUsed++;
+    localStorage.setItem("fmp_daily_used", fmpUsed);
+    updateFmpUI();
+    return {
+      mktCap : fmtMktCap(q.marketCap),
+      pe     : q.pe ? Number(q.pe).toFixed(1) : "N/A",
+      chg    : q.changesPercentage != null ? Number(q.changesPercentage).toFixed(2) : null,
+      low52  : q.yearLow  ? Number(q.yearLow).toFixed(2)  : "—",
+      high52 : q.yearHigh ? Number(q.yearHigh).toFixed(2) : "—",
+      price  : q.price    ? Number(q.price).toFixed(2)    : "—",
+    };
+  } catch { return null; }
 }
 
 function applyFundamentals(ticker, data) {
