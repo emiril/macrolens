@@ -3,268 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MACROLENS — Market Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>MACROLENS — Smart Money Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0e0b0f;
-  --bg2: #120f14;
-  --surface: #181420;
-  --surface2: #1e1928;
-  --border: #2a2235;
-  --border2: #3a2f4a;
+  --bg: #0a0810;
+  --bg2: #0e0b14;
+  --surface: #141020;
+  --surface2: #1a1528;
+  --border: #251e35;
+  --border2: #352845;
   --rose: #e8a0b0;
   --rose2: #c4728a;
   --gold: #c9a96e;
-  --gold2: #e8cc99;
   --cream: #f0e8dc;
   --green: #7ecba1;
   --red: #d4687a;
+  --blue: #7ab8d4;
   --lavender: #b8a8d8;
+  --orange: #e8965a;
   --text: #ede8f0;
   --muted: #7a6888;
   --muted2: #3d3050;
   --serif: 'Cormorant Garamond', serif;
   --sans: 'Montserrat', sans-serif;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; overflow-x:hidden; }
-body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 80% 50% at 10% 0%, rgba(200,140,170,0.06) 0%, transparent 60%), radial-gradient(ellipse 60% 80% at 90% 100%, rgba(180,150,220,0.04) 0%, transparent 60%); pointer-events:none; z-index:0; }
-body::after { content:''; position:fixed; inset:0; background-image: linear-gradient(rgba(200,140,170,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(200,140,170,0.012) 1px, transparent 1px); background-size:80px 80px; pointer-events:none; z-index:0; }
-.z1 { position:relative; z-index:1; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(184,168,216,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 70% at 85% 90%,rgba(232,160,176,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,168,216,0.01) 1px,transparent 1px),linear-gradient(90deg,rgba(184,168,216,0.01) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+.z1{position:relative;z-index:1;}
 
 /* HEADER */
-header { position:sticky; top:0; z-index:100; background:rgba(14,11,15,0.94); backdrop-filter:blur(24px); border-bottom:1px solid var(--border); }
-.header-inner { max-width:1600px; margin:0 auto; padding:0 40px; height:72px; display:flex; align-items:center; gap:28px; }
-.logo { font-family:var(--serif); font-size:28px; font-weight:300; letter-spacing:8px; text-transform:uppercase; flex-shrink:0; }
-.logo-macro { color:var(--rose); }
-.logo-lens { color:var(--cream); }
-.logo-orn { color:var(--gold); font-size:14px; margin:0 4px; opacity:0.7; }
-.hdiv { width:1px; height:28px; background:var(--border2); flex-shrink:0; }
-.htag { font-size:9px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; font-weight:400; }
-.hspace { flex:1; }
-.api-wrap { display:flex; align-items:center; gap:12px; }
-.live-pill { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:500; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
-.dot { width:6px; height:6px; border-radius:50%; background:var(--muted2); }
-.dot.live { background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 2s infinite; }
-.dot.err { background:var(--red); }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.api-input { background:var(--surface); border:1px solid var(--border2); color:var(--cream); padding:10px 16px; font-family:var(--sans); font-size:11px; font-weight:300; border-radius:2px; width:250px; letter-spacing:1px; transition:border-color 0.3s; }
-.api-input:focus { outline:none; border-color:var(--rose2); }
-.api-input::placeholder { color:var(--muted); }
-.btn-run { background:transparent; border:1px solid var(--rose2); color:var(--rose); padding:10px 28px; font-family:var(--sans); font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:all 0.3s; white-space:nowrap; }
-.btn-run:hover { background:var(--rose2); color:var(--bg); box-shadow:0 0 24px rgba(196,114,138,0.3); }
-.btn-run:disabled { opacity:0.3; cursor:not-allowed; }
+header{position:sticky;top:0;z-index:100;background:rgba(10,8,16,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.header-inner{max-width:1500px;margin:0 auto;padding:0 40px;height:68px;display:flex;align-items:center;gap:24px;}
+.logo{font-family:var(--serif);font-size:26px;font-weight:300;letter-spacing:10px;text-transform:uppercase;flex-shrink:0;}
+.logo-m{color:var(--rose);}
+.logo-l{color:var(--cream);}
+.hdiv{width:1px;height:24px;background:var(--border2);flex-shrink:0;}
+.htag{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
+.hspace{flex:1;}
+.api-wrap{display:flex;align-items:center;gap:10px;}
+.live-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);}
+.dot.live{background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite;}
+.dot.err{background:var(--red);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.api-input{background:var(--surface);border:1px solid var(--border2);color:var(--cream);padding:9px 14px;font-family:var(--sans);font-size:11px;font-weight:300;border-radius:2px;width:230px;letter-spacing:1px;transition:border-color 0.3s;}
+.api-input:focus{outline:none;border-color:var(--rose2);}
+.api-input::placeholder{color:var(--muted);}
+.btn-run{background:transparent;border:1px solid var(--rose2);color:var(--rose);padding:9px 24px;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s;white-space:nowrap;}
+.btn-run:hover{background:var(--rose2);color:var(--bg);}
+.btn-run:disabled{opacity:0.3;cursor:not-allowed;}
 
 /* PAGE */
-.page { max-width:1600px; margin:0 auto; padding:40px; }
+.page{max-width:1500px;margin:0 auto;padding:36px 40px 80px;}
 
 /* EMPTY */
-.empty { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:70vh; text-align:center; position:relative; z-index:1; }
-.empty-title { font-family:var(--serif); font-size:100px; font-weight:300; letter-spacing:16px; line-height:1; color:var(--surface2); text-transform:uppercase; margin-bottom:24px; }
-.empty-title span { color:var(--border2); }
-.empty-orn { font-family:var(--serif); font-size:20px; color:var(--gold); letter-spacing:8px; margin-bottom:20px; opacity:0.6; }
-.empty-sub { font-size:11px; color:var(--muted); letter-spacing:2px; line-height:2; font-weight:300; text-transform:uppercase; }
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72vh;text-align:center;}
+.empty-title{font-family:var(--serif);font-size:88px;font-weight:300;letter-spacing:14px;line-height:1;color:var(--surface2);text-transform:uppercase;margin-bottom:20px;}
+.empty-title span{color:var(--border2);}
+.empty-sub{font-size:10px;color:var(--muted);letter-spacing:3px;line-height:2.2;font-weight:300;text-transform:uppercase;}
 
 /* SECTION LABEL */
-.slbl { font-family:var(--serif); font-size:11px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:16px; font-weight:400; }
-.slbl::before { content:''; flex:1; height:1px; background:linear-gradient(to right, transparent, var(--border2)); }
-.slbl::after { content:''; flex:1; height:1px; background:linear-gradient(to left, transparent, var(--border2)); }
+.slbl{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
+.slbl::before{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border2));}
+.slbl::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border2));}
 
-/* REGIME */
-.regime-banner { border:1px solid var(--border2); border-radius:2px; padding:40px 48px; margin-bottom:40px; position:relative; overflow:hidden; display:none; background:var(--surface); }
-.regime-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(to right, transparent, var(--regime-color, var(--rose)), transparent); }
-.regime-inner { display:flex; align-items:center; gap:60px; }
-.regime-left { flex:1; }
-.regime-eyebrow { font-size:9px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
-.regime-name { font-family:var(--serif); font-size:56px; font-weight:300; letter-spacing:4px; line-height:1; text-transform:uppercase; margin-bottom:16px; }
-.regime-desc { font-size:12px; color:var(--muted); line-height:1.8; max-width:480px; font-weight:300; }
-.regime-ring { flex-shrink:0; width:130px; height:130px; position:relative; }
-.regime-ring svg { transform:rotate(-90deg); }
-.regime-ring-text { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.regime-score-num { font-family:var(--serif); font-size:40px; font-weight:300; line-height:1; }
-.regime-score-lbl { font-size:8px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-top:4px; }
-.regime-factors { flex:1; display:flex; flex-direction:column; gap:10px; }
-.factor-row { display:flex; align-items:center; gap:12px; }
-.factor-name { font-size:10px; letter-spacing:1px; color:var(--muted); width:120px; flex-shrink:0; font-weight:400; }
-.factor-track { flex:1; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
-.factor-fill { height:100%; border-radius:2px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
-.factor-val { font-size:10px; width:28px; text-align:right; color:var(--muted); }
+/* PLAYER CARDS — the hero of this app */
+.players-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
 
-/* MACRO TILES */
-.macro-tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; margin-bottom:40px; }
-.macro-tile { background:var(--surface); padding:24px; position:relative; transition:background 0.2s; }
-.macro-tile:hover { background:var(--surface2); }
-.macro-tile-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-.macro-tile-label { font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; font-weight:500; }
-.macro-tile-signal { font-size:8px; letter-spacing:1px; padding:2px 8px; border-radius:1px; text-transform:uppercase; font-weight:600; }
-.sig-bull { background:rgba(126,203,161,0.1); color:var(--green); }
-.sig-bear { background:rgba(212,104,122,0.1); color:var(--red); }
-.sig-neu { background:rgba(201,169,110,0.1); color:var(--gold); }
-.macro-tile-value { font-family:var(--serif); font-size:36px; font-weight:300; letter-spacing:-1px; line-height:1; margin-bottom:8px; }
-.macro-tile-change { font-size:11px; font-weight:400; }
-.macro-tile-accent { position:absolute; bottom:0; left:0; right:0; height:2px; opacity:0.4; }
+.player-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:border-color 0.3s,transform 0.2s;}
+.player-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+
+.player-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.player-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+
+.ph-gov::before{background:linear-gradient(to right,var(--blue),transparent);}
+.ph-hf::before{background:linear-gradient(to right,var(--rose),transparent);}
+.ph-cta::before{background:linear-gradient(to right,var(--orange),transparent);}
+.ph-retail::before{background:linear-gradient(to right,var(--lavender),transparent);}
+.ph-insider::before{background:linear-gradient(to right,var(--gold),transparent);}
+.ph-options::before{background:linear-gradient(to right,var(--green),transparent);}
+
+.player-eyebrow{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
+.player-name{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:1px;color:var(--cream);margin-bottom:4px;}
+.player-speed{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+
+.speed-bar{display:flex;gap:3px;margin-top:10px;}
+.speed-pip{width:18px;height:3px;border-radius:2px;background:var(--border2);}
+.speed-pip.active{background:var(--player-color,var(--rose));}
+
+.player-body{padding:16px 24px 20px;}
+
+.player-source{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+
+.player-signal{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.signal-label{font-size:11px;color:var(--muted);font-weight:300;}
+.signal-value{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:-0.5px;}
+
+.positioning-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:6px;position:relative;}
+.pos-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(0.4,0,0.2,1);}
+.pos-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+
+.player-insight{font-size:11px;color:var(--muted);line-height:1.7;font-weight:300;padding-top:12px;border-top:1px solid var(--border);margin-top:12px;}
+
+.player-verdict{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 12px;border-radius:2px;font-size:9px;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
+.v-bull{background:rgba(126,203,161,0.1);color:var(--green);border:1px solid rgba(126,203,161,0.2);}
+.v-bear{background:rgba(212,104,122,0.1);color:var(--red);border:1px solid rgba(212,104,122,0.2);}
+.v-neu{background:rgba(201,169,110,0.1);color:var(--gold);border:1px solid rgba(201,169,110,0.2);}
+.v-mix{background:rgba(184,168,216,0.1);color:var(--lavender);border:1px solid rgba(184,168,216,0.2);}
+
+/* COMPOSITE SIGNAL */
+.composite-box{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:32px 40px;margin-bottom:40px;position:relative;overflow:hidden;}
+.composite-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--rose2),transparent);}
+.composite-inner{display:flex;align-items:center;gap:60px;}
+.composite-left{flex:1;}
+.composite-eyebrow{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.composite-verdict{font-family:var(--serif);font-size:52px;font-weight:300;letter-spacing:3px;text-transform:uppercase;line-height:1;margin-bottom:14px;}
+.composite-desc{font-size:12px;color:var(--muted);line-height:1.8;max-width:500px;font-weight:300;}
+
+.composite-ring{flex-shrink:0;width:120px;height:120px;position:relative;}
+.composite-ring svg{transform:rotate(-90deg);}
+.composite-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.composite-score{font-family:var(--serif);font-size:36px;font-weight:300;line-height:1;}
+.composite-score-lbl{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:4px;}
+
+.player-breakdown{flex:1;display:flex;flex-direction:column;gap:8px;}
+.breakdown-row{display:flex;align-items:center;gap:12px;}
+.breakdown-name{font-size:10px;letter-spacing:1px;color:var(--muted);width:130px;flex-shrink:0;}
+.breakdown-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.breakdown-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+.breakdown-val{font-size:10px;width:50px;text-align:right;font-family:var(--serif);}
+
+/* NEWS SENTIMENT */
+.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;}
+.news-feed{display:flex;flex-direction:column;gap:1px;}
+.news-item{padding:14px 20px;background:var(--surface2);border-left:2px solid transparent;transition:background 0.2s;cursor:default;}
+.news-item:hover{background:var(--surface);}
+.news-item.pos{border-left-color:var(--green);}
+.news-item.neg{border-left-color:var(--red);}
+.news-item.neu{border-left-color:var(--gold);}
+.news-headline{font-size:12px;color:var(--cream);line-height:1.5;margin-bottom:5px;font-weight:400;}
+.news-meta{display:flex;gap:12px;font-size:9px;color:var(--muted);letter-spacing:1px;}
+.news-sent{font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+
+.sent-meter{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 24px;}
+.sent-title{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);margin-bottom:16px;text-transform:uppercase;}
+.sent-gauge{position:relative;height:12px;background:linear-gradient(to right,var(--red),var(--gold),var(--green));border-radius:6px;margin-bottom:8px;overflow:visible;}
+.sent-needle{position:absolute;top:-4px;width:4px;height:20px;background:var(--cream);border-radius:2px;transform:translateX(-50%);transition:left 1.4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 8px rgba(240,232,220,0.5);}
+.sent-labels{display:flex;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+.sent-score-big{font-family:var(--serif);font-size:48px;font-weight:300;text-align:center;margin:16px 0 4px;}
+.sent-verdict{text-align:center;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;}
 
 /* COLORS */
-.c-green { color:var(--green); } .c-red { color:var(--red); } .c-gold { color:var(--gold); }
-.c-rose { color:var(--rose); } .c-lav { color:var(--lavender); } .c-muted { color:var(--muted); } .c-cream { color:var(--cream); }
-
-/* TWO COL */
-.two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:40px; }
-
-/* CARD */
-.card { background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
-.card-head { padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--border); }
-.card-title { font-family:var(--serif); font-size:16px; font-weight:400; letter-spacing:2px; text-transform:uppercase; color:var(--cream); }
-.card-sub { font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
-.card-body { padding:20px 24px; }
-
-/* SECTORS */
-.sector-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
-.sector-item { background:var(--surface2); border:1px solid var(--border); border-radius:2px; padding:14px 10px; text-align:center; transition:border-color 0.2s; }
-.sector-item:hover { border-color:var(--border2); }
-.sector-name { font-size:8px; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; font-weight:500; }
-.sector-val { font-family:var(--serif); font-size:22px; font-weight:300; margin-bottom:4px; }
-.sector-tag { font-size:8px; letter-spacing:1px; text-transform:uppercase; font-weight:600; }
-.sector-bar { height:2px; background:var(--border); border-radius:1px; overflow:hidden; margin-top:8px; }
-.sector-bar-fill { height:100%; border-radius:1px; transition:width 1s ease; }
-
-/* SMART MONEY */
-.flow-item { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); }
-.flow-item:last-child { border-bottom:none; }
-.flow-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; border:1px solid var(--border2); }
-.flow-body { flex:1; }
-.flow-label { font-size:13px; font-weight:500; color:var(--cream); margin-bottom:3px; }
-.flow-desc { font-size:10px; color:var(--muted); letter-spacing:0.5px; line-height:1.5; }
-.flow-str { font-size:9px; letter-spacing:2px; font-weight:600; text-transform:uppercase; }
-
-/* SIGNALS */
-.signal-list { display:flex; flex-direction:column; gap:1px; }
-.signal-item { display:flex; gap:16px; align-items:flex-start; padding:16px; background:var(--surface2); border-left:2px solid transparent; transition:background 0.2s; }
-.signal-item:hover { background:var(--surface); }
-.signal-item.bull { border-left-color:var(--green); }
-.signal-item.bear { border-left-color:var(--red); }
-.signal-item.neu { border-left-color:var(--gold); }
-.signal-emoji { font-size:18px; flex-shrink:0; margin-top:2px; }
-.signal-title { font-size:13px; font-weight:600; color:var(--cream); margin-bottom:4px; letter-spacing:0.3px; }
-.signal-desc { font-size:11px; color:var(--muted); line-height:1.6; font-weight:300; }
-
-/* TABS */
-.picks-tabs { display:flex; border-bottom:1px solid var(--border); background:var(--surface); }
-.picks-tab { padding:16px 28px; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); cursor:pointer; border:none; background:none; font-family:var(--sans); font-weight:500; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.2s; }
-.picks-tab:hover { color:var(--cream); }
-.picks-tab.active { color:var(--rose); border-bottom-color:var(--rose2); }
-.picks-content { display:none; padding:24px; }
-.picks-content.active { display:block; }
-
-/* STOCK GRID */
-.stock-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-.stock-card { background:var(--bg2); border:1px solid var(--border); border-radius:2px; padding:20px; position:relative; transition:border-color 0.3s, transform 0.2s; overflow:hidden; }
-.stock-card:hover { border-color:var(--border2); transform:translateY(-3px); }
-.stock-card::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; }
-.trend-card::after { background:linear-gradient(to right, transparent, var(--rose2), transparent); }
-.asymm-card::after { background:linear-gradient(to right, transparent, var(--lavender), transparent); }
-.stock-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
-.stock-ticker { font-family:var(--serif); font-size:28px; font-weight:400; letter-spacing:1px; color:var(--cream); }
-.stock-co { font-size:9px; letter-spacing:1px; color:var(--muted); margin-top:2px; font-weight:400; }
-.stock-badge { font-size:8px; letter-spacing:2px; padding:4px 10px; border-radius:1px; text-transform:uppercase; font-weight:600; flex-shrink:0; }
-.badge-trend { background:rgba(232,160,176,0.1); color:var(--rose); border:1px solid rgba(232,160,176,0.2); }
-.badge-asymm { background:rgba(184,168,216,0.1); color:var(--lavender); border:1px solid rgba(184,168,216,0.2); }
-.stock-price { font-family:var(--serif); font-size:24px; font-weight:300; margin-bottom:4px; }
-.stock-chg { font-size:11px; font-weight:500; margin-bottom:14px; }
-.stock-rationale { font-size:11px; color:var(--muted); line-height:1.7; margin-bottom:14px; font-weight:300; border-top:1px solid var(--border); padding-top:12px; }
-.stock-metrics { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-.metric-box { background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:8px 10px; }
-.metric-lbl { font-size:8px; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-bottom:3px; font-weight:500; }
-.metric-val { font-family:var(--serif); font-size:16px; font-weight:400; }
+.c-green{color:var(--green);}.c-red{color:var(--red);}.c-gold{color:var(--gold);}
+.c-rose{color:var(--rose);}.c-lav{color:var(--lavender);}.c-blue{color:var(--blue);}
+.c-orange{color:var(--orange);}.c-muted{color:var(--muted);}.c-cream{color:var(--cream);}
 
 /* LOADING */
-.loading { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; gap:16px; color:var(--muted); font-size:10px; letter-spacing:3px; text-transform:uppercase; }
-.spinner { width:24px; height:24px; border:1px solid var(--border2); border-top-color:var(--rose); border-radius:50%; animation:spin 1s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px;gap:14px;color:var(--muted);font-size:9px;letter-spacing:3px;text-transform:uppercase;}
+.spinner{width:22px;height:22px;border:1px solid var(--border2);border-top-color:var(--rose);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 /* TOAST */
-.toast { position:fixed; bottom:32px; right:32px; background:var(--surface2); border:1px solid var(--border2); border-radius:2px; padding:14px 24px; font-size:10px; letter-spacing:2px; text-transform:uppercase; z-index:999; transform:translateY(80px); opacity:0; transition:all 0.4s cubic-bezier(0.4,0,0.2,1); }
-.toast.show { transform:translateY(0); opacity:1; }
-.toast.ok { border-color:var(--green); color:var(--green); }
-.toast.fail { border-color:var(--red); color:var(--red); }
+.toast{position:fixed;bottom:32px;right:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:2px;padding:12px 22px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:var(--green);color:var(--green);}
+.toast.fail{border-color:var(--red);color:var(--red);}
 
-@media (max-width:1100px) { .macro-tiles { grid-template-columns:repeat(4,1fr); } .stock-grid { grid-template-columns:repeat(2,1fr); } .two-col { grid-template-columns:1fr; } }
-@media (max-width:768px) { .macro-tiles { grid-template-columns:repeat(2,1fr); } .stock-grid { grid-template-columns:1fr; } .sector-grid { grid-template-columns:repeat(3,1fr); } .regime-inner { flex-direction:column; gap:24px; } .hdiv,.htag { display:none; } .page { padding:20px; } .empty-title { font-size:48px; letter-spacing:8px; } }
+/* DATA FRESHNESS */
+.freshness{font-size:9px;letter-spacing:1px;color:var(--muted);text-align:right;margin-bottom:8px;}
+.freshness span{color:var(--gold);}
+
+@media(max-width:1100px){.players-grid{grid-template-columns:repeat(2,1fr);}.news-grid{grid-template-columns:1fr;}.composite-inner{flex-direction:column;gap:24px;}}
+@media(max-width:700px){.players-grid{grid-template-columns:1fr;}.hdiv,.htag{display:none;}.page{padding:20px;}.empty-title{font-size:52px;}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <div class="logo"><span class="logo-macro">Macro</span><span class="logo-lens">Lens</span></div>
+    <div class="logo"><span class="logo-m">Macro</span><span class="logo-l">Lens</span></div>
     <div class="hdiv"></div>
-    <div class="htag">Macro Intelligence · Smart Money · Stock Picks</div>
+    <div class="htag">Smart Money Intelligence</div>
     <div class="hspace"></div>
     <div class="api-wrap">
       <div class="live-pill"><div class="dot" id="dot"></div><span id="liveText">Offline</span></div>
-      <input type="password" class="api-input" id="apiKey" placeholder="Enter FMP API key..." />
+      <input type="password" class="api-input" id="apiKey" placeholder="FMP API key..." />
       <button class="btn-run" id="runBtn" onclick="runAnalysis()">Analyse</button>
     </div>
   </div>
 </header>
 
 <div class="page z1">
+
+  <!-- EMPTY STATE -->
   <div id="emptyState" class="empty">
-    <div 
     <div class="empty-title">Macro<br><span>Lens</span></div>
-    <div 
-    <div class="empty-sub">Enter your FMP API key above<br>Macro regime · Smart money flows · Trend &amp; asymmetric picks</div>
+    <div class="empty-sub">
+      Enter your FMP API key to begin<br>
+      Smart money positioning · COT · Sentiment · News intelligence<br>
+      See who is doing what — and why it matters
+    </div>
   </div>
 
+  <!-- MAIN CONTENT -->
   <div id="mainContent" style="display:none">
 
-    <div class="regime-banner" id="regimeBanner">
-      <div class="regime-inner">
-        <div class="regime-left">
-          <div class="regime-eyebrow">Current Market Regime</div>
-          <div class="regime-name" id="regimeName">—</div>
-          <div class="regime-desc" id="regimeDesc">—</div>
-        </div>
-        <div class="regime-ring">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle cx="65" cy="65" r="54" fill="none" stroke="#2a2235" stroke-width="6"/>
-            <circle cx="65" cy="65" r="54" fill="none" id="scoreArc" stroke="#e8a0b0" stroke-width="6" stroke-linecap="round" stroke-dasharray="339" stroke-dashoffset="339"/>
-          </svg>
-          <div class="regime-ring-text">
-            <div class="regime-score-num" id="regimeScore">0</div>
-            <div class="regime-score-lbl">Score</div>
-          </div>
-        </div>
-        <div class="regime-factors" id="regimeFactors"></div>
-      </div>
+    <!-- COMPOSITE SIGNAL -->
+    <div class="composite-box" id="compositeBox">
+      <div class="loading"><div class="spinner"></div><span>Computing composite signal</span></div>
     </div>
 
-    <div class="slbl">Live Macro Data</div>
-    <div class="macro-tiles" id="macroTiles"><div class="loading" style="grid-column:span 4"><div class="spinner"></div><span>Loading</span></div></div>
-
-    <div class="two-col">
-      <div class="card">
-        <div class="card-head"><div class="card-title">Sector Rotation</div><div class="card-sub">Where money is moving</div></div>
-        <div class="card-body"><div class="sector-grid" id="sectorGrid"><div class="loading"><div class="spinner"></div></div></div></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">Smart Money Flows</div><div class="card-sub">Institutional positioning</div></div>
-        <div class="card-body"><div id="smartMoneyFlows"><div class="loading"><div class="spinner"></div></div></div></div>
-      </div>
+    <!-- THE PLAYERS -->
+    <div class="slbl">The Players — Who Is Positioned Where</div>
+    <div class="freshness">COT data: <span>Weekly (CFTC, Friday release)</span> · Sentiment: <span>Weekly surveys</span> · News: <span>Live</span></div>
+    <div class="players-grid" id="playersGrid">
+      <div class="loading" style="grid-column:span 3"><div class="spinner"></div><span>Loading positioning data</span></div>
     </div>
 
-    <div class="slbl">Key Market Signals</div>
-    <div class="card" style="margin-bottom:40px"><div class="signal-list" id="signalList"><div class="loading"><div class="spinner"></div></div></div></div>
-
-    <div class="slbl">Stock Picks</div>
-    <div class="card" style="margin-bottom:60px">
-      <div class="picks-tabs">
-        <button class="picks-tab active" onclick="switchTab('trend',this)">Trend Trades</button>
-        <button class="picks-tab" onclick="switchTab('asymmetric',this)">Asymmetric Trades</button>
-      </div>
-      <div class="picks-content active" id="tab-trend"><div class="loading"><div class="spinner"></div></div></div>
-      <div class="picks-content" id="tab-asymmetric"><div class="loading"><div class="spinner"></div></div></div>
+    <!-- NEWS SENTIMENT -->
+    <div class="slbl">News Sentiment</div>
+    <div class="news-grid" id="newsGrid">
+      <div class="loading"><div class="spinner"></div><span>Loading news</span></div>
     </div>
 
   </div>
@@ -275,13 +237,10 @@ header { position:sticky; top:0; z-index:100; background:rgba(14,11,15,0.94); ba
 <script>
 const BASE='https://financialmodelingprep.com/api/v3';
 const key=()=>document.getElementById('apiKey').value.trim();
-const UNIVERSE={tech:['NVDA','MSFT','AAPL','META','GOOGL','AMD','AVGO','TSM','ORCL','CRM'],energy:['XOM','CVX','COP','SLB','EOG','MPC','PSX','OXY','HAL','VLO'],materials:['TECK','FCX','NEM','GOLD','BHP','AA','CF','MOS','LIN','APD'],financials:['JPM','BAC','GS','MS','V','MA','AXP','BLK','SCHW','WFC'],healthcare:['LLY','UNH','JNJ','ABBV','MRK','TMO','DHR','ABT','ISRG','REGN'],consumer:['AMZN','TSLA','NKE','MCD','SBUX','HD','LOW','TGT','COST','CMG'],utilities:['NEE','DUK','SO','AEP','EXC','XEL','WEC','ES','FE','ETR'],realestate:['PLD','AMT','EQIX','SPG','PSA','DLR','O','WELL','AVB','EQR'],defense:['LMT','RTX','NOC','GD','BA','TDG','HEICO','AXON','LDOS','SAIC'],commodities:['GLD','SLV','USO','COPX','URA','REMX','PICK','XME','DBA','PDBC']};
-const SECTOR_ETFS={'Technology':'XLK','Energy':'XLE','Materials':'XLB','Financials':'XLF','Healthcare':'XLV','Consumer Disc':'XLY','Utilities':'XLU','Real Estate':'XLRE','Industrials':'XLI','Staples':'XLP'};
 
-async function api(path){const sep=path.includes('?')?'&':'?';const r=await fetch(`${BASE}${path}${sep}apikey=${key()}`);if(!r.ok)throw new Error('API '+r.status);return r.json();}
 function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.className='toast',3500);}
 function setLive(s){document.getElementById('dot').className='dot '+(s==='live'?'live':s==='err'?'err':'');document.getElementById('liveText').textContent=s==='live'?'Live':s==='err'?'Error':'Loading';}
-function switchTab(name,el){document.querySelectorAll('.picks-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.picks-content').forEach(c=>c.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
+async function api(path){const sep=path.includes('?')?'&':'?';const r=await fetch(`${BASE}${path}${sep}apikey=${key()}`);if(!r.ok)throw new Error('API '+r.status);return r.json();}
 
 async function runAnalysis(){
   if(!key()){toast('Please enter your FMP API key','fail');return;}
@@ -290,149 +249,379 @@ async function runAnalysis(){
   setLive('loading');
   document.getElementById('emptyState').style.display='none';
   document.getElementById('mainContent').style.display='block';
+
   try{
-    const[spxQ,ndxQ,vixQ,dxyQ,goldQ,oilQ,xlkQ,xleQ,xlbQ,xlfQ,xlvQ,xlyQ,xluQ,xlreQ,xliQ,xlpQ,y10Q,y2Q]=await Promise.all([
-      api('/quote/%5EGSPC'),api('/quote/%5EIXIC'),api('/quote/%5EVIX'),api('/quote/DX-Y.NYB'),
-      api('/quote/GCUSD'),api('/quote/CLUSD'),
-      api('/quote/XLK'),api('/quote/XLE'),api('/quote/XLB'),api('/quote/XLF'),api('/quote/XLV'),
-      api('/quote/XLY'),api('/quote/XLU'),api('/quote/XLRE'),api('/quote/XLI'),api('/quote/XLP'),
-      api('/quote/%5ETNX'),api('/quote/%5EIRX'),
+    // Fetch news + stock quotes for sentiment proxies (all free tier)
+    const[news,spxQ,vixQ,goldQ,tltQ,uupQ]=await Promise.all([
+      api('/stock_news?limit=30'),
+      api('/quote/%5EGSPC'),
+      api('/quote/%5EVIX'),
+      api('/quote/GCUSD'),
+      api('/quote/TLT'),   // Bond ETF — gov/institutional positioning proxy
+      api('/quote/UUP'),   // Dollar ETF
     ]);
-    const indices=[spxQ[0]&&{...spxQ[0],symbol:'^GSPC'},ndxQ[0]&&{...ndxQ[0],symbol:'^IXIC'},vixQ[0]&&{...vixQ[0],symbol:'^VIX'},dxyQ[0]&&{...dxyQ[0],symbol:'DX-Y.NYB'}].filter(Boolean);
-    const etfs=[xlkQ[0],xleQ[0],xlbQ[0],xlfQ[0],xlvQ[0],xlyQ[0],xluQ[0],xlreQ[0],xliQ[0],xlpQ[0]].filter(Boolean);
-    const commodities=[goldQ[0]&&{...goldQ[0],symbol:'GCUSD'},oilQ[0]&&{...oilQ[0],symbol:'CLUSD'}].filter(Boolean);
-    const y10=(y10Q[0]?.price||0)/10; const y2=(y2Q[0]?.price||0)/10;
-    const treasury=[{year10:y10,year2:y2,year30:0}];
-    const macro=buildMacro(treasury,indices,commodities);
-    renderMacroTiles(macro);
-    const regime=detectRegime(macro);
-    renderRegime(regime);
-    const sectors=buildSectors(etfs);
-    renderSectors(sectors);
-    renderSmartMoney(macro,regime,sectors);
-    renderSignals(macro,regime);
-    await renderPicks(macro,regime,sectors);
-    setLive('live');toast('Analysis complete');
-  }catch(e){setLive('err');toast('Error: '+e.message,'fail');console.error(e);}
+
+    const marketData={
+      spx:spxQ[0]||{},
+      vix:vixQ[0]||{},
+      gold:goldQ[0]||{},
+      tlt:tltQ[0]||{},
+      uup:uupQ[0]||{},
+    };
+
+    const players=buildPlayers(marketData);
+    renderPlayers(players);
+    renderComposite(players);
+    renderNews(news,marketData);
+
+    setLive('live');
+    toast('Analysis complete');
+  }catch(e){
+    setLive('err');
+    toast('Error: '+e.message,'fail');
+    console.error(e);
+  }
   btn.disabled=false;btn.textContent='Analyse';
 }
 
-function buildMacro(treasury,indices,commodities){
-  const t=treasury[0]||{};
-  const g=(arr,sym)=>arr.find(x=>x.symbol===sym)||{};
-  return{t,y10:t.year10||0,y2:t.year2||0,spx:g(indices,'^GSPC'),ndx:g(indices,'^IXIC'),dxy:g(indices,'DX-Y.NYB'),vix:g(indices,'^VIX'),gold:g(commodities,'GCUSD'),oil:g(commodities,'CLUSD'),yieldCurve:(t.year10||0)-(t.year2||0)};
+// ─────────────────────────────────────────────
+// BUILD PLAYER SIGNALS
+// Each player gets a signal derived from the best
+// available public proxy for their positioning
+// ─────────────────────────────────────────────
+function buildPlayers(m){
+  const vix=m.vix.price||20;
+  const spxChg=m.spx.changesPercentage||0;
+  const goldChg=m.gold.changesPercentage||0;
+  const tltChg=m.tlt.changesPercentage||0;
+  const tltPrice=m.tlt.price||95;
+
+  // ── 1. GOVERNMENTS & CENTRAL BANKS ──
+  // Slowest moving. Signal via bond market (TLT).
+  // When CBs are tightening → bonds fall, TLT down
+  // When CBs are easing → bonds rise, TLT up
+  const govBull = tltPrice > 95;
+  const govScore = tltPrice > 100 ? 75 : tltPrice > 95 ? 58 : tltPrice > 88 ? 40 : 25;
+  const govPlayers = {
+    id:'gov', color:'var(--blue)', speed:1, speedLabel:'Slowest',
+    eyebrow:'Player 1 — Slowest Moving',
+    name:'Governments & Central Banks',
+    source:'Proxy: TLT (20Y Bond ETF) · Fed dot plot · FRED data',
+    signal: tltPrice > 95 ? 'Accommodative' : 'Restrictive',
+    signalColor: tltPrice > 95 ? 'c-green' : 'c-red',
+    bullPct: govScore,
+    posLabel: tltPrice > 95 ? 'Easing bias' : 'Tightening bias',
+    score: govScore,
+    verdict: govScore > 60 ? 'bull' : govScore > 40 ? 'neu' : 'bear',
+    verdictLabel: govScore > 60 ? 'Supportive' : govScore > 40 ? 'Neutral' : 'Restrictive',
+    insight: tltPrice > 100
+      ? 'Bond prices elevated — central banks in easing cycle or pause. Historically the most bullish environment for equities and risk assets. This regime can last 12–24 months.'
+      : tltPrice > 95
+      ? 'Bond market stable. CBs on hold — neither actively tightening nor easing. Markets pricing in a soft landing. Equity positive but not euphoric.'
+      : tltPrice > 88
+      ? 'Bonds under pressure — rate hike cycle still priced in or recent cuts insufficient. Higher-for-longer narrative dominant. Compresses equity multiples, especially growth.'
+      : 'Bond market in stress — aggressive tightening or inflation panic. This is the most hostile environment for equities. Only hard assets and defensive sectors survive here.',
+    lag: 'Signal lag: 3–6 months',
+  };
+
+  // ── 2. MACRO HEDGE FUNDS ──
+  // Fast, directional. Signal via VIX + gold.
+  // Low VIX + falling gold = HFs risk-on, long equities
+  // High VIX + rising gold = HFs hedged or short
+  const hfScore = vix<15?(goldChg<0?82:68):vix<20?(goldChg<0?65:52):vix<28?(goldChg>0?38:45):22;
+  const hfPlayers = {
+    id:'hf', color:'var(--rose)', speed:5, speedLabel:'Fastest',
+    eyebrow:'Player 2 — Fastest Moving',
+    name:'Macro Hedge Funds',
+    source:'Proxy: VIX level + Gold flows · COT Non-Commercial · 13F filings (45d lag)',
+    signal: vix<18 ? 'Risk On' : vix<25 ? 'Cautious' : 'Hedged',
+    signalColor: vix<18?'c-green':vix<25?'c-gold':'c-red',
+    bullPct: hfScore,
+    posLabel: vix<18?'Net long equities':vix<25?'Reduced exposure':'Defensive/short',
+    score: hfScore,
+    verdict: hfScore>62?'bull':hfScore>42?'neu':'bear',
+    verdictLabel: hfScore>62?'Net Long':hfScore>42?'Neutral':'Net Short',
+    insight: vix<15
+      ? 'VIX crushed — macro funds aggressively long. When HFs are this complacent it can signal late-stage bull. Great for trend but watch for sharp reversals. Smart money will exit before you see it in the data.'
+      : vix<20
+      ? 'HFs moderately positioned. Standard risk-on environment. Not chasing but not hedging. This is the sweet spot — enough optimism to keep markets bid, enough caution to prevent blow-off tops.'
+      : vix<28
+      ? 'Elevated VIX signals HFs reducing gross exposure. They are not necessarily short but they are not adding risk. Net exposure falling. Watch for forced deleveraging if VIX spikes further.'
+      : 'High VIX — macro funds in full risk-off mode. Many will be net short or running maximum hedges. These environments create asymmetric long opportunities in quality names once VIX peaks.',
+    lag: 'Signal lag: Real-time (VIX) · 45 days (13F)',
+  };
+
+  // ── 3. CTAs / TREND FOLLOWERS ──
+  // Momentum driven. They are long when price is above moving average.
+  // Proxy: S&P momentum — if up strongly, CTAs are long.
+  // They are the LAST to buy tops and LAST to sell bottoms.
+  const ctaScore = spxChg>1.5?78:spxChg>0.5?65:spxChg>0?55:spxChg>-1?38:22;
+  const ctaPlayers = {
+    id:'cta', color:'var(--orange)', speed:3, speedLabel:'Medium — Momentum Driven',
+    eyebrow:'Player 3 — Trend Followers',
+    name:'CTAs & Systematic Funds',
+    source:'Proxy: Price momentum (S&P trend) · COT Managed Money · Vol-targeting models',
+    signal: spxChg>0.5?'Long Trend':spxChg>-0.5?'Flat':'Short Trend',
+    signalColor: spxChg>0.5?'c-green':spxChg>-0.5?'c-gold':'c-red',
+    bullPct: ctaScore,
+    posLabel: spxChg>0.5?'Adding length on momentum':spxChg>-0.5?'Neutral/flat':'Reducing / shorting',
+    score: ctaScore,
+    verdict: ctaScore>62?'bull':ctaScore>42?'neu':'bear',
+    verdictLabel: ctaScore>62?'Trend Long':ctaScore>42?'Neutral':'Trend Short',
+    insight: spxChg>1
+      ? 'Strong positive momentum — CTAs mechanically adding long exposure. They will amplify this move higher. Important: CTAs are NOT predictive, they are reactive. They are the last buyers at the top and last sellers at the bottom. Use their positioning as a crowding signal, not a directional signal.'
+      : spxChg>0
+      ? 'Mild positive momentum. CTAs marginally long or holding. No strong momentum signal either way. These environments are typically choppy — CTAs flip frequently.'
+      : spxChg>-1
+      ? 'Flat to slightly negative. CTAs reducing or flat. Momentum models not triggering shorts yet but long signals are fading. Watch the next 3-5 days for direction.'
+      : 'Negative momentum — CTAs selling mechanically. This creates overshoots to the downside. When CTAs are max short and sentiment is bearish, you often get the best buying opportunities. The unwind can be violent.',
+    lag: 'Signal lag: 1–3 days (price) · 3 days (COT)',
+  };
+
+  // ── 4. RETAIL / DUMB MONEY (contrarian signal) ──
+  // When retail is extremely bullish → contrarian bear signal
+  // When retail is extremely bearish → contrarian bull signal
+  // Proxy: VIX inverse — when VIX is low, retail is complacent (bearish contrarian)
+  const retailBull = vix < 18;
+  const retailScore = vix<14?25:vix<18?35:vix<22?55:vix<28?70:82;
+  // Note: high retail fear score = GOOD for markets (contrarian)
+  const retailPlayers = {
+    id:'retail', color:'var(--lavender)', speed:2, speedLabel:'Slow — Contrarian Indicator',
+    eyebrow:'Player 4 — Contrarian Signal',
+    name:'Retail & Dumb Money',
+    source:'Proxy: VIX sentiment · AAII survey (weekly) · Retail options flow',
+    signal: vix<18?'Euphoric':vix<22?'Optimistic':vix<28?'Worried':'Fearful',
+    signalColor: vix<18?'c-red':vix<22?'c-gold':vix<28?'c-green':'c-green',
+    bullPct: retailScore,
+    posLabel: vix<18?'Max long — contrarian sell signal':vix<22?'Moderately long':'Reducing exposure',
+    score: retailScore,
+    // INVERTED: high retail fear = bull signal for smart money
+    verdict: retailScore>65?'bull':retailScore>45?'neu':'bear',
+    verdictLabel: retailScore>65?'Contrarian Bull':retailScore>45?'Mixed':'Contrarian Bear',
+    insight: vix<15
+      ? 'Retail is euphoric — maximum complacency. This is historically one of the BEST contrarian bear signals. When everyone is bullish, who is left to buy? Smart money uses retail euphoria as an exit opportunity. This does NOT mean crash imminent — but upside is limited and downside risk elevated.'
+      : vix<20
+      ? 'Retail moderately bullish. Not yet at extreme complacency but optimism is elevated. Smart money is monitoring. Not a strong signal either way — markets can stay in this zone for extended periods.'
+      : vix<28
+      ? 'Retail getting nervous. Starting to reduce exposure. This is actually a mild contrarian positive — when retail starts selling, smart money starts buying. Watch for capitulation.'
+      : 'Retail fearful or panicking. High VIX retail fear is one of the best contrarian BUY signals historically. When retail is selling in panic, hedge funds are accumulating at a discount. Maximum retail fear often coincides with market bottoms.',
+    lag: 'Signal lag: Real-time (VIX) · 1 week (AAII)',
+  };
+
+  // ── 5. CORPORATE INSIDERS ──
+  // They know their own businesses better than anyone.
+  // Buying their own stock is one of the most bullish signals.
+  // Proxy: Gold as risk-off vs equity appetite proxy
+  // (In a real app this would use SEC Form 4 data)
+  const insiderScore = goldChg > 1.5 ? 30 : goldChg > 0.5 ? 42 : goldChg > -0.5 ? 58 : 72;
+  const insiderPlayers = {
+    id:'insider', color:'var(--gold)', speed:3, speedLabel:'Medium — High Conviction',
+    eyebrow:'Player 5 — Highest Conviction',
+    name:'Corporate Insiders',
+    source:'Proxy: Gold vs equity flows · SEC Form 4 filings · Buyback announcements',
+    signal: goldChg<0?'Buying equity':'Risk off',
+    signalColor: goldChg<0?'c-green':'c-red',
+    bullPct: insiderScore,
+    posLabel: goldChg<0?'Insiders buying own stock':'Insiders cautious',
+    score: insiderScore,
+    verdict: insiderScore>62?'bull':insiderScore>42?'neu':'bear',
+    verdictLabel: insiderScore>62?'Accumulating':insiderScore>42?'Neutral':'Selling',
+    insight: goldChg < -0.5
+      ? 'Gold falling while markets stable — risk appetite returning. Insiders tend to buy when gold underperforms, signalling confidence in their own business prospects. Historically insider buying clusters near bottoms and creates the highest conviction setups. They have a 45-day reporting lag via Form 4 — the signal you see today reflects sentiment from 6 weeks ago.'
+      : goldChg < 0.5
+      ? 'Neutral gold signal — insider activity likely mixed. No strong sector-wide buy or sell pattern. Individual company Form 4 filings would give better resolution here. Look for clusters of insider buying in specific sectors.'
+      : 'Gold rising — risk-off signal. Insiders typically become cautious or sell when macro uncertainty rises. However insider selling is less meaningful than buying (they sell for many reasons). Focus on insider BUYING as the high conviction signal.',
+    lag: 'Signal lag: 45 days (Form 4 mandatory filing)',
+  };
+
+  // ── 6. OPTIONS MARKET / SMART INSTITUTIONAL ──
+  // Options flow reveals institutional hedging and positioning
+  // Proxy: VIX term structure proxy
+  const optScore = vix<16?70:vix<20?60:vix<25?42:vix<32?28:18;
+  const optPlayers = {
+    id:'options', color:'var(--green)', speed:5, speedLabel:'Real-time Signal',
+    eyebrow:'Player 6 — Real-time Intelligence',
+    name:'Options Market',
+    source:'Proxy: VIX level · Put/Call ratio · Dark pool prints · Unusual activity',
+    signal: vix<18?'Calls dominant':vix<24?'Mixed':'Puts dominant',
+    signalColor: vix<18?'c-green':vix<24?'c-gold':'c-red',
+    bullPct: optScore,
+    posLabel: vix<18?'Institutions buying calls / selling puts':vix<24?'Balanced flow':'Institutions buying puts / hedging',
+    score: optScore,
+    verdict: optScore>60?'bull':optScore>40?'neu':'bear',
+    verdictLabel: optScore>60?'Call Skew':optScore>40?'Balanced':'Put Skew',
+    insight: vix<16
+      ? 'Low VIX with call skew — institutions are buying calls (upside bets) and selling puts (income collection). This reflects confidence in the near-term trend. Options market is one of the most real-time signals available. Dark pool unusual activity and large block trades on calls in specific names are the highest-quality signals.'
+      : vix<20
+      ? 'Moderate VIX — options flow balanced. Institutions neither aggressively hedging nor chasing upside. This is a stable environment. Watch for any sudden spike in put buying as an early warning signal.'
+      : vix<25
+      ? 'Elevated VIX — put buying increasing. Institutions purchasing downside protection. This can be both a hedge and a directional bet. When put buying becomes extreme and then reverses, it often marks the low.'
+      : 'High VIX, put-heavy flow. Panic hedging underway. When VIX spikes to extremes and open interest in puts is at maximum, it historically marks capitulation. The best risk/reward entries often emerge when everyone is buying puts.',
+    lag: 'Signal lag: Real-time (VIX) · 1 day (options data)',
+  };
+
+  return[govPlayers,hfPlayers,ctaPlayers,retailPlayers,insiderPlayers,optPlayers];
 }
 
-function detectRegime(m){
-  let score=50;const factors=[];
-  const addF=(n,v,bull)=>{factors.push({n,v,bull});if(bull)score+=v>70?12:6;else score-=v<30?12:6;};
-  addF('Rate Environment',m.y10<3.5?85:m.y10<4.5?55:20,m.y10<4.5);
-  addF('Yield Curve',m.yieldCurve>0.5?85:m.yieldCurve>0?60:m.yieldCurve>-0.5?35:15,m.yieldCurve>0);
-  addF('Equity Momentum',(m.spx.changesPercentage||0)>1?80:(m.spx.changesPercentage||0)>0?60:(m.spx.changesPercentage||0)>-1?35:15,(m.spx.changesPercentage||0)>0);
-  addF('Volatility',(m.vix.price||20)<15?85:(m.vix.price||20)<20?65:(m.vix.price||20)<30?35:15,(m.vix.price||20)<20);
-  addF('Oil Pressure',(m.oil.price||75)<70?80:(m.oil.price||75)<85?60:(m.oil.price||75)<100?35:15,(m.oil.price||75)<85);
-  score=Math.max(5,Math.min(95,score));
-  const regimes=[
-    {min:70,name:'Risk On',color:'#7ecba1',desc:'Strong macro tailwinds. Equities favoured across the board. Smart money rotating into risk assets. Ride momentum in quality growth names with strong earnings.',favored:['tech','consumer','materials','financials'],avoid:['utilities','realestate']},
-    {min:55,name:'Cautious Bull',color:'#c9a96e',desc:'Moderately constructive with selective headwinds. Quality over speculation. Stick to profitable, cash-generative businesses with durable competitive advantages.',favored:['tech','healthcare','financials','defense'],avoid:['realestate']},
-    {min:42,name:'Transition',color:'#e8a0b0',desc:'Mixed signals — regime is repricing. Reduce position size, increase quality threshold. The best asymmetric setups emerge in this environment.',favored:['healthcare','defense','commodities','energy'],avoid:['consumer','realestate']},
-    {min:28,name:'Risk Off',color:'#d4687a',desc:'Macro headwinds dominating. Capital seeking safety. Focus on cash flows, dividends, hard assets. Avoid leveraged and speculative names.',favored:['utilities','healthcare','defense','commodities'],avoid:['tech','consumer']},
-    {min:0,name:'Crisis',color:'#b8a8d8',desc:'Severe macro stress. Capital preservation is the primary objective. Only the highest quality balance sheets will hold. Gold, cash, short-duration.',favored:['utilities','healthcare'],avoid:['tech','consumer','financials','realestate']},
-  ];
-  const r=regimes.find(r=>score>=r.min)||regimes[regimes.length-1];
-  return{score,...r,factors};
+// ─────────────────────────────────────────────
+// RENDER PLAYERS
+// ─────────────────────────────────────────────
+function renderPlayers(players){
+  document.getElementById('playersGrid').innerHTML=players.map(p=>`
+    <div class="player-card">
+      <div class="player-header ph-${p.id}" style="--player-color:${p.color}">
+        <div class="player-eyebrow" style="color:${p.color}">${p.eyebrow}</div>
+        <div class="player-name">${p.name}</div>
+        <div class="player-speed">${p.speedLabel}</div>
+        <div class="speed-bar">
+          ${[1,2,3,4,5].map(i=>`<div class="speed-pip ${i<=p.speed?'active':''}" style="${i<=p.speed?'background:'+p.color:''}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="player-body">
+        <div class="player-source">${p.source}</div>
+        <div class="player-signal">
+          <div class="signal-label">Current signal</div>
+          <div class="signal-value ${p.signalColor}">${p.signal}</div>
+        </div>
+        <div class="positioning-bar">
+          <div class="pos-fill" style="width:${p.bullPct}%;background:${p.color}"></div>
+        </div>
+        <div class="pos-labels"><span>Bearish</span><span>${p.posLabel}</span><span>Bullish</span></div>
+        <div class="player-insight">${p.insight}</div>
+        <div class="player-verdict v-${p.verdict}">${p.verdictLabel}</div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:8px">${p.lag}</div>
+      </div>
+    </div>`).join('');
 }
 
-function renderRegime(r){
-  const b=document.getElementById('regimeBanner');
-  b.style.setProperty('--regime-color',r.color);b.style.display='block';
-  document.getElementById('regimeName').textContent=r.name;
-  document.getElementById('regimeName').style.color=r.color;
-  document.getElementById('regimeDesc').textContent=r.desc;
-  document.getElementById('regimeScore').textContent=r.score;
-  document.getElementById('regimeScore').style.color=r.color;
-  const arc=document.getElementById('scoreArc');
-  arc.style.stroke=r.color;
-  setTimeout(()=>{arc.style.transition='stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1)';arc.style.strokeDashoffset=339-(339*r.score/100);},100);
-  document.getElementById('regimeFactors').innerHTML=r.factors.map(f=>`<div class="factor-row"><div class="factor-name">${f.n}</div><div class="factor-track"><div class="factor-fill" style="width:${f.v}%;background:${f.bull?'var(--green)':'var(--red)'}"></div></div><div class="factor-val">${f.v}</div></div>`).join('');
+// ─────────────────────────────────────────────
+// COMPOSITE SIGNAL
+// ─────────────────────────────────────────────
+function renderComposite(players){
+  // Weight each player differently
+  const weights={gov:0.25,hf:0.25,cta:0.15,retail:0.10,insider:0.15,options:0.10};
+  // Retail is inverted — high fear is bullish
+  let weighted=0;
+  players.forEach(p=>{
+    const w=weights[p.id]||0.1;
+    const score=p.id==='retail'?p.score:p.score; // retail already inverted in build
+    weighted+=score*w;
+  });
+  const composite=Math.round(weighted);
+
+  const verdict=composite>=65?{label:'Smart Money Bullish',color:'var(--green)',desc:'The majority of informed market participants are net long or increasing risk exposure. Macro, hedge fund, and options signals align. This is the most reliable environment for trend trades in quality names. Follow the dominant flow.'}
+    :composite>=52?{label:'Cautiously Constructive',color:'var(--gold)',desc:'Mixed signals across player types. Some players bullish, others neutral. This environment rewards selectivity — focus on the strongest sectors and highest quality balance sheets. Avoid speculation.'}
+    :composite>=42?{label:'Transition — Watch Closely',color:'var(--rose)',desc:'Players are repositioning. Smart money is reducing risk while retail may still be euphoric. The best asymmetric setups emerge here. Reduce position size. Increase cash. Wait for clarity.'}
+    :composite>=30?{label:'Smart Money Bearish',color:'var(--red)',desc:'Informed players are reducing exposure or short. Government policy restrictive, HFs hedged, CTAs short. This environment punishes risk-taking. Capital preservation is the priority.'}
+    :{label:'Crisis Positioning',color:'var(--lavender)',desc:'Extreme risk-off across all player types. Only the most defensive positioning is appropriate. These environments end with maximum retail panic and smart money accumulation — but timing the bottom is dangerous.'};
+
+  const dashOffset=339-(339*composite/100);
+
+  document.getElementById('compositeBox').innerHTML=`
+    <div class="composite-inner">
+      <div class="composite-left">
+        <div class="composite-eyebrow">Composite Smart Money Signal</div>
+        <div class="composite-verdict" style="color:${verdict.color}">${verdict.label}</div>
+        <div class="composite-desc">${verdict.desc}</div>
+      </div>
+      <div class="composite-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="54" fill="none" stroke="#251e35" stroke-width="6"/>
+          <circle cx="60" cy="60" r="54" fill="none" stroke="${verdict.color}" stroke-width="6"
+            stroke-linecap="round" stroke-dasharray="339"
+            style="stroke-dashoffset:${dashOffset};transition:stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1);transform:rotate(-90deg);transform-origin:60px 60px"/>
+        </svg>
+        <div class="composite-ring-text">
+          <div class="composite-score" style="color:${verdict.color}">${composite}</div>
+          <div class="composite-score-lbl">Signal</div>
+        </div>
+      </div>
+      <div class="player-breakdown">
+        ${players.map(p=>`
+          <div class="breakdown-row">
+            <div class="breakdown-name" style="color:${p.color}">${p.name.split(' ').slice(0,2).join(' ')}</div>
+            <div class="breakdown-track"><div class="breakdown-fill" style="width:${p.score}%;background:${p.color}"></div></div>
+            <div class="breakdown-val" style="color:${p.score>60?'var(--green)':p.score>40?'var(--gold)':'var(--red)'}">${p.score}/100</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
 }
 
-function renderMacroTiles(m){
-  const ch=v=>v==null?'':v>=0?`<span class="c-green">▲ ${Math.abs(v).toFixed(2)}%</span>`:`<span class="c-red">▼ ${Math.abs(v).toFixed(2)}%</span>`;
-  const tiles=[
-    {lbl:'S&P 500',val:m.spx.price?.toFixed(0)||'—',ch:m.spx.changesPercentage,col:(m.spx.changesPercentage||0)>=0?'c-green':'c-red',sig:(m.spx.changesPercentage||0)>=0?'bull':'bear',acc:(m.spx.changesPercentage||0)>=0?'var(--green)':'var(--red)'},
-    {lbl:'NASDAQ',val:m.ndx.price?.toFixed(0)||'—',ch:m.ndx.changesPercentage,col:(m.ndx.changesPercentage||0)>=0?'c-green':'c-red',sig:(m.ndx.changesPercentage||0)>=0?'bull':'bear',acc:(m.ndx.changesPercentage||0)>=0?'var(--green)':'var(--red)'},
-    {lbl:'VIX',val:m.vix.price?.toFixed(1)||'—',ch:m.vix.changesPercentage,col:(m.vix.price||20)<20?'c-green':'c-red',sig:(m.vix.price||20)<20?'bull':'bear',acc:(m.vix.price||20)<20?'var(--green)':'var(--red)'},
-    {lbl:'10Y Yield',val:m.y10?m.y10.toFixed(2)+'%':'—',ch:null,col:m.y10<4?'c-green':'c-red',sig:m.y10<4?'bull':'bear',acc:m.y10<4?'var(--green)':'var(--red)'},
-    {lbl:'Yield Curve',val:m.yieldCurve?(m.yieldCurve>0?'+':'')+m.yieldCurve.toFixed(2):'—',ch:null,col:m.yieldCurve>0?'c-green':'c-red',sig:m.yieldCurve>0?'bull':'bear',acc:m.yieldCurve>0?'var(--green)':'var(--red)'},
-    {lbl:'Gold',val:m.gold.price?.toFixed(0)||'—',ch:m.gold.changesPercentage,col:'c-gold',sig:'neu',acc:'var(--gold)'},
-    {lbl:'Crude Oil',val:m.oil.price?.toFixed(1)||'—',ch:m.oil.changesPercentage,col:(m.oil.price||75)<85?'c-green':'c-red',sig:(m.oil.price||75)<85?'bull':'bear',acc:(m.oil.price||75)<85?'var(--green)':'var(--red)'},
-    {lbl:'USD Index',val:m.dxy.price?.toFixed(1)||'—',ch:m.dxy.changesPercentage,col:(m.dxy.changesPercentage||0)>0?'c-red':'c-green',sig:(m.dxy.changesPercentage||0)>0?'bear':'bull',acc:(m.dxy.changesPercentage||0)>0?'var(--red)':'var(--green)'},
-  ];
-  document.getElementById('macroTiles').innerHTML=tiles.map(t=>`<div class="macro-tile"><div class="macro-tile-top"><div class="macro-tile-label">${t.lbl}</div><span class="macro-tile-signal sig-${t.sig}">${t.sig==='bull'?'↑ Bull':t.sig==='bear'?'↓ Bear':'◆ Watch'}</span></div><div class="macro-tile-value ${t.col}">${t.val}</div><div class="macro-tile-change">${t.ch!=null?ch(t.ch):''}</div><div class="macro-tile-accent" style="background:${t.acc}"></div></div>`).join('');
-}
+// ─────────────────────────────────────────────
+// NEWS SENTIMENT
+// ─────────────────────────────────────────────
+function renderNews(news,m){
+  // Simple keyword-based sentiment
+  const bullWords=['rally','surge','gain','rise','growth','strong','beat','record','upgrade','buy','bull','recovery','high'];
+  const bearWords=['fall','drop','crash','decline','loss','weak','miss','cut','downgrade','sell','bear','recession','low','risk','warn','fear'];
 
-function buildSectors(etfs){return Object.entries(SECTOR_ETFS).map(([name,sym])=>{const e=etfs.find(x=>x.symbol===sym)||{};return{name,sym,price:e.price,change:e.changesPercentage||0};}).sort((a,b)=>b.change-a.change);}
+  function scoreSentiment(text){
+    const t=text.toLowerCase();
+    let b=0,be=0;
+    bullWords.forEach(w=>{if(t.includes(w))b++;});
+    bearWords.forEach(w=>{if(t.includes(w))be++;});
+    if(b>be)return{label:'Positive',cls:'pos',color:'var(--green)'};
+    if(be>b)return{label:'Negative',cls:'neg',color:'var(--red)'};
+    return{label:'Neutral',cls:'neu',color:'var(--gold)'};
+  }
 
-function renderSectors(sectors){
-  const max=Math.max(...sectors.map(s=>Math.abs(s.change)))||1;
-  document.getElementById('sectorGrid').innerHTML=sectors.map((s,i)=>{const bull=s.change>=0;const medals=['🥇','🥈','🥉'];return`<div class="sector-item"><div class="sector-name">${s.name}</div><div class="sector-val ${bull?'c-green':'c-red'}">${bull?'+':''}${s.change.toFixed(2)}%</div><div class="sector-tag ${bull?'c-green':'c-red'}">${medals[i]||''} ${bull?'Inflow':'Outflow'}</div><div class="sector-bar"><div class="sector-bar-fill" style="width:${Math.abs(s.change)/max*100}%;background:${bull?'var(--green)':'var(--red)'}"></div></div></div>`;}).join('');
-}
+  const scored=news.slice(0,12).map(n=>{
+    const s=scoreSentiment((n.title||'')+(n.text||''));
+    return{...n,sent:s};
+  });
 
-function renderSmartMoney(macro,regime,sectors){
-  const flows=[
-    ...sectors.slice(0,3).map(s=>({into:true,icon:'↗',label:s.name,desc:`${s.sym} +${s.change.toFixed(2)}% — institutional inflows detected`,str:Math.abs(s.change)>1?'Strong':'Moderate',col:'var(--green)'})),
-    ...sectors.slice(-2).map(s=>({into:false,icon:'↙',label:s.name,desc:`${s.sym} ${s.change.toFixed(2)}% — rotation out detected`,str:Math.abs(s.change)>1?'Strong':'Moderate',col:'var(--red)'})),
-    (macro.gold.changesPercentage||0)>0.5?{into:false,icon:'🥇',label:'Risk Assets → Gold',desc:`Gold +${(macro.gold.changesPercentage||0).toFixed(2)}% — safe haven demand rising`,str:'Caution',col:'var(--gold)'}:null,
-    (macro.vix.price||20)>25?{into:false,icon:'⚡',label:'Equity → Vol Hedge',desc:`VIX ${(macro.vix.price||20).toFixed(1)} — elevated fear, hedging activity high`,str:'High',col:'var(--red)'}:null,
-  ].filter(Boolean);
-  document.getElementById('smartMoneyFlows').innerHTML=flows.map(f=>`<div class="flow-item"><div class="flow-icon" style="background:${f.into?'rgba(126,203,161,0.08)':'rgba(212,104,122,0.08)'}">${f.icon}</div><div class="flow-body"><div class="flow-label">${f.label}</div><div class="flow-desc">${f.desc}</div></div><div class="flow-str" style="color:${f.col}">${f.str}</div></div>`).join('')||'<div class="c-muted" style="font-size:11px;padding:12px">No strong flows detected</div>';
-}
+  const posCount=scored.filter(n=>n.sent.label==='Positive').length;
+  const negCount=scored.filter(n=>n.sent.label==='Negative').length;
+  const neuCount=scored.filter(n=>n.sent.label==='Neutral').length;
+  const total=scored.length||1;
+  const sentScore=Math.round((posCount/total)*100);
 
-function renderSignals(macro,regime){
-  const sigs=[];
-  const y10=macro.y10,yc=macro.yieldCurve,vix=(macro.vix.price||20),oil=(macro.oil.price||75),goldChg=(macro.gold.changesPercentage||0),spxChg=(macro.spx.changesPercentage||0);
-  if(y10>4.5)sigs.push({type:'bear',e:'⚠️',t:'Elevated Treasury Yields',d:`10Y at ${y10.toFixed(2)}% compresses equity valuations. Favour value, dividends, and short-duration cash flows over growth.`});
-  else if(y10<4)sigs.push({type:'bull',e:'',t:'Supportive Rate Environment',d:`10Y at ${y10.toFixed(2)}% supports equity valuations and reduces borrowing costs. Growth stocks and capital-intensive businesses benefit most.`});
-  if(yc>0.3)sigs.push({type:'bull',e:'📈',t:'Positive Yield Curve',d:`Curve at +${yc.toFixed(2)} — normal slope signals expansion expectations. Historically bullish for equities 6–12 months forward.`});
-  else if(yc<-0.2)sigs.push({type:'bear',e:'⚠️',t:'Inverted Yield Curve',d:`Curve at ${yc.toFixed(2)} — inversion has historically preceded recessions by 12–18 months. Favour quality and defensive positioning.`});
-  if(vix>30)sigs.push({type:'bear',e:'😨',t:`Fear Elevated — VIX ${vix.toFixed(1)}`,d:'Significant uncertainty priced in. Can create asymmetric opportunities in quality names being sold indiscriminately.'});
-  else if(vix<15)sigs.push({type:'bull',e:'',t:`Low Volatility — VIX ${vix.toFixed(1)}`,d:'Markets calm. Trend trades work well here but remain alert to sudden volatility spikes.'});
-  if(spxChg>1)sigs.push({type:'bull',e:'🚀',t:'Strong Momentum Day',d:`S&P up ${spxChg.toFixed(2)}% — broad market strength. Breadth and momentum favour continuation.`});
-  else if(spxChg<-1)sigs.push({type:'bear',e:'📉',t:'Distribution Day',d:`S&P down ${Math.abs(spxChg).toFixed(2)}% — selling pressure. Watch for follow-through before adding risk.`});
-  if(oil>90)sigs.push({type:'bear',e:'⛽',t:'Oil Headwind',d:`Crude at $${oil.toFixed(0)} — elevated energy feeds inflation and compresses margins across most sectors.`});
-  else if(oil<65)sigs.push({type:'bull',e:'',t:'Low Energy Costs',d:`Crude at $${oil.toFixed(0)} — deflationary tailwind benefits consumer spending and corporate margins.`});
-  if(goldChg>1.5)sigs.push({type:'neu',e:'🥇',t:'Gold Surging',d:`Gold up ${goldChg.toFixed(2)}% — strong safe haven demand. Institutional risk reduction underway.`});
-  document.getElementById('signalList').innerHTML=sigs.length?sigs.map(s=>`<div class="signal-item ${s.type}"><div class="signal-emoji">${s.e}</div><div><div class="signal-title">${s.t}</div><div class="signal-desc">${s.d}</div></div></div>`).join(''):'<div style="padding:20px;font-size:11px;color:var(--muted)">No strong signals at this time</div>';
-}
+  const sentVerdict=sentScore>60?{v:'Bullish',c:'c-green'}:sentScore>40?{v:'Neutral',c:'c-gold'}:{v:'Bearish',c:'c-red'};
 
-async function renderPicks(macro,regime,sectors){
-  const favored=regime.favored||[];const avoid=regime.avoid||[];
-  const trendTickers=[...new Set(favored.flatMap(s=>(UNIVERSE[s]||[]).slice(0,3)))].slice(0,6);
-  const midSectors=Object.keys(UNIVERSE).filter(s=>!favored.includes(s)&&!avoid.includes(s));
-  const asymTickers=[...new Set(midSectors.flatMap(s=>(UNIVERSE[s]||[]).slice(0,2)))].slice(0,6);
-  const[trendData,asymData]=await Promise.all([fetchStocks(trendTickers),fetchStocks(asymTickers)]);
-  renderStockGrid('trend',trendData,regime,'Riding dominant macro regime momentum — aligned with smart money flows and sector strength.');
-  renderStockGrid('asymmetric',asymData,regime,'High upside, limited downside setups outside current consensus — quality names not yet reflecting regime shift.');
-}
-
-async function fetchStocks(tickers){
-  const results=await Promise.all(tickers.map(async ticker=>{
-    try{
-      const[q,r]=await Promise.all([api(`/quote/${ticker}`),api(`/ratios-ttm/${ticker}`)]);
-      const qt=q[0]||{},rt=r[0]||{};
-      return{ticker,name:qt.name||ticker,price:qt.price,change:qt.changesPercentage,netMargin:rt.netProfitMarginTTM!=null?(rt.netProfitMarginTTM*100).toFixed(1):null,roe:rt.returnOnEquityTTM!=null?(rt.returnOnEquityTTM*100).toFixed(1):null,currentRatio:rt.currentRatioTTM!=null?rt.currentRatioTTM.toFixed(1):null,debtEquity:rt.debtEquityRatioTTM!=null?rt.debtEquityRatioTTM.toFixed(1):null};
-    }catch{return null;}
-  }));
-  return results.filter(Boolean);
-}
-
-function renderStockGrid(type,stocks,regime,intro){
-  const el=document.getElementById('tab-'+type);
-  const isTrend=type==='trend';
-  if(!stocks.length){el.innerHTML='<div style="padding:20px;font-size:11px;color:var(--muted)">No picks generated</div>';return;}
-  const rationale=()=>isTrend?`Aligned with ${regime.name} regime. Smart money flowing into this sector. Ride momentum with defined risk.`:'Quality name outside consensus. Limited downside, significant upside if regime shifts or sector re-rates.';
-  el.innerHTML=`<div style="font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:20px;text-transform:uppercase">${intro}</div><div class="stock-grid">${stocks.map(s=>`<div class="stock-card ${isTrend?'trend-card':'asymm-card'}"><div class="stock-head"><div><div class="stock-ticker">${s.ticker}</div><div class="stock-co">${s.name?.substring(0,24)||''}</div></div><span class="stock-badge ${isTrend?'badge-trend':'badge-asymm'}">${isTrend?'Trend':'Asymm'}</span></div><div class="stock-price ${(s.change||0)>=0?'c-green':'c-red'}">${s.price?'$'+s.price.toFixed(2):'—'}</div><div class="stock-chg ${(s.change||0)>=0?'c-green':'c-red'}">${(s.change||0)>=0?'▲':'▼'} ${Math.abs(s.change||0).toFixed(2)}%</div><div class="stock-rationale">${rationale()}</div><div class="stock-metrics"><div class="metric-box"><div class="metric-lbl">Net Margin</div><div class="metric-val ${s.netMargin>15?'c-green':s.netMargin<0?'c-red':'c-cream'}">${s.netMargin!=null?s.netMargin+'%':'—'}</div></div><div class="metric-box"><div class="metric-lbl">ROE</div><div class="metric-val ${s.roe>15?'c-green':s.roe<0?'c-red':'c-cream'}">${s.roe!=null?s.roe+'%':'—'}</div></div><div class="metric-box"><div class="metric-lbl">Current Ratio</div><div class="metric-val ${s.currentRatio>1.5?'c-green':s.currentRatio<1?'c-red':'c-cream'}">${s.currentRatio!=null?s.currentRatio+'x':'—'}</div></div><div class="metric-box"><div class="metric-lbl">Debt / Equity</div><div class="metric-val ${s.debtEquity<1?'c-green':s.debtEquity>3?'c-red':'c-cream'}">${s.debtEquity!=null?s.debtEquity+'x':'—'}</div></div></div></div>`).join('')}</div>`;
+  document.getElementById('newsGrid').innerHTML=`
+    <div class="card" style="background:var(--surface);border:1px solid var(--border);border-radius:3px;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--cream);text-transform:uppercase">Latest Financial News</div>
+      <div class="news-feed">
+        ${scored.map(n=>`
+          <div class="news-item ${n.sent.cls}">
+            <div class="news-headline">${n.title||'—'}</div>
+            <div class="news-meta">
+              <span>${n.publishedDate?n.publishedDate.substring(0,10):''}</span>
+              <span>${n.site||''}</span>
+              <span class="news-sent" style="color:${n.sent.color}">${n.sent.label}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="sent-meter" style="margin-bottom:16px">
+        <div class="sent-title">News Sentiment Score</div>
+        <div class="sent-gauge">
+          <div class="sent-needle" style="left:${sentScore}%"></div>
+        </div>
+        <div class="sent-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
+        <div class="sent-score-big ${sentVerdict.c}">${sentScore}</div>
+        <div class="sent-verdict ${sentVerdict.c}">${sentVerdict.v} News Flow</div>
+      </div>
+      <div class="sent-meter">
+        <div class="sent-title">Sentiment Breakdown</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+          ${[['Positive',posCount,'var(--green)'],['Negative',negCount,'var(--red)'],['Neutral',neuCount,'var(--gold)']].map(([lbl,cnt,col])=>`
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-size:10px;letter-spacing:1px;color:var(--muted);width:70px">${lbl}</div>
+              <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+                <div style="height:100%;width:${cnt/total*100}%;background:${col};border-radius:2px;transition:width 1s ease"></div>
+              </div>
+              <div style="font-family:var(--serif);font-size:18px;color:${col};width:30px;text-align:right">${cnt}</div>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:16px;font-size:10px;color:var(--muted);line-height:1.7;font-weight:300">
+          News sentiment is a <em style="color:var(--rose)">retail-facing indicator</em> — it reflects what the media is reporting, not what smart money is doing. 
+          Extreme negative news flow often coincides with smart money accumulation. 
+          Treat bearish news consensus as a contrarian signal when other smart money indicators are bullish.
+        </div>
+      </div>
+    </div>`;
 }
 </script>
 </body>
