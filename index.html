@@ -584,16 +584,21 @@ async function preselectTickers(articles, pastedText) {
         temperature:0.1,
         messages:[{
           role:"user",
-          content:`Given these market headlines, list the 8-12 most relevant US-listed stock and ETF tickers to analyse (large-cap S&P500 / major ETFs only). No FX pairs. Return ONLY a JSON array of ticker strings, nothing else.\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
+          content:`Given these market headlines, list the 8-12 most relevant US-listed stock and ETF tickers to analyse (large-cap S&P500 / major ETFs only). No FX pairs. Return ONLY a JSON array of ticker strings, nothing else. Example: ["AAPL","MSFT","XLE"]\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
         }]
       })
     });
     const data = await resp.json();
     const text = data.choices?.[0]?.message?.content || "[]";
-    const clean = text.replace(/\`\`\`json|\`\`\`/g,"").trim();
-    const tickers = JSON.parse(clean);
-    return Array.isArray(tickers) ? tickers.slice(0,12) : [];
-  } catch { return []; }
+    console.log("preselectTickers raw:", text);
+    // extract array even if wrapped in prose
+    const match = text.match(/\[.*?\]/s);
+    if (!match) { console.warn("preselectTickers: no array found in response"); return []; }
+    const tickers = JSON.parse(match[0]);
+    const result = Array.isArray(tickers) ? tickers.slice(0,12) : [];
+    console.log("preselectTickers result:", result);
+    return result;
+  } catch(e) { console.warn("preselectTickers error:", e.message); return []; }
 }
 
 // ── Fetch FMP for a list of tickers, return map ───────────────
@@ -1019,9 +1024,12 @@ async function run() {
     // Step 2: fetch FMP fundamentals for candidates in parallel
     let fundamentalsBlock = "";
     if (candidateTickers.length) {
-      step(`Fetching live fundamentals for ${candidateTickers.length} tickers...`);
+      step(`Fetching live data for ${candidateTickers.length} tickers...`);
       const fundMap = await fetchFundamentalsMap(candidateTickers);
       fundamentalsBlock = buildFundamentalsBlock(fundMap);
+      console.log(`fundamentalsBlock (${Object.keys(fundMap).length} tickers fetched):`, fundamentalsBlock || "EMPTY — FMP returned nothing");
+    } else {
+      console.warn("preselectTickers returned 0 tickers — skipping FMP fetch");
     }
 
     // Step 3: full Groq analysis with fundamentals injected
