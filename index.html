@@ -291,7 +291,18 @@ async function runAnalysis(){
   document.getElementById('emptyState').style.display='none';
   document.getElementById('mainContent').style.display='block';
   try{
-    const[treasury,indices,etfs,commodities]=await Promise.all([api('/treasury?limit=1'),api('/quotes/index'),api('/quotes/etf'),api('/symbol/GCUSD,CLUSD,BZUSD,NGUSD')]);
+    const[spxQ,ndxQ,vixQ,dxyQ,goldQ,oilQ,xlkQ,xleQ,xlbQ,xlfQ,xlvQ,xlyQ,xluQ,xlreQ,xliQ,xlpQ,y10Q,y2Q]=await Promise.all([
+      api('/quote/%5EGSPC'),api('/quote/%5EIXIC'),api('/quote/%5EVIX'),api('/quote/DX-Y.NYB'),
+      api('/quote/GCUSD'),api('/quote/CLUSD'),
+      api('/quote/XLK'),api('/quote/XLE'),api('/quote/XLB'),api('/quote/XLF'),api('/quote/XLV'),
+      api('/quote/XLY'),api('/quote/XLU'),api('/quote/XLRE'),api('/quote/XLI'),api('/quote/XLP'),
+      api('/quote/%5ETNX'),api('/quote/%5EIRX'),
+    ]);
+    const indices=[spxQ[0]&&{...spxQ[0],symbol:'^GSPC'},ndxQ[0]&&{...ndxQ[0],symbol:'^IXIC'},vixQ[0]&&{...vixQ[0],symbol:'^VIX'},dxyQ[0]&&{...dxyQ[0],symbol:'DX-Y.NYB'}].filter(Boolean);
+    const etfs=[xlkQ[0],xleQ[0],xlbQ[0],xlfQ[0],xlvQ[0],xlyQ[0],xluQ[0],xlreQ[0],xliQ[0],xlpQ[0]].filter(Boolean);
+    const commodities=[goldQ[0]&&{...goldQ[0],symbol:'GCUSD'},oilQ[0]&&{...oilQ[0],symbol:'CLUSD'}].filter(Boolean);
+    const y10=(y10Q[0]?.price||0)/10; const y2=(y2Q[0]?.price||0)/10;
+    const treasury=[{year10:y10,year2:y2,year30:0}];
     const macro=buildMacro(treasury,indices,commodities);
     renderMacroTiles(macro);
     const regime=detectRegime(macro);
