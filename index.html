@@ -45,7 +45,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .tok-fill.crit{background:var(--red)}
 
 /* ── PAGE ── */
-#page{max-width:1400px;margin:0 auto;padding:40px 40px 100px}
+#page{max-width:1400px;margin:0 auto;padding:88px 40px 100px}
 .ebox{background:rgba(232,120,136,.08);border:1px solid rgba(232,120,136,.3);border-radius:3px;padding:14px 20px;font-size:12px;color:var(--red);margin-bottom:24px;line-height:1.7;display:none}
 
 /* ── SOURCE HEALTH PANEL ── */
@@ -72,10 +72,10 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .paste-icon{font-size:14px;color:var(--lav)}
 .paste-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cream)}
 .paste-sub{font-size:10px;color:var(--muted)}
-.paste-toggle{font-size:10px;color:var(--muted);letter-spacing:1px;transition:transform .2s}
+.paste-toggle{font-size:10px;color:var(--muted);letter-spacing:1px;transition:transform .2s;display:inline-block}
 .paste-toggle.open{transform:rotate(180deg)}
-.ibox-body{display:none;padding:16px 20px}
-.ibox-body.open{display:block}
+.ibox-body{display:none !important;padding:16px 20px}
+.ibox-body.open{display:block !important}
 .ibox-ta{width:100%;min-height:100px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:2px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:12px;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;transition:border-color .2s}
 .ibox-ta:focus{border-color:var(--rose2)}
 .ibox-ta::placeholder{color:var(--muted)}
@@ -211,7 +211,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
 .fund-err{font-size:10px;color:var(--muted);font-style:italic;padding:4px 0}
 
 @media(max-width:1100px){.dlayout{grid-template-columns:1fr}.dside{flex-direction:row;flex-wrap:wrap}.scard{flex:1;min-width:280px}}
-@media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:24px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}}
+@media(max-width:800px){.ngrid,.sgrid{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}#page{padding:88px 20px 80px}#hdr{padding:0 20px;gap:12px}.htag{display:none}.bigw{font-size:56px}}
 @media(max-width:560px){.ngrid,.sgrid,.steps{grid-template-columns:1fr}}
 </style>
 </head>
@@ -439,8 +439,8 @@ const FEEDS = [
   { name:"CNBC Markets",  url:"https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664" },
   { name:"ZeroHedge",     url:"https://cms.zerohedge.com/fullrss2.xml" },
   { name:"Guardian",      url:"https://www.theguardian.com/business/rss" },
-  { name:"AP Business",   url:"https://feeds.apnews.com/rss/apf-business" },
-  { name:"Reuters",       url:"https://feeds.reuters.com/reuters/marketsNews" },
+  { name:"WSJ Markets",   url:"https://feeds.a.dj.com/rss/RSSMarketsMain.xml" },
+  { name:"Politico Econ", url:"https://rss.politico.com/economy.xml" },
   { name:"NYT Business",  url:"https://rss.nytimes.com/services/xml/rss/nyt/Business.xml" },
   { name:"FT",            url:"https://www.ft.com/rss/home/uk" },
 ];
@@ -561,6 +561,65 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("src-summary").textContent = "Hit Analyse Now to check";
 });
 
+
+// ── Step 1: quick ticker pre-screen ──────────────────────────
+async function preselectTickers(articles, pastedText) {
+  try {
+    const lines = articles.slice(0, 30).map(a => a.title).join("\n");
+    const snippet = pastedText ? pastedText.slice(0, 1000) : "";
+    const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":`Bearer ${GROQ_KEY}`},
+      body: JSON.stringify({
+        model:"llama-3.3-70b-versatile",
+        max_tokens:300,
+        temperature:0.1,
+        messages:[{
+          role:"user",
+          content:`Given these market headlines, list the 8-12 most relevant US-listed stock and ETF tickers to analyse (large-cap S&P500 / major ETFs only). No FX pairs. Return ONLY a JSON array of ticker strings, nothing else.\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
+        }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.choices?.[0]?.message?.content || "[]";
+    const clean = text.replace(/\`\`\`json|\`\`\`/g,"").trim();
+    const tickers = JSON.parse(clean);
+    return Array.isArray(tickers) ? tickers.slice(0,12) : [];
+  } catch { return []; }
+}
+
+// ── Fetch FMP for a list of tickers, return map ───────────────
+async function fetchFundamentalsMap(tickers) {
+  const map = {};
+  await Promise.all(tickers.map(async ticker => {
+    const data = await fetchYahoo(ticker);
+    if (data) map[ticker] = data;
+  }));
+  window._fundMap = map;
+  return map;
+}
+
+// ── Build text block to inject into Groq prompt ───────────────
+function buildFundamentalsBlock(map) {
+  if (!Object.keys(map).length) return "";
+  return Object.entries(map).map(([ticker, d]) =>
+    `${ticker}: Price $${d.price} | Day ${d.chg != null ? (d.chg >= 0 ? "+" : "")+d.chg+"%" : "N/A"} | Mkt Cap ${d.mktCap} | P/E ${d.pe} | 52W ${d.low52}–${d.high52}`
+  ).join("\n");
+}
+
+// ── Apply already-fetched fundamentals to rendered cards ──────
+function applyFundamentalsToCards(picks, map) {
+  picks.filter(p => p.asset_type !== "fx").forEach(p => {
+    const data = map[p.ticker];
+    if (data) {
+      applyFundamentals(p.ticker, data);
+    } else {
+      const strip = document.getElementById("fund-"+p.ticker);
+      if (strip) strip.style.display = "none";
+    }
+  });
+}
+
 // ── Fetch one RSS feed via allorigins XML proxy ───────────
 function parseRSS(xmlStr) {
   try {
@@ -666,7 +725,7 @@ async function groq(system, user) {
       model:GROQ_MODEL,
       messages:[{role:"system",content:system},{role:"user",content:user}],
       temperature:0.35,
-      max_tokens:3800,
+      max_tokens:6000,
     })
   });
   if (!r.ok) { const t=await r.text(); throw new Error("Groq "+r.status+": "+t.slice(0,200)); }
@@ -695,7 +754,7 @@ function buildSentSection(aaiiText, naaimText) {
   return out;
 }
 
-async function analyse(articles, pastedText, aaiiText="", naaimText="") {
+async function analyse(articles, pastedText, aaiiText="", naaimText="", fundamentalsBlock="") {
   step("Groq AI reading all sources...");
 
   const lines = articles.slice(0,30).map((a,i)=>`${i+1}. [${a.source}] ${a.title}`).join("\n");
@@ -776,26 +835,24 @@ async function analyse(articles, pastedText, aaiiText="", naaimText="") {
 }
 
 TREND PICKS rules:
-- Include as many picks as the macro thesis genuinely supports — no fixed limit, no padding
+- Target 6-10 picks. Be generous — err on the side of more picks not fewer.
 - Mix of stocks, ETFs and major FX pairs as the thesis dictates
-- Both long AND short directions — if the thesis is bearish on a sector, include shorts
-- Stocks and ETFs: large-cap, highly liquid, well-known names only (S&P 500 members, major sector ETFs like SPY/QQQ/XLF/GLD/TLT etc)
+- Both long AND short directions — always include at least 1-2 shorts if macro warrants
+- Stocks and ETFs: large-cap, highly liquid only (S&P 500 members, major ETFs: SPY/QQQ/XLF/GLD/TLT/IWM/EEM/XLE/XLK/XLV etc)
 - FX: major pairs only (EURUSD, GBPUSD, USDJPY, USDCHF, AUDUSD, USDCAD, NZDUSD, GBPJPY etc)
 - Each pick must have a clear, direct link to the news flow — no generic picks
 - conviction: exactly "Medium", "Med-High", or "High" — nothing else
-- Only include picks with at least Med-High conviction
 
 ASYMMETRIC PICKS rules:
-- Include as many as genuinely qualify — no fixed limit, no padding
-- These are contrarian, mispriced, or regime-shift trades where risk/reward is skewed
+- Target 4-6 picks. These are contrarian, mispriced, or regime-shift trades.
 - Both long and short — a short on an overbought name is valid asymmetry
 - Same liquidity rules: large-cap stocks, major ETFs, major FX pairs only
 - Must have a clear asymmetric setup — down 30%+ with intact thesis, under-owned sector, positioning extreme, event mispricing
 - Each must state what the market is getting wrong
 - conviction: "Medium", "Med-High", or "High" only
-- Only include if genuinely asymmetric — fewer high-quality picks beats padding
 
 GLOBAL rules:
+- If LIVE FUNDAMENTALS are provided above, incorporate them into your rationale — comment on valuation (P/E vs sector), market cap context, and recent price action (day change, 52W position). This is mandatory when fundamentals are available.
 - asset_type: exactly "stock", "etf", or "fx"
 - direction: exactly "long" or "short"
 - key_entities: 6-8 entries, direction = bull/bear/neutral only
@@ -946,7 +1003,21 @@ async function run() {
     const extras = [researchText && "research", aaiiText && "AAII", naaimText && "NAAIM"].filter(Boolean);
     step(`${count} articles fetched${extras.length ? " + " + extras.join(" + ") : ""} — sending to Groq...`);
 
-    const d = await analyse(articles, researchText, aaiiText, naaimText);
+    // Step 1: quick ticker pre-screen
+    step(`${count} articles — pre-screening tickers...`);
+    const candidateTickers = await preselectTickers(articles, researchText);
+
+    // Step 2: fetch FMP fundamentals for candidates in parallel
+    let fundamentalsBlock = "";
+    if (candidateTickers.length) {
+      step(`Fetching live fundamentals for ${candidateTickers.length} tickers...`);
+      const fundMap = await fetchFundamentalsMap(candidateTickers);
+      fundamentalsBlock = buildFundamentalsBlock(fundMap);
+    }
+
+    // Step 3: full Groq analysis with fundamentals injected
+    step(`Running full macro analysis...`);
+    const d = await analyse(articles, researchText, aaiiText, naaimText, fundamentalsBlock);
     render(articles, d, hasPasted, 0);
     saveState(articles, d);
 
@@ -954,9 +1025,9 @@ async function run() {
     document.getElementById("res").style.display="block";
     setStatus("done","Live");
 
-    // fetch fundamentals async after render — non-blocking
+    // Apply live data to cards (already fetched — just render)
     const allPicks = [...(d.trend_picks||[]), ...(d.asymmetric_picks||[])];
-    fetchAllFundamentals(allPicks);
+    applyFundamentalsToCards(allPicks, window._fundMap || {});
   } catch(e) {
     console.error(e);
     showErr(e.message);
@@ -1178,19 +1249,8 @@ function applyFundamentals(ticker, data) {
     el.className = "fund-val" + (cls ? " "+cls : "");
   };
   if (!data) {
-    set(`f-mktcap-${ticker}`, "—");
-    set(`f-pe-${ticker}`,     "—");
-    set(`f-chg-${ticker}`,    "unavailable", "");
-    set(`f-52w-${ticker}`,    "—");
     const strip = document.getElementById("fund-"+ticker);
-    if (strip) {
-      const err = document.createElement("div");
-      err.className = "fund-err";
-      err.textContent = "Live data unavailable — verify manually";
-      err.style.cssText = "grid-column:1/-1;font-size:10px;color:var(--muted)";
-      strip.innerHTML = "";
-      strip.appendChild(err);
-    }
+    if (strip) strip.style.display = "none";
     return;
   }
   set(`f-mktcap-${ticker}`, data.mktCap);
