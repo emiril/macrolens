@@ -679,21 +679,26 @@ async function fetchBalanceSheet(ticker) {
   } catch { return null; }
 }
 
-// ── Fetch all three endpoints per ticker in parallel ──────────
+// ── Fetch all endpoints per ticker, batched to avoid 429 ────
 async function fetchFundamentalsMap(tickers) {
   const map = {};
   const stocks = tickers.filter(t => !ETF_BLACKLIST.has(t.toUpperCase()));
-  await Promise.all(stocks.map(async ticker => {
-    const [quote, income, cashflow, balance] = await Promise.all([
-      fetchYahoo(ticker),
-      fetchIncome(ticker),
-      fetchCashFlow(ticker),
-      fetchBalanceSheet(ticker),
-    ]);
-    if (quote || income || cashflow || balance) {
-      map[ticker] = { quote, income, cashflow, balance };
-    }
-  }));
+  const BATCH = 3;
+  for (let i = 0; i < stocks.length; i += BATCH) {
+    const batch = stocks.slice(i, i + BATCH);
+    await Promise.all(batch.map(async ticker => {
+      const [quote, income, cashflow, balance] = await Promise.all([
+        fetchYahoo(ticker),
+        fetchIncome(ticker),
+        fetchCashFlow(ticker),
+        fetchBalanceSheet(ticker),
+      ]);
+      if (quote || income || cashflow || balance) {
+        map[ticker] = { quote, income, cashflow, balance };
+      }
+    }));
+    if (i + BATCH < stocks.length) await new Promise(r => setTimeout(r, 800));
+  }
   window._fundMap = map;
   return map;
 }
