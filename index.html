@@ -601,34 +601,123 @@ async function preselectTickers(articles, pastedText) {
   } catch(e) { console.warn("preselectTickers error:", e.message); return []; }
 }
 
-// ── Fetch FMP for a list of tickers, return map ───────────────
+// ── ETF blacklist — free FMP tier 402s on these ──────────────
 const ETF_BLACKLIST = new Set(["SPY","QQQ","IWM","VTI","VOO","GLD","SLV","TLT","IEF","USO","UNG","XLE","XLF","XLK","XLV","XLI","XLU","XLP","XLB","XLY","XLRE","EEM","EFA","VWO","LQD","HYG","AGG","BND","DIA","MDY","VNQ","ARKK","ARKG","ARKW","ARKF","ARKQ"]);
 
+// ── Fetch income statement (3 years annual) ───────────────────
+async function fetchIncome(ticker) {
+  try {
+    const r = await fetch(
+      `https://financialmodelingprep.com/stable/income-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!Array.isArray(d) || !d.length) return null;
+    fmpUsed++; localStorage.setItem("fmp_daily_used", fmpUsed); updateFmpUI();
+    return d.map(y => ({
+      year    : y.calendarYear || y.date?.slice(0,4) || "?",
+      revenue : y.revenue,
+      netIncome: y.netIncome,
+      grossMargin: y.grossProfitRatio != null ? (y.grossProfitRatio*100).toFixed(1) : null,
+      netMargin  : y.netIncomeRatio   != null ? (y.netIncomeRatio  *100).toFixed(1) : null,
+      eps        : y.eps != null ? Number(y.eps).toFixed(2) : null,
+    }));
+  } catch { return null; }
+}
+
+// ── Fetch cash flow (3 years annual) ─────────────────────────
+async function fetchCashFlow(ticker) {
+  try {
+    const r = await fetch(
+      `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!Array.isArray(d) || !d.length) return null;
+    fmpUsed++; localStorage.setItem("fmp_daily_used", fmpUsed); updateFmpUI();
+    return d.map(y => ({
+      year    : y.calendarYear || y.date?.slice(0,4) || "?",
+      fcf     : y.freeCashFlow,
+      opCF    : y.operatingCashFlow,
+      capex   : y.capitalExpenditure,
+    }));
+  } catch { return null; }
+}
+
+// ── Fetch all three endpoints per ticker in parallel ──────────
 async function fetchFundamentalsMap(tickers) {
   const map = {};
   const stocks = tickers.filter(t => !ETF_BLACKLIST.has(t.toUpperCase()));
   await Promise.all(stocks.map(async ticker => {
-    const data = await fetchYahoo(ticker);
-    if (data) map[ticker] = data;
+    const [quote, income, cashflow] = await Promise.all([
+      fetchYahoo(ticker),
+      fetchIncome(ticker),
+      fetchCashFlow(ticker),
+    ]);
+    if (quote || income || cashflow) {
+      map[ticker] = { quote, income, cashflow };
+    }
   }));
   window._fundMap = map;
   return map;
 }
 
-// ── Build text block to inject into Groq prompt ───────────────
+// ── Format number as $XB / $XM ───────────────────────────────
+function fmtNum(v) {
+  if (v == null) return "N/A";
+  const abs = Math.abs(v);
+  const sign = v < 0 ? "-" : "";
+  if (abs >= 1e12) return sign+"$"+(abs/1e12).toFixed(2)+"T";
+  if (abs >= 1e9)  return sign+"$"+(abs/1e9).toFixed(1)+"B";
+  if (abs >= 1e6)  return sign+"$"+(abs/1e6).toFixed(0)+"M";
+  return sign+"$"+abs;
+}
+
+// ── Build rich text block for Groq prompt ────────────────────
 function buildFundamentalsBlock(map) {
   if (!Object.keys(map).length) return "";
-  return Object.entries(map).map(([ticker, d]) =>
-    `${ticker}: Price $${d.price} | Day ${d.chg != null ? (d.chg >= 0 ? "+" : "")+d.chg+"%" : "N/A"} | Mkt Cap ${d.mktCap} | P/E ${d.pe} | 52W ${d.low52}–${d.high52}`
-  ).join("\n");
+  return Object.entries(map).map(([ticker, {quote:q, income:inc, cashflow:cf}]) => {
+    const lines = [`${ticker}:`];
+
+    // Quote snapshot
+    if (q) {
+      const chgStr = q.chg != null ? (q.chg >= 0 ? "+" : "")+q.chg+"%" : "N/A";
+      lines.push(`  Quote: Price $${q.price} | Day ${chgStr} | Mkt Cap ${q.mktCap} | P/E ${q.pe} | 52W ${q.low52}–${q.high52}`);
+    }
+
+    // Income trend (newest first)
+    if (inc?.length) {
+      lines.push(`  Income (annual, newest first):`);
+      inc.forEach(y => {
+        lines.push(`    ${y.year}: Rev ${fmtNum(y.revenue)} | Net Income ${fmtNum(y.netIncome)} | Gross Margin ${y.grossMargin ?? "N/A"}% | Net Margin ${y.netMargin ?? "N/A"}% | EPS $${y.eps ?? "N/A"}`);
+      });
+      // Revenue growth YoY if 2+ years
+      if (inc.length >= 2 && inc[0].revenue && inc[1].revenue) {
+        const growth = (((inc[0].revenue - inc[1].revenue) / Math.abs(inc[1].revenue)) * 100).toFixed(1);
+        lines.push(`    Revenue growth YoY: ${growth > 0 ? "+" : ""}${growth}%`);
+      }
+    }
+
+    // Cash flow trend
+    if (cf?.length) {
+      lines.push(`  Cash Flow (annual, newest first):`);
+      cf.forEach(y => {
+        lines.push(`    ${y.year}: FCF ${fmtNum(y.fcf)} | Op CF ${fmtNum(y.opCF)} | Capex ${fmtNum(y.capex)}`);
+      });
+    }
+
+    return lines.join("\n");
+  }).join("\n\n");
 }
 
 // ── Apply already-fetched fundamentals to rendered cards ──────
 function applyFundamentalsToCards(picks, map) {
   picks.filter(p => p.asset_type !== "fx").forEach(p => {
-    const data = map[p.ticker];
-    if (data) {
-      applyFundamentals(p.ticker, data);
+    const entry = map[p.ticker];
+    if (entry?.quote) {
+      applyFundamentals(p.ticker, entry.quote);
     } else {
       const strip = document.getElementById("fund-"+p.ticker);
       if (strip) strip.style.display = "none";
@@ -869,7 +958,7 @@ ASYMMETRIC PICKS rules:
 - conviction: "Medium", "Med-High", or "High" only
 
 GLOBAL rules:
-- If LIVE FUNDAMENTALS are provided above, incorporate them into your rationale — comment on valuation (P/E vs sector), market cap context, and recent price action (day change, 52W position). This is mandatory when fundamentals are available.
+- If LIVE FUNDAMENTALS are provided above, you MUST incorporate them into your rationale. Cover: revenue trend (growing/declining/flat), margin trajectory (expanding/compressing), FCF health (positive/negative/improving), valuation (P/E vs growth rate, expensive or cheap vs history), and where price sits in the 52W range. Be specific with numbers — e.g. "Revenue +18% YoY to $X, margins expanding, FCF $XB — justifies premium valuation" or "Revenue flat, margins compressed, FCF declining — overvalued at 34x". Generic rationale that ignores available fundamentals is not acceptable.
 - asset_type: exactly "stock", "etf", or "fx"
 - direction: exactly "long" or "short"
 - key_entities: 6-8 entries, direction = bull/bear/neutral only
@@ -1301,14 +1390,10 @@ function applyFundamentals(ticker, data) {
 }
 
 async function fetchAllFundamentals(picks) {
-  // only stocks and ETFs, skip FX
-  const targets = picks.filter(p => p.asset_type !== "fx");
-  if (!targets.length) return;
-  // batch: fetch all in parallel
-  await Promise.all(targets.map(async p => {
-    const data = await fetchYahoo(p.ticker);
-    applyFundamentals(p.ticker, data);
-  }));
+  const tickers = picks.filter(p => p.asset_type !== "fx").map(p => p.ticker);
+  if (!tickers.length) return;
+  const map = await fetchFundamentalsMap(tickers);
+  applyFundamentalsToCards(picks, map);
 }
 
 </script>
