@@ -234,7 +234,7 @@ strong{color:var(--cream);font-weight:500} em{color:var(--rose);font-style:norma
       <div id="sdot"></div>
       <div id="stxt">Ready</div>
     </div>
-    <div id="token-box"><div class="tok-val">Groq <span id="tok-daily">500k</span></div><div class="tok-bar" style="width:48px"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div></div>
+    <div id="token-box"><div class="tok-val">Groq <span id="tok-daily">500k</span></div><div class="tok-bar" style="width:48px"><div class="tok-fill" id="tok-bar-d" style="width:100%"></div></div><div class="vline" style="height:14px;margin:0 4px"></div><div class="tok-val">FMP <span id="tok-fmp">250</span></div><div class="tok-bar" style="width:30px"><div class="tok-fill" id="tok-bar-fmp" style="width:100%"></div></div></div>
     <button id="ubtn" onclick="runUpdate()">+ Update</button>
     <button id="abtn" onclick="run()">Analyse Now</button>
   </div>
@@ -602,9 +602,12 @@ async function preselectTickers(articles, pastedText) {
 }
 
 // ── Fetch FMP for a list of tickers, return map ───────────────
+const ETF_BLACKLIST = new Set(["SPY","QQQ","IWM","VTI","VOO","GLD","SLV","TLT","IEF","USO","UNG","XLE","XLF","XLK","XLV","XLI","XLU","XLP","XLB","XLY","XLRE","EEM","EFA","VWO","LQD","HYG","AGG","BND","DIA","MDY","VNQ","ARKK","ARKG","ARKW","ARKF","ARKQ"]);
+
 async function fetchFundamentalsMap(tickers) {
   const map = {};
-  await Promise.all(tickers.map(async ticker => {
+  const stocks = tickers.filter(t => !ETF_BLACKLIST.has(t.toUpperCase()));
+  await Promise.all(stocks.map(async ticker => {
     const data = await fetchYahoo(ticker);
     if (data) map[ticker] = data;
   }));
@@ -1229,7 +1232,16 @@ if (fmpDay !== todayKey) {
 }
 
 function updateFmpUI() {
-  // FMP counter removed from UI
+  const remaining = Math.max(0, FMP_LIMIT - fmpUsed);
+  const pct = (fmpUsed / FMP_LIMIT) * 100;
+  const el = document.getElementById("tok-fmp");
+  if (el) el.textContent = remaining;
+  const bar = document.getElementById("tok-bar-fmp");
+  if (!bar) return;
+  bar.style.width = Math.max(0, 100 - pct) + "%";
+  if (pct > 90) bar.className = "tok-fill crit";
+  else if (pct > 70) bar.className = "tok-fill warn";
+  else bar.className = "tok-fill";
 }
 
 function fmtMktCap(v) {
@@ -1249,9 +1261,10 @@ async function fetchYahoo(ticker) {
     );
     if (!r.ok) { console.warn(`FMP ${ticker} HTTP ${r.status}`); return null; }
     const d = await r.json();
-    const q = Array.isArray(d) ? d[0] : null;
+    console.log(`FMP ${ticker} raw:`, JSON.stringify(d).slice(0,300));
+    const q = Array.isArray(d) ? d[0] : (d && typeof d === 'object' ? d : null);
     if (!q?.price) { console.warn(`FMP ${ticker} empty`); return null; }
-    console.log(`FMP ${ticker} OK: $${q.price} | P/E ${q.pe} | chg ${q.changesPercentage}%`);
+    console.log(`FMP ${ticker} fields: pe=${q.pe} chg=${q.changesPercentage} chg2=${q.change} price=${q.price}`);
     fmpUsed++;
     localStorage.setItem("fmp_daily_used", fmpUsed);
     updateFmpUI();
