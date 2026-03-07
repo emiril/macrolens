@@ -584,7 +584,7 @@ async function preselectTickers(articles, pastedText) {
         temperature:0.1,
         messages:[{
           role:"user",
-          content:`Given these market headlines, list the 8-12 most relevant US-listed stock and ETF tickers to analyse (large-cap S&P500 / major ETFs only). No FX pairs. Return ONLY a JSON array of ticker strings, nothing else. Example: ["AAPL","MSFT","XLE"]\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
+          content:`Given these market headlines, list the 8-12 most relevant US-listed INDIVIDUAL STOCK tickers only (large-cap S&P500 members). NO ETFs, NO index funds, NO commodity funds. Individual company stocks only — e.g. XOM not XLE, CVX not USO, NVDA not QQQ. Return ONLY a JSON array of ticker strings, nothing else. Example: ["AAPL","MSFT","XOM","CVX","UAL"]\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
         }]
       })
     });
@@ -611,17 +611,16 @@ async function fetchIncome(ticker) {
       `https://financialmodelingprep.com/stable/income-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
       { signal: AbortSignal.timeout(8000) }
     );
-    if (!r.ok) return null;
+    if (!r.ok) {
+      if (r.status === 402) ETF_BLACKLIST.add(ticker.toUpperCase());
+      return null;
+    }
     const d = await r.json();
     if (!Array.isArray(d) || !d.length) return null;
     fmpUsed++; localStorage.setItem("fmp_daily_used", fmpUsed); updateFmpUI();
     return d.map(y => ({
-      year    : y.calendarYear || y.date?.slice(0,4) || "?",
-      revenue : y.revenue,
-      netIncome: y.netIncome,
-      grossMargin: y.grossProfitRatio != null ? (y.grossProfitRatio*100).toFixed(1) : null,
-      netMargin  : y.netIncomeRatio   != null ? (y.netIncomeRatio  *100).toFixed(1) : null,
-      eps        : y.eps != null ? Number(y.eps).toFixed(2) : null,
+      year     : y.calendarYear || y.date?.slice(0,4) || "?",
+      opMargin : y.operatingIncomeRatio != null ? (y.operatingIncomeRatio*100).toFixed(1) : null,
     }));
   } catch { return null; }
 }
@@ -633,15 +632,42 @@ async function fetchCashFlow(ticker) {
       `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
       { signal: AbortSignal.timeout(8000) }
     );
-    if (!r.ok) return null;
+    if (!r.ok) {
+      if (r.status === 402) ETF_BLACKLIST.add(ticker.toUpperCase());
+      return null;
+    }
     const d = await r.json();
     if (!Array.isArray(d) || !d.length) return null;
     fmpUsed++; localStorage.setItem("fmp_daily_used", fmpUsed); updateFmpUI();
     return d.map(y => ({
       year    : y.calendarYear || y.date?.slice(0,4) || "?",
+      netOpCF : y.netCashProvidedByOperatingActivities ?? y.operatingCashFlow,
       fcf     : y.freeCashFlow,
-      opCF    : y.operatingCashFlow,
-      capex   : y.capitalExpenditure,
+    }));
+  } catch { return null; }
+}
+
+// ── Fetch balance sheet (3 years annual) — for debt/assets ──
+async function fetchBalanceSheet(ticker) {
+  try {
+    const r = await fetch(
+      `https://financialmodelingprep.com/stable/balance-sheet-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!r.ok) {
+      if (r.status === 402) ETF_BLACKLIST.add(ticker.toUpperCase());
+      return null;
+    }
+    const d = await r.json();
+    if (!Array.isArray(d) || !d.length) return null;
+    fmpUsed++; localStorage.setItem("fmp_daily_used", fmpUsed); updateFmpUI();
+    return d.map(y => ({
+      year       : y.calendarYear || y.date?.slice(0,4) || "?",
+      totalDebt  : y.totalDebt,
+      totalAssets: y.totalAssets,
+      debtToAssets: (y.totalDebt != null && y.totalAssets)
+        ? (y.totalDebt / y.totalAssets).toFixed(3)
+        : null,
     }));
   } catch { return null; }
 }
@@ -688,25 +714,34 @@ function buildFundamentalsBlock(map) {
       lines.push(`  Quote: Price $${q.price} (${chgStr} today) | Mkt Cap ${q.mktCap} | 52W ${q.low52}–${q.high52} | vs 50MA: ${avg50Diff != null ? (avg50Diff>=0?"+":"")+avg50Diff+"%" : "N/A"} | vs 200MA: ${q.avg200 ? ((q.price-q.avg200)/q.avg200*100).toFixed(1)+"%" : "N/A"}`);
     }
 
-    // Income trend (newest first)
+    // 1. Net Operating Margin (3yr)
     if (inc?.length) {
-      lines.push(`  Income (annual, newest first):`);
-      inc.forEach(y => {
-        lines.push(`    ${y.year}: Rev ${fmtNum(y.revenue)} | Net Income ${fmtNum(y.netIncome)} | Gross Margin ${y.grossMargin ?? "N/A"}% | Net Margin ${y.netMargin ?? "N/A"}% | EPS $${y.eps ?? "N/A"}`);
-      });
-      // Revenue growth YoY if 2+ years
-      if (inc.length >= 2 && inc[0].revenue && inc[1].revenue) {
-        const growth = (((inc[0].revenue - inc[1].revenue) / Math.abs(inc[1].revenue)) * 100).toFixed(1);
-        lines.push(`    Revenue growth YoY: ${growth > 0 ? "+" : ""}${growth}%`);
+      const margins = inc.map(y => `${y.year}: ${y.opMargin != null ? y.opMargin+"%" : "N/A"}`).join(" | ");
+      lines.push(`  Net Op Margin: ${margins}`);
+      if (inc.length >= 2 && inc[0].opMargin != null && inc[1].opMargin != null) {
+        const delta = (parseFloat(inc[0].opMargin) - parseFloat(inc[1].opMargin)).toFixed(1);
+        lines.push(`  Op Margin trend: ${delta >= 0 ? "+" : ""}${delta}pp YoY`);
       }
     }
 
-    // Cash flow trend
+    // 2. Free Cash Flow (3yr)
     if (cf?.length) {
-      lines.push(`  Cash Flow (annual, newest first):`);
-      cf.forEach(y => {
-        lines.push(`    ${y.year}: FCF ${fmtNum(y.fcf)} | Op CF ${fmtNum(y.opCF)} | Capex ${fmtNum(y.capex)}`);
-      });
+      const fcfs = cf.map(y => `${y.year}: ${fmtNum(y.fcf)}`).join(" | ");
+      lines.push(`  FCF: ${fcfs}`);
+      if (cf.length >= 2 && cf[0].fcf != null && cf[1].fcf != null) {
+        const delta = (((cf[0].fcf - cf[1].fcf) / Math.abs(cf[1].fcf)) * 100).toFixed(1);
+        lines.push(`  FCF trend: ${delta >= 0 ? "+" : ""}${delta}% YoY`);
+      }
+    }
+
+    // 3. Debt-to-Assets (3yr)
+    if (bal?.length) {
+      const dta = bal.map(y => `${y.year}: ${y.debtToAssets ?? "N/A"}`).join(" | ");
+      lines.push(`  Debt/Assets: ${dta}`);
+      if (bal.length >= 2 && bal[0].debtToAssets && bal[1].debtToAssets) {
+        const delta = (parseFloat(bal[0].debtToAssets) - parseFloat(bal[1].debtToAssets)).toFixed(3);
+        lines.push(`  Debt/Assets trend: ${delta >= 0 ? "+" : ""}${delta} YoY (lower = healthier)`);
+      }
     }
 
     return lines.join("\n");
@@ -959,7 +994,7 @@ ASYMMETRIC PICKS rules:
 - conviction: "Medium", "Med-High", or "High" only
 
 GLOBAL rules:
-- If LIVE FUNDAMENTALS are provided above, you MUST incorporate them into your rationale. Cover: revenue trend (growing/declining/flat), margin trajectory (expanding/compressing), FCF health (positive/negative/improving), valuation (P/E vs growth rate, expensive or cheap vs history), and where price sits in the 52W range. Be specific with numbers — e.g. "Revenue +18% YoY to $X, margins expanding, FCF $XB — justifies premium valuation" or "Revenue flat, margins compressed, FCF declining — overvalued at 34x". Generic rationale that ignores available fundamentals is not acceptable.
+- If LIVE FUNDAMENTALS are provided above, you MUST use all three with specific numbers: (1) Net operating margin — expanding or compressing, by how many pp? (2) Free cash flow — post-capex trend, growing or shrinking? (3) Debt/assets — leverage rising or falling? Be precise: e.g. "Op margin 8.1% (-2pp YoY). FCF $16.6B (-16% YoY). Debt/assets 0.21 (stable) — margin pressure is the key risk." Ignoring these when available is not acceptable.
 - asset_type: exactly "stock", "etf", or "fx"
 - direction: exactly "long" or "short"
 - key_entities: 6-8 entries, direction = bull/bear/neutral only
@@ -1349,7 +1384,15 @@ async function fetchYahoo(ticker) {
       `https://financialmodelingprep.com/stable/quote?symbol=${ticker}&apikey=${FMP_KEY}`,
       { signal: AbortSignal.timeout(8000) }
     );
-    if (!r.ok) { console.warn(`FMP ${ticker} HTTP ${r.status}`); return null; }
+    if (!r.ok) {
+      if (r.status === 402) {
+        ETF_BLACKLIST.add(ticker.toUpperCase());
+        console.warn(`FMP ${ticker} 402 — added to blacklist`);
+      } else {
+        console.warn(`FMP ${ticker} HTTP ${r.status}`);
+      }
+      return null;
+    }
     const d = await r.json();
     console.log(`FMP ${ticker} raw:`, JSON.stringify(d).slice(0,300));
     const q = Array.isArray(d) ? d[0] : (d && typeof d === 'object' ? d : null);
