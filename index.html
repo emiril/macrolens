@@ -1229,14 +1229,7 @@ if (fmpDay !== todayKey) {
 }
 
 function updateFmpUI() {
-  const remaining = Math.max(0, FMP_LIMIT - fmpUsed);
-  const pct = (fmpUsed / FMP_LIMIT) * 100;
-  const fmpEl = document.getElementById("tok-fmp");
-  if (fmpEl) fmpEl.textContent = remaining;
-  const bar = document.getElementById("tok-bar-fmp");
-  if (!bar) return;
-  bar.style.width = Math.max(0, 100 - pct) + "%";
-  bar.className = "tok-fill" + (pct > 90 ? " crit" : pct > 70 ? " warn" : "");
+  // FMP counter removed from UI
 }
 
 function fmtMktCap(v) {
@@ -1248,56 +1241,29 @@ function fmtMktCap(v) {
 }
 
 async function fetchYahoo(ticker) {
-  // Try Yahoo Finance direct (works from browser)
-  const yUrls = [
-    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d`,
-    `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d`,
-  ];
-  for (const url of yUrls) {
-    try {
-      const r = await fetch(url, { signal: AbortSignal.timeout(6000), headers: { "Accept": "application/json" } });
-      if (!r.ok) { console.warn(`Yahoo ${ticker} HTTP ${r.status}`); continue; }
-      const d = await r.json();
-      const meta = d?.chart?.result?.[0]?.meta;
-      if (!meta?.regularMarketPrice) { console.warn(`Yahoo ${ticker} no price`); continue; }
-      const price = meta.regularMarketPrice;
-      const prev  = meta.chartPreviousClose || meta.previousClose || price;
-      const chg   = prev ? ((price - prev) / prev * 100) : null;
-      console.log(`Yahoo ${ticker} OK: $${price} | chg ${chg?.toFixed(2)}%`);
-      fmpUsed++;
-      localStorage.setItem("fmp_daily_used", fmpUsed);
-      updateFmpUI();
-      return {
-        mktCap : meta.marketCap ? fmtMktCap(meta.marketCap) : "N/A",
-        pe     : meta.trailingPE ? Number(meta.trailingPE).toFixed(1) : "N/A",
-        chg    : chg != null ? chg.toFixed(2) : null,
-        low52  : meta.fiftyTwoWeekLow  ? Number(meta.fiftyTwoWeekLow).toFixed(2)  : "—",
-        high52 : meta.fiftyTwoWeekHigh ? Number(meta.fiftyTwoWeekHigh).toFixed(2) : "—",
-        price  : price.toFixed(2),
-      };
-    } catch(e) { console.warn(`Yahoo ${ticker} error: ${e.message}`); }
-  }
-  // Fallback: stooq (price + day change only, no P/E)
+  // FMP — CORS-open from any browser origin
   try {
-    const sym = ticker.toLowerCase() + (ticker.length <= 4 ? ".us" : "");
-    const r = await fetch(`https://stooq.com/q/l/?s=${sym}&f=sd2t2ohlcvn&h&e=csv`, { signal: AbortSignal.timeout(6000) });
-    if (!r.ok) throw new Error("stooq HTTP "+r.status);
-    const text = await r.text();
-    const rows = text.trim().split("\n");
-    if (rows.length < 2) throw new Error("stooq no data");
-    const cols = rows[1].split(",");
-    // Symbol,Date,Time,Open,High,Low,Close,Volume,Name
-    const close = parseFloat(cols[6]);
-    const open  = parseFloat(cols[3]);
-    if (!close) throw new Error("stooq no close");
-    const chg = ((close - open) / open * 100);
-    console.log(`stooq ${ticker} OK: $${close}`);
+    const r = await fetch(
+      `https://financialmodelingprep.com/stable/quote?symbol=${ticker}&apikey=${FMP_KEY}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!r.ok) { console.warn(`FMP ${ticker} HTTP ${r.status}`); return null; }
+    const d = await r.json();
+    const q = Array.isArray(d) ? d[0] : null;
+    if (!q?.price) { console.warn(`FMP ${ticker} empty`); return null; }
+    console.log(`FMP ${ticker} OK: $${q.price} | P/E ${q.pe} | chg ${q.changesPercentage}%`);
     fmpUsed++;
     localStorage.setItem("fmp_daily_used", fmpUsed);
     updateFmpUI();
-    return { mktCap:"N/A", pe:"N/A", chg:chg.toFixed(2), low52:"—", high52:"—", price:close.toFixed(2) };
-  } catch(e) { console.warn(`stooq ${ticker} error: ${e.message}`); }
-  return null;
+    return {
+      mktCap : q.marketCap ? fmtMktCap(q.marketCap) : "N/A",
+      pe     : q.pe        ? Number(q.pe).toFixed(1) : "N/A",
+      chg    : q.changesPercentage != null ? Number(q.changesPercentage).toFixed(2) : null,
+      low52  : q.yearLow  ? Number(q.yearLow).toFixed(2)  : "—",
+      high52 : q.yearHigh ? Number(q.yearHigh).toFixed(2) : "—",
+      price  : Number(q.price).toFixed(2),
+    };
+  } catch(e) { console.warn(`FMP ${ticker} error: ${e.message}`); return null; }
 }
 
 function applyFundamentals(ticker, data) {
