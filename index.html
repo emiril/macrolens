@@ -605,7 +605,7 @@ async function preselectTickers(articles, pastedText) {
 const ETF_BLACKLIST = new Set(["SPY","QQQ","IWM","VTI","VOO","GLD","SLV","TLT","IEF","USO","UNG","XLE","XLF","XLK","XLV","XLI","XLU","XLP","XLB","XLY","XLRE","EEM","EFA","VWO","LQD","HYG","AGG","BND","DIA","MDY","VNQ","ARKK","ARKG","ARKW","ARKF","ARKQ"]);
 
 // ── FMP fetch with 429 retry + backoff ───────────────────────
-async function fmpFetch(url, retries=3) {
+async function fmpFetch(url, retries=1) {
   for (let i = 0; i < retries; i++) {
     const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
     if (r.status === 429) {
@@ -689,21 +689,17 @@ async function fetchBalanceSheet(ticker) {
 async function fetchFundamentalsMap(tickers) {
   const map = {};
   const stocks = tickers.filter(t => !ETF_BLACKLIST.has(t.toUpperCase()));
-  const BATCH = 2;
-  for (let i = 0; i < stocks.length; i += BATCH) {
-    const batch = stocks.slice(i, i + BATCH);
-    await Promise.all(batch.map(async ticker => {
-      const [quote, income, cashflow, balance] = await Promise.all([
-        fetchYahoo(ticker),
-        fetchIncome(ticker),
-        fetchCashFlow(ticker),
-        fetchBalanceSheet(ticker),
-      ]);
-      if (quote || income || cashflow || balance) {
-        map[ticker] = { quote, income, cashflow, balance };
-      }
-    }));
-    if (i + BATCH < stocks.length) await new Promise(r => setTimeout(r, 2000));
+  // Fully sequential — one request at a time to avoid 429
+  const GAP = 600; // ms between requests
+  for (const ticker of stocks) {
+    const quote    = await fetchYahoo(ticker);      await new Promise(r=>setTimeout(r,GAP));
+    const income   = await fetchIncome(ticker);     await new Promise(r=>setTimeout(r,GAP));
+    const cashflow = await fetchCashFlow(ticker);   await new Promise(r=>setTimeout(r,GAP));
+    const balance  = await fetchBalanceSheet(ticker);
+    if (quote || income || cashflow || balance) {
+      map[ticker] = { quote, income, cashflow, balance };
+    }
+    await new Promise(r=>setTimeout(r,GAP));
   }
   window._fundMap = map;
   return map;
@@ -1399,7 +1395,7 @@ function fmtMktCap(v) {
 async function fetchYahoo(ticker) {
   // FMP — CORS-open from any browser origin
   try {
-    const r = await fmpFetch();
+    const r = await fmpFetch(`https://financialmodelingprep.com/stable/quote?symbol=${ticker}&apikey=${FMP_KEY}`);
     if (!r.ok) {
       if (r.status === 402) {
         ETF_BLACKLIST.add(ticker.toUpperCase());
