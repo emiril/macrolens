@@ -618,10 +618,17 @@ async function fetchIncome(ticker) {
     const d = await r.json();
     if (!Array.isArray(d) || !d.length) return null;
     fmpUsed++; localStorage.setItem("fmp_daily_used", fmpUsed); updateFmpUI();
-    return d.map(y => ({
-      year     : y.calendarYear || y.date?.slice(0,4) || "?",
-      opMargin : y.operatingIncomeRatio != null ? (y.operatingIncomeRatio*100).toFixed(1) : null,
-    }));
+    console.log("FMP income "+ticker+" raw:", JSON.stringify(d[0]).slice(0,400));
+    console.log("FMP income "+ticker+" opRatio:", d[0].operatingIncomeRatio, "| operatingIncome:", d[0].operatingIncome, "| revenue:", d[0].revenue);
+    return d.map(y => {
+      let opMargin = null;
+      if (y.operatingIncomeRatio != null) {
+        opMargin = (y.operatingIncomeRatio * 100).toFixed(1);
+      } else if (y.operatingIncome != null && y.revenue) {
+        opMargin = (y.operatingIncome / y.revenue * 100).toFixed(1);
+      }
+      return { year: y.calendarYear || y.date?.slice(0,4) || "?", opMargin };
+    });
   } catch { return null; }
 }
 
