@@ -584,7 +584,7 @@ async function preselectTickers(articles, pastedText) {
         temperature:0.1,
         messages:[{
           role:"user",
-          content:`Given these market headlines, list the 8-12 most relevant US-listed INDIVIDUAL STOCK tickers only (large-cap S&P500 members). NO ETFs, NO index funds, NO commodity funds. Individual company stocks only — e.g. XOM not XLE, CVX not USO, NVDA not QQQ. Return ONLY a JSON array of ticker strings, nothing else. Example: ["AAPL","MSFT","XOM","CVX","UAL"]\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
+          content:`Given these market headlines, list the 8-10 most relevant US-listed INDIVIDUAL STOCK tickers only (large-cap S&P500 members). NO ETFs, NO index funds, NO commodity funds. Individual company stocks only — e.g. XOM not XLE, CVX not USO, NVDA not QQQ. Return ONLY a JSON array of ticker strings, nothing else. Example: ["AAPL","MSFT","XOM","CVX","UAL"]\n\nHeadlines:\n${lines}${snippet ? "\n\nResearch context:\n"+snippet : ""}`
         }]
       })
     });
@@ -604,13 +604,25 @@ async function preselectTickers(articles, pastedText) {
 // ── ETF blacklist — free FMP tier 402s on these ──────────────
 const ETF_BLACKLIST = new Set(["SPY","QQQ","IWM","VTI","VOO","GLD","SLV","TLT","IEF","USO","UNG","XLE","XLF","XLK","XLV","XLI","XLU","XLP","XLB","XLY","XLRE","EEM","EFA","VWO","LQD","HYG","AGG","BND","DIA","MDY","VNQ","ARKK","ARKG","ARKW","ARKF","ARKQ"]);
 
+// ── FMP fetch with 429 retry + backoff ───────────────────────
+async function fmpFetch(url, retries=3) {
+  for (let i = 0; i < retries; i++) {
+    const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    if (r.status === 429) {
+      const wait = (i+1) * 3000;
+      console.log(`FMP 429 — waiting ${wait/1000}s then retry ${i+1}/${retries}`);
+      await new Promise(res => setTimeout(res, wait));
+      continue;
+    }
+    return r;
+  }
+  return { ok: false, status: 429 }; // exhausted
+}
+
 // ── Fetch income statement (3 years annual) ───────────────────
 async function fetchIncome(ticker) {
   try {
-    const r = await fetch(
-      `https://financialmodelingprep.com/stable/income-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
-      { signal: AbortSignal.timeout(8000) }
-    );
+    const r = await fmpFetch(`https://financialmodelingprep.com/stable/income-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`);
     if (!r.ok) {
       if (r.status === 402) ETF_BLACKLIST.add(ticker.toUpperCase());
       return null;
@@ -635,10 +647,7 @@ async function fetchIncome(ticker) {
 // ── Fetch cash flow (3 years annual) ─────────────────────────
 async function fetchCashFlow(ticker) {
   try {
-    const r = await fetch(
-      `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
-      { signal: AbortSignal.timeout(8000) }
-    );
+    const r = await fmpFetch(`https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`);
     if (!r.ok) {
       if (r.status === 402) ETF_BLACKLIST.add(ticker.toUpperCase());
       return null;
@@ -657,10 +666,7 @@ async function fetchCashFlow(ticker) {
 // ── Fetch balance sheet (3 years annual) — for debt/assets ──
 async function fetchBalanceSheet(ticker) {
   try {
-    const r = await fetch(
-      `https://financialmodelingprep.com/stable/balance-sheet-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`,
-      { signal: AbortSignal.timeout(8000) }
-    );
+    const r = await fmpFetch(`https://financialmodelingprep.com/stable/balance-sheet-statement?symbol=${ticker}&period=annual&limit=3&apikey=${FMP_KEY}`);
     if (!r.ok) {
       if (r.status === 402) ETF_BLACKLIST.add(ticker.toUpperCase());
       return null;
@@ -683,7 +689,7 @@ async function fetchBalanceSheet(ticker) {
 async function fetchFundamentalsMap(tickers) {
   const map = {};
   const stocks = tickers.filter(t => !ETF_BLACKLIST.has(t.toUpperCase()));
-  const BATCH = 3;
+  const BATCH = 2;
   for (let i = 0; i < stocks.length; i += BATCH) {
     const batch = stocks.slice(i, i + BATCH);
     await Promise.all(batch.map(async ticker => {
@@ -697,7 +703,7 @@ async function fetchFundamentalsMap(tickers) {
         map[ticker] = { quote, income, cashflow, balance };
       }
     }));
-    if (i + BATCH < stocks.length) await new Promise(r => setTimeout(r, 800));
+    if (i + BATCH < stocks.length) await new Promise(r => setTimeout(r, 2000));
   }
   window._fundMap = map;
   return map;
@@ -1393,10 +1399,7 @@ function fmtMktCap(v) {
 async function fetchYahoo(ticker) {
   // FMP — CORS-open from any browser origin
   try {
-    const r = await fetch(
-      `https://financialmodelingprep.com/stable/quote?symbol=${ticker}&apikey=${FMP_KEY}`,
-      { signal: AbortSignal.timeout(8000) }
-    );
+    const r = await fmpFetch();
     if (!r.ok) {
       if (r.status === 402) {
         ETF_BLACKLIST.add(ticker.toUpperCase());
