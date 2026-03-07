@@ -684,7 +684,8 @@ function buildFundamentalsBlock(map) {
     // Quote snapshot
     if (q) {
       const chgStr = q.chg != null ? (q.chg >= 0 ? "+" : "")+q.chg+"%" : "N/A";
-      lines.push(`  Quote: Price $${q.price} | Day ${chgStr} | Mkt Cap ${q.mktCap} | P/E ${q.pe} | 52W ${q.low52}–${q.high52}`);
+      const avg50Diff = q.avg50 ? ((q.price - q.avg50)/q.avg50*100).toFixed(1) : null;
+      lines.push(`  Quote: Price $${q.price} (${chgStr} today) | Mkt Cap ${q.mktCap} | 52W ${q.low52}–${q.high52} | vs 50MA: ${avg50Diff != null ? (avg50Diff>=0?"+":"")+avg50Diff+"%" : "N/A"} | vs 200MA: ${q.avg200 ? ((q.price-q.avg200)/q.avg200*100).toFixed(1)+"%" : "N/A"}`);
     }
 
     // Income trend (newest first)
@@ -1039,7 +1040,7 @@ function renderStocks(gid, picks=[], type) {
         <div class="skm"><div class="skml">Conviction</div><div class="skmv ${convCls}">${p.conviction||""}</div></div>
       </div>
       ${p.invalidation ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(232,120,136,.05);border:1px solid rgba(232,120,136,.12);border-radius:2px"><span style="font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;font-weight:600">Invalidation · </span><span style="font-size:11px;color:var(--sub)">${p.invalidation}</span></div>` : ""}
-      ${p.asset_type !== "fx" ? `<div class="fund-strip" id="fund-${p.ticker}"><div class="fund-cell"><div class="fund-lbl">Market Cap</div><div class="fund-val loading" id="f-mktcap-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">P/E Ratio</div><div class="fund-val loading" id="f-pe-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">Day Change</div><div class="fund-val loading" id="f-chg-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">52W Range</div><div class="fund-val loading" id="f-52w-${p.ticker}">—</div></div></div>` : ""}
+      ${p.asset_type !== "fx" ? `<div class="fund-strip" id="fund-${p.ticker}"><div class="fund-cell"><div class="fund-lbl">Price</div><div class="fund-val loading" id="f-price-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">Day Chg</div><div class="fund-val loading" id="f-chg-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">Mkt Cap</div><div class="fund-val loading" id="f-mktcap-${p.ticker}">—</div></div><div class="fund-cell"><div class="fund-lbl">52W Range</div><div class="fund-val loading" id="f-52w-${p.ticker}">—</div></div></div>` : ""}
     </div>`;
   }).join("");
 }
@@ -1353,17 +1354,19 @@ async function fetchYahoo(ticker) {
     console.log(`FMP ${ticker} raw:`, JSON.stringify(d).slice(0,300));
     const q = Array.isArray(d) ? d[0] : (d && typeof d === 'object' ? d : null);
     if (!q?.price) { console.warn(`FMP ${ticker} empty`); return null; }
-    console.log(`FMP ${ticker} fields: pe=${q.pe} chg=${q.changesPercentage} chg2=${q.change} price=${q.price}`);
+    console.log(`FMP ${ticker} fields: chg=${q.changePercentage} price=${q.price} mktCap=${q.marketCap} avg50=${q.priceAvg50}`);
     fmpUsed++;
     localStorage.setItem("fmp_daily_used", fmpUsed);
     updateFmpUI();
     return {
       mktCap : q.marketCap ? fmtMktCap(q.marketCap) : "N/A",
-      pe     : q.pe        ? Number(q.pe).toFixed(1) : "N/A",
-      chg    : q.changesPercentage != null ? Number(q.changesPercentage).toFixed(2) : null,
+      pe     : q.pe        ? Number(q.pe).toFixed(1) : null,  // pe absent on free tier — from income stmt
+      chg    : q.changePercentage != null ? Number(q.changePercentage).toFixed(2) : null,
       low52  : q.yearLow  ? Number(q.yearLow).toFixed(2)  : "—",
       high52 : q.yearHigh ? Number(q.yearHigh).toFixed(2) : "—",
       price  : Number(q.price).toFixed(2),
+      avg50  : q.priceAvg50  ? Number(q.priceAvg50).toFixed(2)  : null,
+      avg200 : q.priceAvg200 ? Number(q.priceAvg200).toFixed(2) : null,
     };
   } catch(e) { console.warn(`FMP ${ticker} error: ${e.message}`); return null; }
 }
@@ -1380,13 +1383,13 @@ function applyFundamentals(ticker, data) {
     if (strip) strip.style.display = "none";
     return;
   }
-  set(`f-mktcap-${ticker}`, data.mktCap);
-  set(`f-pe-${ticker}`,     data.pe);
+  set(`f-price-${ticker}`,  data.price ? "$"+data.price : "—");
   const chgNum = parseFloat(data.chg);
   const chgStr = data.chg != null ? (chgNum >= 0 ? "+" : "") + data.chg + "%" : "—";
   const chgCls = data.chg != null ? (chgNum >= 0 ? "pos" : "neg") : "";
-  set(`f-chg-${ticker}`, chgStr, chgCls);
-  set(`f-52w-${ticker}`, data.low52 + " – " + data.high52);
+  set(`f-chg-${ticker}`,   chgStr, chgCls);
+  set(`f-mktcap-${ticker}`, data.mktCap);
+  set(`f-52w-${ticker}`,    data.low52 + " – " + data.high52);
 }
 
 async function fetchAllFundamentals(picks) {
