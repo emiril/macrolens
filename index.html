@@ -677,13 +677,14 @@ async function fetchFundamentalsMap(tickers) {
   const map = {};
   const stocks = tickers.filter(t => !ETF_BLACKLIST.has(t.toUpperCase()));
   await Promise.all(stocks.map(async ticker => {
-    const [quote, income, cashflow] = await Promise.all([
+    const [quote, income, cashflow, balance] = await Promise.all([
       fetchYahoo(ticker),
       fetchIncome(ticker),
       fetchCashFlow(ticker),
+      fetchBalanceSheet(ticker),
     ]);
-    if (quote || income || cashflow) {
-      map[ticker] = { quote, income, cashflow };
+    if (quote || income || cashflow || balance) {
+      map[ticker] = { quote, income, cashflow, balance };
     }
   }));
   window._fundMap = map;
@@ -704,7 +705,7 @@ function fmtNum(v) {
 // ── Build rich text block for Groq prompt ────────────────────
 function buildFundamentalsBlock(map) {
   if (!Object.keys(map).length) return "";
-  return Object.entries(map).map(([ticker, {quote:q, income:inc, cashflow:cf}]) => {
+  return Object.entries(map).map(([ticker, {quote:q, income:inc, cashflow:cf, balance:bal}]) => {
     const lines = [`${ticker}:`];
 
     // Quote snapshot
